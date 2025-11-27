@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Brugere {
+  id         Int       @id @default(autoincrement())
+  brugernavn String    @unique
+  password   String
+  navn       String
+  teaternavn String
+  lokation   String
+  email      String    @unique
+  features   Boolean   @default(false)
+
+  produkter  Produkter[]
+}
+
+model Produkter {
+  id               Int                  @id @default(autoincrement())
+  navn             String
+  beskrivelse      String
+  kategori         String
+  billede_url      String
+  skjult           Boolean              @default(false)
+
+  bruger_id        Int
+  ejer             Brugere              @relation(fields: [bruger_id], references: [id])
+
+  forestillingsperioder Forestillingsperioder[]
+  reservationer        Reservationer[]
+}
+
+model Forestillingsperioder {
+  id         Int       @id @default(autoincrement())
+  navn       String
+  start_dato DateTime
+  slut_dato  DateTime
+
+  produkt_id Int
+  produkt    Produkter @relation(fields: [produkt_id], references: [id])
+}
+
+model Reservationer {
+  id         Int      @id @default(autoincrement())
+  produkt_id Int
+  bruger     String
+  teaternavn String
+  fra_dato   DateTime
+  til_dato   DateTime
+
+  produkt    Produkter @relation(fields: [produkt_id], references: [id])
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
