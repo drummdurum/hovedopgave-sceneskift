@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - SceneSkift</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+  <!-- Header fixed på toppen med transparent baggrund -->
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+    <%- include('../header/header') %>
+  </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-[60vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 100px 20px;">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          Opret konto
+        </h1>
+        <p class="text-xl" style="color: var(--color-light); opacity: 0.9;">
+          Bliv en del af SceneSkift fællesskabet
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-6 py-12">
+    
+    <section class="section max-w-4xl mx-auto">
+      
+      <!-- Register Form -->
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <h2 class="text-3xl mb-4 text-center" style="font-family: var(--font-heading); color: var(--color-primary);">Opret din konto</h2>
+        <div class="h-1 w-32 mx-auto mb-8" style="background-color: var(--color-secondary);"></div>
+        
+        <form id="registerForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="brugernavn" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Brugernavn *</label>
+              <input type="text" id="brugernavn" name="brugernavn" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary); font-size: 1rem;"
+                placeholder="Vælg et brugernavn">
+            </div>
+            
+            <div>
+              <label for="password" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Password *</label>
+              <input type="password" id="password" name="password" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary); font-size: 1rem;"
+                placeholder="Vælg et sikkert password">
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="navn" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Dit fulde navn *</label>
+              <input type="text" id="navn" name="navn" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary); font-size: 1rem;"
+                placeholder="Fornavn Efternavn">
+            </div>
+            
+            <div>
+              <label for="email" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">E-mail *</label>
+              <input type="email" id="email" name="email" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary); font-size: 1rem;"
+                placeholder="din@email.dk">
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="teaternavn" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Teater / Organisation *</label>
+              <input type="text" id="teaternavn" name="teaternavn" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary); font-size: 1rem;"
+                placeholder="Navn på dit teater">
+            </div>
+            
+            <div>
+              <label for="lokation" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Lokation *</label>
+              <input type="text" id="lokation" name="lokation" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary); font-size: 1rem;"
+                placeholder="By eller region">
+            </div>
+          </div>
+          
+          <div id="registerError" class="hidden p-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
+          <div id="registerSuccess" class="hidden p-4 rounded-xl" style="background-color: #dcfce7; color: #16a34a;"></div>
+          
+          <div class="p-6 rounded-xl" style="background-color: rgba(212, 175, 55, 0.1); border: 1px solid var(--color-secondary);">
+            <p style="color: var(--color-dark);">
+              <strong>⚠️ Bemærk:</strong> Din konto skal godkendes af en administrator, før du kan bruge alle funktioner. 
+              Du vil modtage en e-mail, når din konto er godkendt.
+            </p>
+          </div>
+          
+          <button type="submit" class="btn-primary w-full py-4 text-lg" style="border-radius: 100px; font-weight: 700;">
+            Opret konto
+          </button>
+        </form>
+        
+        <div class="mt-8 text-center">
+          <p style="color: var(--color-dark);">Har du allerede en konto?</p>
+          <a href="/login" class="inline-block mt-2" style="color: var(--color-secondary); font-weight: 600; text-decoration: underline;">
+            Log ind her
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <%- include('../footer/footer') %>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const errorDiv = document.getElementById('registerError');
+      const successDiv = document.getElementById('registerSuccess');
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+      
+      const formData = {
+        brugernavn: document.getElementById('brugernavn').value,
+        password: document.getElementById('password').value,
+        navn: document.getElementById('navn').value,
+        email: document.getElementById('email').value,
+        teaternavn: document.getElementById('teaternavn').value,
+        lokation: document.getElementById('lokation').value,
+        features: false
+      };
+      
+      try {
+        const response = await fetch('/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          successDiv.innerHTML = '<strong>Konto oprettet!</strong> Din konto afventer nu godkendelse fra en administrator. Du vil modtage en e-mail, når kontoen er godkendt.';
+          successDiv.classList.remove('hidden');
+          document.getElementById('registerForm').reset();
+          setTimeout(() => {
+            window.location.href = '/profile';
+          }, 3000);
+        } else {
+          errorDiv.textContent = data.error || 'Der opstod en fejl ved oprettelse';
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'Der opstod en netværksfejl. Prøv igen.';
+        errorDiv.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

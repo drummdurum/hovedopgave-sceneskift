@@ -19,6 +19,8 @@ model Brugere {
   lokation   String
   email      String    @unique
   features   Boolean   @default(false)
+  godkendt   Boolean   @default(false)
+  rolle      String    @default("bruger") // "bruger" eller "admin"
 
   produkter  Produkter[]
 }

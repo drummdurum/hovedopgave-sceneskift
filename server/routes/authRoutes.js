@@ -52,7 +52,9 @@ router.post('/register', async (req, res) => {
       teaternavn: newUser.teaternavn,
       lokation: newUser.lokation,
       email: newUser.email,
-      features: newUser.features
+      features: newUser.features,
+      godkendt: newUser.godkendt,
+      rolle: newUser.rolle
     };
 
     res.status(201).json({ 
@@ -104,7 +106,9 @@ router.post('/login', async (req, res) => {
       teaternavn: user.teaternavn,
       lokation: user.lokation,
       email: user.email,
-      features: user.features
+      features: user.features,
+      godkendt: user.godkendt,
+      rolle: user.rolle
     };
 
     res.json({ 

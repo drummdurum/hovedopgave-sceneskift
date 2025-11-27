@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - SceneSkift</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+  <!-- Header fixed på toppen med transparent baggrund -->
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+    <%- include('../header/header') %>
+  </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.6); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 80px 20px;">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          🔧 Admin Panel
+        </h1>
+        <p class="text-xl" style="color: var(--color-light); opacity: 0.9;">
+          Administrer brugere og godkendelser
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-6 py-12">
+    
+    <% if (user && user.rolle === 'admin') { %>
+    
+    <!-- Stats overview -->
+    <section class="section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color: var(--color-secondary);">
+          <span class="text-2xl">👥</span>
+        </div>
+        <p class="text-4xl font-bold" style="color: var(--color-primary);" id="totalUsers">-</p>
+        <p style="color: var(--color-dark); opacity: 0.7;">Totale brugere</p>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color: #fef3c7;">
+          <span class="text-2xl">⏳</span>
+        </div>
+        <p class="text-4xl font-bold" style="color: #d97706;" id="pendingUsers">-</p>
+        <p style="color: var(--color-dark); opacity: 0.7;">Afventer godkendelse</p>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color: #dcfce7;">
+          <span class="text-2xl">✅</span>
+        </div>
+        <p class="text-4xl font-bold" style="color: #16a34a;" id="approvedUsers">-</p>
+        <p style="color: var(--color-dark); opacity: 0.7;">Godkendte brugere</p>
+      </div>
+    </section>
+    
+    <!-- Afventende brugere -->
+    <section class="section max-w-6xl mx-auto mb-12">
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Afventende godkendelser</h2>
+        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+        
+        <div id="pendingList" class="space-y-4">
+          <p style="color: var(--color-dark); opacity: 0.7;">Indlæser...</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Alle brugere -->
+    <section class="section max-w-6xl mx-auto">
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Alle brugere</h2>
+        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full" id="usersTable">
+            <thead>
+              <tr style="background-color: #f8f9fa;">
+                <th class="text-left p-4 rounded-tl-xl">Navn</th>
+                <th class="text-left p-4">Brugernavn</th>
+                <th class="text-left p-4">Teater</th>
+                <th class="text-left p-4">Lokation</th>
+                <th class="text-left p-4">Status</th>
+                <th class="text-left p-4">Rolle</th>
+                <th class="text-left p-4 rounded-tr-xl">Handlinger</th>
+              </tr>
+            </thead>
+            <tbody id="usersList">
+              <tr>
+                <td colspan="7" class="p-4 text-center" style="color: var(--color-dark); opacity: 0.7;">Indlæser...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    
+    <% } else { %>
+    <!-- Ikke admin eller ikke logget ind -->
+    <section class="section max-w-2xl mx-auto text-center">
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Adgang nægtet</h2>
+        <div class="h-1 w-32 mx-auto mb-8" style="background-color: var(--color-secondary);"></div>
+        <p class="text-lg mb-8" style="color: var(--color-dark);">
+          Du har ikke adgang til admin panelet. Kun administratorer kan se denne side.
+        </p>
+        <a href="/" class="btn-primary" style="border-radius: 100px; padding: 12px 32px;">
+          Tilbage til forsiden
+        </a>
+      </div>
+    </section>
+    <% } %>
+
+  </main>
+
+  <!-- Footer -->
+  <%- include('../footer/footer') %>
+
+  <% if (user && user.rolle === 'admin') { %>
+  <script>
+    // Hent alle brugere
+    async function loadUsers() {
+      try {
+        const response = await fetch('/api/admin/users');
+        const data = await response.json();
+        
+        if (response.ok) {
+          const users = data.users;
+          
+          // Opdater stats
+          document.getElementById('totalUsers').textContent = users.length;
+          document.getElementById('pendingUsers').textContent = users.filter(u => !u.godkendt).length;
+          document.getElementById('approvedUsers').textContent = users.filter(u => u.godkendt).length;
+          
+          // Afventende brugere
+          const pendingUsers = users.filter(u => !u.godkendt);
+          const pendingList = document.getElementById('pendingList');
+          
+          if (pendingUsers.length === 0) {
+            pendingList.innerHTML = '<p class="p-4 rounded-xl text-center" style="background-color: #dcfce7; color: #16a34a;">🎉 Ingen afventende godkendelser!</p>';
+          } else {
+            pendingList.innerHTML = pendingUsers.map(user => `
+              <div class="flex items-center justify-between p-6 rounded-xl" style="background-color: #fef3c7;">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: var(--color-secondary);">
+                    <span class="text-xl font-bold" style="color: var(--color-dark);">${user.navn.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-lg" style="color: var(--color-dark);">${user.navn}</p>
+                    <p style="color: var(--color-dark); opacity: 0.7;">${user.teaternavn} · ${user.lokation}</p>
+                    <p class="text-sm" style="color: var(--color-dark); opacity: 0.6;">${user.email}</p>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="approveUser(${user.id})" class="px-4 py-2 rounded-xl font-bold transition" style="background-color: #16a34a; color: white;">
+                    ✓ Godkend
+                  </button>
+                  <button onclick="rejectUser(${user.id})" class="px-4 py-2 rounded-xl font-bold transition" style="background-color: #dc2626; color: white;">
+                    ✗ Afvis
+                  </button>
+                </div>
+              </div>
+            `).join('');
+          }
+          
+          // Alle brugere tabel
+          const usersList = document.getElementById('usersList');
+          usersList.innerHTML = users.map(user => `
+            <tr style="border-bottom: 1px solid #e5e7eb;">
+              <td class="p-4 font-semibold" style="color: var(--color-dark);">${user.navn}</td>
+              <td class="p-4" style="color: var(--color-dark);">${user.brugernavn}</td>
+              <td class="p-4" style="color: var(--color-dark);">${user.teaternavn}</td>
+              <td class="p-4" style="color: var(--color-dark);">${user.lokation}</td>
+              <td class="p-4">
+                ${user.godkendt 
+                  ? '<span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: #dcfce7; color: #16a34a;">Godkendt</span>'
+                  : '<span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: #fef3c7; color: #d97706;">Afventer</span>'
+                }
+              </td>
+              <td class="p-4">
+                <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: ${user.rolle === 'admin' ? 'var(--color-primary)' : '#f3f4f6'}; color: ${user.rolle === 'admin' ? 'white' : 'var(--color-dark)'};">
+                  ${user.rolle}
+                </span>
+              </td>
+              <td class="p-4">
+                <div class="flex gap-2">
+                  ${!user.godkendt ? `
+                    <button onclick="approveUser(${user.id})" class="px-3 py-1 rounded-lg text-sm" style="background-color: #16a34a; color: white;">Godkend</button>
+                  ` : ''}
+                  ${user.rolle !== 'admin' ? `
+                    <button onclick="makeAdmin(${user.id})" class="px-3 py-1 rounded-lg text-sm" style="background-color: var(--color-primary); color: white;">Gør admin</button>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Fejl ved indlæsning af brugere:', error);
+      }
+    }
+    
+    async function approveUser(userId) {
+      try {
+        const response = await fetch(`/api/admin/users/${userId}/approve`, { method: 'POST' });
+        if (response.ok) {
+          loadUsers();
+        } else {
+          alert('Fejl ved godkendelse af bruger');
+        }
+      } catch (error) {
+        console.error('Fejl:', error);
+      }
+    }
+    
+    async function rejectUser(userId) {
+      if (!confirm('Er du sikker på at du vil afvise denne bruger? Brugeren vil blive slettet.')) return;
+      
+      try {
+        const response = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+        if (response.ok) {
+          loadUsers();
+        } else {
+          alert('Fejl ved afvisning af bruger');
+        }
+      } catch (error) {
+        console.error('Fejl:', error);
+      }
+    }
+    
+    async function makeAdmin(userId) {
+      if (!confirm('Er du sikker på at du vil gøre denne bruger til admin?')) return;
+      
+      try {
+        const response = await fetch(`/api/admin/users/${userId}/make-admin`, { method: 'POST' });
+        if (response.ok) {
+          loadUsers();
+        } else {
+          alert('Fejl ved ændring af rolle');
+        }
+      } catch (error) {
+        console.error('Fejl:', error);
+      }
+    }
+    
+    // Indlæs brugere ved page load
+    loadUsers();
+  </script>
+  <% } %>
+</body>
+</html>

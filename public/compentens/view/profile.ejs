@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - SceneSkift</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+  <!-- Header fixed på toppen med transparent baggrund -->
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+    <%- include('../header/header') %>
+  </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 80px 20px;">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          Min Profil
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-6 py-12">
+    
+    <% if (user) { %>
+    <section class="section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Profil info -->
+      <div class="md:col-span-2 bg-white rounded-2xl shadow-xl p-10">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl" style="font-family: var(--font-heading); color: var(--color-primary);">Profiloplysninger</h2>
+          <% if (user.rolle === 'admin') { %>
+          <a href="/admin" class="btn-secondary" style="border-radius: 100px;">
+            🔧 Admin Panel
+          </a>
+          <% } %>
+        </div>
+        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
+            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Brugernavn</label>
+            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.brugernavn %></p>
+          </div>
+          
+          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
+            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Navn</label>
+            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.navn %></p>
+          </div>
+          
+          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
+            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">E-mail</label>
+            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.email %></p>
+          </div>
+          
+          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
+            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Teater</label>
+            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.teaternavn %></p>
+          </div>
+          
+          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
+            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Lokation</label>
+            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.lokation %></p>
+          </div>
+        </div>
+        
+        <div class="mt-8 flex gap-4">
+          <button onclick="logout()" class="btn-secondary" style="border-radius: 100px;">
+            Log ud
+          </button>
+        </div>
+      </div>
+
+      <!-- Status kort -->
+      <div class="space-y-6">
+        <!-- Godkendelsesstatus -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+          <h3 class="text-xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Kontostatus</h3>
+          <div class="h-1 w-16 mb-6" style="background-color: var(--color-secondary);"></div>
+          
+          <% if (user.godkendt) { %>
+          <div class="flex items-center gap-3 p-4 rounded-xl" style="background-color: #dcfce7;">
+            <span class="text-2xl">✅</span>
+            <div>
+              <p class="font-bold text-lg" style="color: #16a34a;">Godkendt</p>
+              <p class="text-sm" style="color: #166534;">Du har fuld adgang til alle funktioner</p>
+            </div>
+          </div>
+          <% } else { %>
+          <div class="flex items-center gap-3 p-4 rounded-xl" style="background-color: #fef3c7;">
+            <span class="text-2xl">⏳</span>
+            <div>
+              <p class="font-bold text-lg" style="color: #d97706;">Afventer godkendelse</p>
+              <p class="text-sm" style="color: #92400e;">En administrator gennemgår din ansøgning</p>
+            </div>
+          </div>
+          <% } %>
+        </div>
+        
+        <!-- Hurtige links -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+          <h3 class="text-xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Hurtige links</h3>
+          <div class="h-1 w-16 mb-6" style="background-color: var(--color-secondary);"></div>
+          
+          <div class="space-y-3">
+            <a href="/produkter/mine/produkter" class="block p-4 rounded-xl transition" style="background-color: #f8f9fa; color: var(--color-dark);" onmouseover="this.style.backgroundColor='var(--color-secondary)'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+              📦 Mine produkter
+            </a>
+            <a href="/rekvisitter" class="block p-4 rounded-xl transition" style="background-color: #f8f9fa; color: var(--color-dark);" onmouseover="this.style.backgroundColor='var(--color-secondary)'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+              🔍 Se alle rekvisitter
+            </a>
+            <% if (user.godkendt) { %>
+            <a href="/produkter/opret" class="block p-4 rounded-xl transition" style="background-color: #f8f9fa; color: var(--color-dark);" onmouseover="this.style.backgroundColor='var(--color-secondary)'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+              ➕ Opret nyt produkt
+            </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <% } else { %>
+    <!-- Ikke logget ind -->
+    <section class="section max-w-2xl mx-auto text-center">
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Du er ikke logget ind</h2>
+        <div class="h-1 w-32 mx-auto mb-8" style="background-color: var(--color-secondary);"></div>
+        <p class="text-lg mb-8" style="color: var(--color-dark);">
+          Log ind for at se din profil og få adgang til alle funktioner.
+        </p>
+        <div class="flex gap-4 justify-center">
+          <a href="/login" class="btn-primary" style="border-radius: 100px; padding: 12px 32px;">
+            Log ind
+          </a>
+          <a href="/register" class="btn-secondary" style="border-radius: 100px; padding: 12px 32px;">
+            Opret konto
+          </a>
+        </div>
+      </div>
+    </section>
+    <% } %>
+
+  </main>
+
+  <!-- Footer -->
+  <%- include('../footer/footer') %>
+
+  <script>
+    async function logout() {
+      try {
+        const response = await fetch('/auth/logout', { method: 'POST' });
+        if (response.ok) {
+          window.location.href = '/';
+        }
+      } catch (error) {
+        console.error('Logout fejl:', error);
+      }
+    }
+  </script>
+</body>
+</html>

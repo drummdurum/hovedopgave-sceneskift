@@ -63,12 +63,14 @@ const mainRoutes = require('./server/routes/mainRoutes');
 const authRoutes = require('./server/routes/authRoutes');
 const produkterRoutes = require('./server/routes/produkterRoutes');
 const dataRoutes = require('./server/routes/dataRoutes');
+const adminRoutes = require('./server/routes/adminRoutes');
 
 // Brug routes
 app.use('/', mainRoutes);
 app.use('/auth', authRoutes);
 app.use('/produkter', produkterRoutes);
 app.use('/api', dataRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Start serveren
 app.listen(PORT, () => {
