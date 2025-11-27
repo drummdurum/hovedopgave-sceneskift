@@ -12,7 +12,8 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "prisma:deploy": "npx prisma migrate deploy"
+    "prisma:deploy": "npx prisma migrate deploy",
+    "migrate": "node run-migrations.js"
   },
   "keywords": [
     "express",
