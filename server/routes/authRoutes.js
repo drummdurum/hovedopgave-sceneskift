@@ -61,7 +61,12 @@ router.post('/register', async (req, res) => {
     });
   } catch (error) {
     console.error('Register error:', error);
-    res.status(500).json({ error: 'Der opstod en fejl ved registrering' });
+    console.error('Error details:', error.message);
+    console.error('Error code:', error.code);
+    res.status(500).json({ 
+      error: 'Der opstod en fejl ved registrering',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
@@ -108,7 +113,11 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Der opstod en fejl ved login' });
+    console.error('Error details:', error.message);
+    res.status(500).json({ 
+      error: 'Der opstod en fejl ved login',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 

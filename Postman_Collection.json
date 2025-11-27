@@ -1,0 +1,597 @@
+{
+  "info": {
+    "name": "Hovedopgave Sceneskift API",
+    "description": "API test collection for Sceneskift application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Bruger",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brugernavn\": \"testbruger1\",\n  \"password\": \"sikkertkodeord123\",\n  \"navn\": \"Test Testesen\",\n  \"teaternavn\": \"Det Kongelige Teater\",\n  \"lokation\": \"København\",\n  \"email\": \"test@example.com\",\n  \"features\": false\n}"
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/auth/register",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brugernavn\": \"testbruger1\",\n  \"password\": \"sikkertkodeord123\"\n}"
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/auth/login",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/auth/me",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/auth/logout",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produkter",
+      "item": [
+        {
+          "name": "Hent Alle Produkter",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/produkter",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "produkter"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hent Produkter - Filter Kategori",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/produkter?kategori=Scenografi",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "produkter"
+              ],
+              "query": [
+                {
+                  "key": "kategori",
+                  "value": "Scenografi"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hent Et Produkt",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/produkter/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "produkter",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Opret Produkt (med billede)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "navn",
+                  "value": "Smuk scenografi til Hamlet",
+                  "type": "text"
+                },
+                {
+                  "key": "beskrivelse",
+                  "value": "En fantastisk baggrund med gotisk stil, perfekt til Shakespeare's Hamlet",
+                  "type": "text"
+                },
+                {
+                  "key": "kategori",
+                  "value": "Scenografi",
+                  "type": "text"
+                },
+                {
+                  "key": "skjult",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "billede",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/produkter",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "produkter"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Opdater Produkt",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "navn",
+                  "value": "Opdateret scenografi navn",
+                  "type": "text"
+                },
+                {
+                  "key": "beskrivelse",
+                  "value": "Opdateret beskrivelse",
+                  "type": "text"
+                },
+                {
+                  "key": "kategori",
+                  "value": "Scenografi",
+                  "type": "text"
+                },
+                {
+                  "key": "skjult",
+                  "value": "false",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/produkter/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "produkter",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Slet Produkt",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/produkter/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "produkter",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hent Mine Produkter",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/produkter/mine/produkter",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "produkter",
+                "mine",
+                "produkter"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forestillingsperioder",
+      "item": [
+        {
+          "name": "Hent Forestillingsperioder for Produkt",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/produkt/1/forestillingsperioder",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "produkt",
+                "1",
+                "forestillingsperioder"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hent En Forestillingsperiode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/forestillingsperioder/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "forestillingsperioder",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Opret Forestillingsperiode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"navn\": \"Vinter sæson 2025\",\n  \"start_dato\": \"2025-01-01T00:00:00Z\",\n  \"slut_dato\": \"2025-03-31T23:59:59Z\"\n}"
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/produkt/1/forestillingsperioder",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "produkt",
+                "1",
+                "forestillingsperioder"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Opdater Forestillingsperiode",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"navn\": \"Opdateret vinter sæson\",\n  \"start_dato\": \"2025-01-15T00:00:00Z\",\n  \"slut_dato\": \"2025-04-15T23:59:59Z\"\n}"
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/forestillingsperioder/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "forestillingsperioder",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Slet Forestillingsperiode",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/forestillingsperioder/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "forestillingsperioder",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservationer",
+      "item": [
+        {
+          "name": "Hent Reservationer for Produkt",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/produkt/1/reservationer",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "produkt",
+                "1",
+                "reservationer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hent En Reservation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/reservationer/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "reservationer",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Opret Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fra_dato\": \"2025-02-01T00:00:00Z\",\n  \"til_dato\": \"2025-02-14T23:59:59Z\"\n}"
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/produkt/1/reservationer",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "produkt",
+                "1",
+                "reservationer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Opdater Reservation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fra_dato\": \"2025-02-05T00:00:00Z\",\n  \"til_dato\": \"2025-02-20T23:59:59Z\"\n}"
+            },
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/reservationer/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "reservationer",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Slet Reservation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://hovedopgave-sceneskift-production.up.railway.app/api/reservationer/1",
+              "protocol": "https",
+              "host": [
+                "hovedopgave-sceneskift-production",
+                "up",
+                "railway",
+                "app"
+              ],
+              "path": [
+                "api",
+                "reservationer",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
