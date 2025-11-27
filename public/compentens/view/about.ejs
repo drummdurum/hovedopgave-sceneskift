@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - MinApp</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+    <!-- Header fixed på toppen med transparent baggrund -->
+    <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+      <%- include('../header/header') %>
+    </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-screen flex flex-col" style="background-image: url('/compentens/image/about.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.3); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative justify-center" style="z-index: 1;">
+      <div class="text-center" style="padding:150px;">
+        <div class="mb-8">
+          <img src="/compentens/image/Logo.jpg" alt="Logo" class="mx-auto" style="max-width: 600px; width: 100%;">
+        </div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-8" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          Hvad er vores mission?
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-6 py-12">
+    
+    <!-- Intro section -->
+    <section class="section max-w-6xl mx-auto text-center mb-16">
+      <h2 class="text-5xl md:text-6xl font-bold tracking-tight mb-6" style="font-family: var(--font-heading); color: var(--color-primary);">
+        Vi skaber <em>bæredygtige</em> scener for fremtiden
+      </h2>
+      <div class="h-1 mx-auto mt-4 mb-8" style="background-color: var(--color-secondary); width: 90%;"></div>
+      <p class="text-xl leading-relaxed mx-auto" style="color: var(--color-dark); opacity: 0.9; max-width: 900px;">
+       Så start i dag - del dine rekvisitter, bliv en del af et teaterfællesskab og lav nogle fede teateropsætninger samtidig med at vi hjælper miljøet!
+      </p>
+    </section>
+
+    <!-- Vores historie og værdier - Two column -->
+    <section class="section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      
+      <!-- Left: Vores historie -->
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <h3 class="mb-4 text-3xl" style="font-family: var(--font-heading); color: var(--color-primary);">Vores historie</h3>
+        <div class="h-1 w-32 mb-6" style="background-color: var(--color-secondary);"></div>
+
+        <p class="mb-4 text-lg" style="color: var(--color-dark);">
+          Sceneskift blev stiftet, da jeg i mine mange år i teaterbranchen, har fundet måden vi anskaffer og afskaffer rekvisitter på, problematisk. Grundet små budgetter, stramme deadlines og manglende overblik, bliver der anskaffet mange rekvisitter på en uhensigtsmæssig måde, fx gennem udenlandsk nethandel, og grundet manglende lagerplads bliver mange rekvisitter smidt ud igen efter endt formål.
+        </p>
+        <p class="mb-4 leading-relaxed text-lg" style="color: var(--color-dark);">
+         Dette fik mig til at kigge i retning af løsninger som ville fremme cirkularitet og opfordre til genbrug på en nem og overskuelig måde, så jeg kan hjælpe med at træffe nogle grønnere valg, uden at pege fingre.
+        </p>
+        <p class="mb-4 leading-relaxed text-lg" style="color: var(--color-dark);">
+         Derfor præsenterer jeg Sceneskift, hvor vi i fællesskab kan hjælpe hinanden ved at dele de skønne rekvisitter vi hver især har. Vi ønsker alle de bedste teateropsætninger og vi når længst i fællesskab. 
+        </p>
+        
+      </div>
+
+      <!-- Right: Grønne værdier -->
+      <div class="bg-white rounded-2xl shadow-xl p-10" style="background: linear-gradient(135deg, rgba(138, 5, 23, 0.03) 0%, rgba(34, 139, 34, 0.05) 100%);">
+        <h3 class="mb-4 text-3xl" style="font-family: var(--font-heading); color: #228B22;">🌱 Vores grønne løfte</h3>
+        <div class="h-1 w-32 mb-6" style="background-color: #228B22;"></div>
+        <ul class="space-y-6">
+          <li class="flex items-start gap-3">
+            <span style="color: #228B22; font-size: 1.5rem; line-height: 1;">♻️</span>
+            <div class="mb-10">
+              <strong class="block text-lg" style="color: var(--color-dark);">100% genbrug</strong>
+              <p style="color: var(--color-dark); opacity: 0.8;">Alle vores rekvisitter får nyt liv hos flere teatre</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span style="color: #228B22; font-size: 1.5rem; line-height: 1;">🌍</span>
+            <div class="mb-10">
+              <strong class="block text-lg" style="color: var(--color-dark);">CO2-neutral levering</strong>
+              <p style="color: var(--color-dark); opacity: 0.8;">Vi optimerer transport og kompenserer for vores fodaftryk</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span style="color: #228B22; font-size: 1.5rem; line-height: 1;">🔧</span>
+            <div class="mb-10">
+              <strong class="block text-lg" style="color: var(--color-dark);">Reparation frem for kassering</strong>
+              <p style="color: var(--color-dark); opacity: 0.8;">Vi vedligeholder og genopfrisker alt udstyr professionelt</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span style="color: #228B22; font-size: 1.5rem; line-height: 1;">🤝</span>
+            <div class="mb-10">
+              <strong class="block text-lg" style="color: var(--color-dark);">Lokalt samarbejde</strong>
+              <p style="color: var(--color-dark); opacity: 0.8;">Vi arbejder med lokale håndværkere og materialebanker</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Teamet/Vores passion -->
+    <section class="section max-w-6xl mx-auto text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6" style="font-family: var(--font-heading); color: var(--color-secondary);">
+        Drevet af passion for teatret
+      </h2>
+      <p class="text-xl leading-relaxed mx-auto mb-16" style="color: var(--color-dark); opacity: 0.9; max-width: 800px; padding-bottom: 20px;">
+        Vi er ikke bare en udlejningsservice - vi er teaterfolk, der forstår vigtigheden af hver eneste detalje på scenen.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Card 1: Ekspertise -->
+        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
+              <path d="M12 14L12 8M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="16.5" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
+            25+ års erfaring
+          </h3>
+          <p class="leading-relaxed text-lg" style="color: var(--color-primary);">
+            Vores team har årtiers erfaring fra både professionelle scener og amatørteatre i hele Danmark.
+          </p>
+        </div>
+
+        <!-- Card 2: Udvalg -->
+        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
+              <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+              <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+              <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+              <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
+            5000+ rekvisitter
+          </h3>
+          <p class="leading-relaxed text-lg" style="color: var(--color-primary);">
+            Fra viktorianske møbler til moderne props - vi har Danmarks største udvalg af teaterrekvisitter.
+          </p>
+        </div>
+
+        <!-- Card 3: Community -->
+        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
+              <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13M16 3.13C16.8604 3.3503 17.623 3.8507 18.1676 4.55231C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
+            150+ teatre
+          </h3>
+          <p class="leading-relaxed text-lg" style="color: var(--color-primary);">
+            Vi er stolte over at være en del af Danmarks levende amatørteaterscene med et stærkt fællesskab.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to action -->
+    <section class="section max-w-6xl mx-auto text-center bg-white rounded-2xl shadow-xl p-12 mb-16" style="background-color: var(--color-light);">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6" style="font-family: var(--font-heading); color: var(--color-primary);">
+        Klar til at skabe magi sammen?
+      </h2>
+      <p class="text-xl leading-relaxed mb-8" style="color: var(--color-dark); opacity: 0.9;">
+        Lad os hjælpe dig med at finde de perfekte rekvisitter til din næste forestilling. Sammen skaber vi uforglemmelige oplevelser - bæredygtigt.
+      </p>
+       <div class="mb-16 pt-4" style="padding-bottom: 20px;">
+          <a href="#kontakt" class="btn-secondary inline-block" style="border-radius: 100px; font-weight: 700;">Læs mere og opret her</a>
+        </div>
+    </section>
+
+  </main>
+  
+  <%- include('../footer/footer') %>
+  
+</body>
+</html>

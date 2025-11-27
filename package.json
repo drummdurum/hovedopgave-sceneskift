@@ -1,0 +1,23 @@
+{
+  "name": "hovedopgave-2025",
+  "version": "1.0.0",
+  "description": "Node.js Express application with EJS and Tailwind CSS",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "build:css": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --minify",
+    "watch:css": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
+  },
+  "keywords": ["express", "ejs", "tailwind"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "nodemon": "^3.0.2"
+  }
+}

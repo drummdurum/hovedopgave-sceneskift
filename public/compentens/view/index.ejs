@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - Forside</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+    <!-- Header fixed på toppen med transparent baggrund -->
+    <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+      <%- include('../header/header') %>
+    </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-screen flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.3); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative justify-center" style="z-index: 1;">
+      <div class="text-center" style="padding:150px;">
+        <div class="mb-8">
+          <img src="/compentens/image/Logo.jpg" alt="Logo" class="mx-auto" style="max-width: 600px; width: 100%;">
+        </div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-8" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          Vi lover at du ikke står alene med dine rekvisitter
+        </h1>
+        <a href="#udvalg" class="btn-primary" style="padding: 5px 50px;">
+          Se udvalg
+        </a>
+      </div>
+    </div>
+  </section>
+  <!-- Main content -->
+  <main class="flex-grow container-max px-6 py-12">
+    <!-- Top intro section with divider -->
+    <section class="section max-w-6xl mx-auto text-center">
+      <h2 class="text-5xl md:text-6xl font-bold tracking-tight" style="font-family: var(--font-heading); color: var(--color-primary);">Skabt <em>af</em> <em>for</em> og <em>med</em> amatørteatre</h2>
+      <div class="h-1 mx-auto mt-4" style="background-color: var(--color-secondary); width: 90%;"></div>
+      <p class="leading-relaxed mx-auto mb-8" style="color: var(--color-dark); opacity: 0.9; max-width: 900px;">
+        Siden teatrets gyldne æra har rekvisitter været hjørnestenen i at skabe troværdige og fortryllende forestillinger. Vores nøje udvalgte kollektion bringer den klassiske teaters ånd til live.
+      </p>
+    </section>
+
+    <!-- Two-column cards section -->
+    <section class="section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Left card: Problems + CTA -->
+      <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col h-full">
+        <h3 class="mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Kender du problemer?</h3>
+        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+        <p class="mx-auto mb-6 leading-relaxed" style="color: var(--color-dark);">
+          Vores erfarne teatereksperter står klar til at hjælpe dig med at finde de perfekte rekvisitter til din forestilling.
+        </p>
+        <p class="mb-10 leading-relaxed" style="color: var(--color-dark);">
+          Book en gratis konsultation og få professionel rådgivning tilpasset netet din produktion.
+        </p>
+        <div class="mt-auto pt-4">
+          <a href="#kontakt" class="btn-secondary inline-block" style="border-radius: 100px; font-weight: 700;">Læs mere og opret her</a>
+        </div>
+      </div>
+
+      <!-- Right card: What we help with -->
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <h3 class="mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Hvad vi kan hjælpe med:</h3>
+        <div class="h-1 w-32 mb-6" style="background-color: var(--color-secondary);"></div>
+        <ul class="space-y-5">
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+            <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
+            <span class="text-xl" style="color: var(--color-dark);">Valg af rekvisitter til din periode og stil</span>
+          </li>
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+            <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
+            <span class="text-xl" style="color: var(--color-dark);">Koordinering af flere reservationer</span>
+          </li>
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+            <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
+            <span class="text-xl" style="color: var(--color-dark);">Specialønsker og tilpasninger</span>
+          </li>
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+            <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
+            <span class="text-xl" style="color: var(--color-dark);">Priser og tilgængelighed</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Why choose SceneSkift section -->
+    <section class="section max-w-6xl mx-auto text-center py-16">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-secondary);">
+         Hvorfor vælge SceneSkift?
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
+              <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
+            Professionelt udstyr
+          </h3>
+          <p class="leading-relaxed" style="color: var(--color-primary);">
+            Alt vores udstyr er professionelt og vedligeholdt til de højeste standarder.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
+            Hurtig booking
+          </h3>
+          <p class="leading-relaxed" style="color: var(--color-primary);">
+            Book dit udstyr online og få øjeblikkelig bekræftelse på tilgængelighed.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
+              <path d="M12 2C13.1046 2 14 2.89543 14 4C14 4.53043 13.7893 5.03914 13.4142 5.41421C13.0391 5.78929 12.5304 6 12 6C10.8954 6 10 5.10457 10 4C10 2.89543 10.8954 2 12 2Z" fill="currentColor"/>
+              <path d="M12 22C10.8954 22 10 21.1046 10 20C10 18.8954 10.8954 18 12 18C13.1046 18 14 18.8954 14 20C14 21.1046 13.1046 22 12 22Z" fill="currentColor"/>
+              <path d="M8 12C8 10.8954 7.10457 10 6 10C4.89543 10 4 10.8954 4 12C4 13.1046 4.89543 14 6 14C7.10457 14 8 13.1046 8 12Z" fill="currentColor"/>
+              <path d="M18 10C19.1046 10 20 10.8954 20 12C20 13.1046 19.1046 14 18 14C16.8954 14 16 13.1046 16 12C16 10.8954 16.8954 10 18 10Z" fill="currentColor"/>
+              <path d="M9 7L6 10M15 7L18 10M9 17L6 14M15 17L18 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
+            Teknisk support
+          </h3>
+          <p class="leading-relaxed" style="color: var(--color-primary);">
+            Få hjælp og vejledning fra vores erfarne tekniske team.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <%- include('../footer/footer') %>
+</body>
+</html>

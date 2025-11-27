@@ -1,0 +1,34 @@
+<div style="max-width: var(--max-width); margin: 0 auto; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+  <div>
+    <a href="/" class="transition" style="display: block;">
+      <img src="/compentens/image/logo rundt.png" alt="Logo" style="height: 60px; width: auto; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+  </div>
+  <nav class="space-x-6" style="font-family: var(--font-body); display: flex; align-items: center;">
+    <!-- Profile button -->
+    <a href="/profile" class="btn-primary" >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="color: var(--color-primary);">
+        <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="currentColor"/>
+        <path d="M12 14C6.47715 14 2 16.4772 2 19.5V22H22V19.5C22 16.4772 17.5228 14 12 14Z" fill="currentColor"/>
+      </svg>
+    </a>
+    <!-- User menu -->
+    <div class="user-menu" style="position: relative; display: inline-block;">
+      <button type="button" class="user-btn btn-primary" aria-haspopup="true" aria-expanded="false" title="Menu" style="display: inline-flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="3" y="6" width="18" height="2" fill="currentColor" />
+          <rect x="3" y="11" width="18" height="2" fill="currentColor" />
+          <rect x="3" y="16" width="18" height="2" fill="currentColor" />
+        </svg>
+      </button>
+      <div class="user-dropdown" role="menu" aria-hidden="true" style="position: absolute; right: 0; top: calc(100% + 10px); min-width: 220px; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); padding: 8px; display: none; z-index: 1000;">
+        <a href="/profile" class="dropdown-item" style="display:block; padding: 12px 14px; border-radius: 8px; color: var(--color-dark); text-decoration: none;">Profil</a>
+        <a href="/about" class="dropdown-item" style="display:block; padding: 12px 14px; border-radius: 8px; color: var(--color-dark); text-decoration: none;">About</a>
+        <a href="/rekvisitter" class="dropdown-item" style="display:block; padding: 12px 14px; border-radius: 8px; color: var(--color-dark); text-decoration: none;">Rekvisitter</a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<script src="/compentens/js/dropdownHeader.js"></script>
+ 
