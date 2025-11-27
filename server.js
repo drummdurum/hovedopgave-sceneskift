@@ -8,6 +8,10 @@ const { Pool } = require('pg');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Railway/Proxies: tillad korrekt håndtering af secure cookies bag proxy
+// Dette er nødvendigt for at session-cookies bliver sat/vedligeholdt i produktion
+app.set('trust proxy', 1);
+
 // PostgreSQL pool til sessions
 const pgPool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -43,6 +47,7 @@ app.use(
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 dage
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Kun HTTPS i produktion
+      sameSite: 'lax'
     },
   })
 );
