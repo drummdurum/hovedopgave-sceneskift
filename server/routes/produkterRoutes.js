@@ -125,7 +125,15 @@ router.get('/:id', async (req, res) => {
 });
 
 // Opret nyt produkt (kræver login og billede upload)
-router.post('/', requireAuth, upload.single('billede'), async (req, res) => {
+router.post('/', requireAuth, (req, res, next) => {
+  upload.single('billede')(req, res, (err) => {
+    if (err) {
+      console.error('Upload error:', err);
+      return res.status(400).json({ error: err.message || 'Fejl ved upload af billede' });
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     const { navn, beskrivelse, kategori, skjult } = req.body;
     const bruger_id = req.session.user.id;
@@ -140,7 +148,11 @@ router.post('/', requireAuth, upload.single('billede'), async (req, res) => {
       return res.status(400).json({ error: 'Billede er påkrævet' });
     }
 
-    const billede_url = `/uploads/${req.file.filename}`;
+    // Byg korrekt billede URL med teater-undermappen
+    const path = require('path');
+    const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
+    const relativePath = path.relative(uploadsDir, req.file.path).replace(/\\/g, '/');
+    const billede_url = `/uploads/${relativePath}`;
 
     const nytProdukt = await prisma.produkter.create({
       data: {
@@ -202,7 +214,10 @@ router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
     
     // Hvis nyt billede er uploadet
     if (req.file) {
-      updateData.billede_url = `/uploads/${req.file.filename}`;
+      const path = require('path');
+      const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
+      const relativePath = path.relative(uploadsDir, req.file.path).replace(/\\/g, '/');
+      updateData.billede_url = `/uploads/${relativePath}`;
     }
 
     const opdateretProdukt = await prisma.produkter.update({
