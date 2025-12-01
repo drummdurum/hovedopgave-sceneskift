@@ -64,6 +64,7 @@ const authRoutes = require('./server/routes/authRoutes');
 const produkterRoutes = require('./server/routes/produkterRoutes');
 const dataRoutes = require('./server/routes/dataRoutes');
 const adminRoutes = require('./server/routes/adminRoutes');
+const forestillingsperioderRoutes = require('./server/routes/forestillingsperioderRoutes');
 
 // Brug routes
 app.use('/', mainRoutes);
@@ -71,6 +72,7 @@ app.use('/auth', authRoutes);
 app.use('/produkter', produkterRoutes);
 app.use('/api', dataRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/forestillingsperioder', forestillingsperioderRoutes);
 
 // Start serveren
 app.listen(PORT, () => {

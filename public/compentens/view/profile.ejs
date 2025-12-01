@@ -132,6 +132,70 @@
       </div>
     </section>
     
+    <!-- Forestillingsperioder sektion -->
+    <% if (user.godkendt) { %>
+    <section class="section max-w-6xl mx-auto mt-8">
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl" style="font-family: var(--font-heading); color: var(--color-primary);">🎭 Mine forestillingsperioder</h2>
+          <button onclick="visOpretForestilling()" class="btn-primary" style="border-radius: 100px;">
+            ➕ Tilføj periode
+          </button>
+        </div>
+        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+        
+        <!-- Opret ny forestillingsperiode form (skjult som default) -->
+        <div id="opretForestillingForm" class="hidden mb-8 p-6 rounded-xl" style="background-color: #f8f9fa;">
+          <h3 class="text-xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Ny forestillingsperiode</h3>
+          <form id="forestillingForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Forestillingsnavn *</label>
+              <input type="text" id="forestillingNavn" required
+                class="w-full px-4 py-2 rounded-xl border-2"
+                style="border-color: var(--color-primary);"
+                placeholder="F.eks. Hamlet 2025">
+            </div>
+            <div>
+              <label class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Vælg produkt *</label>
+              <select id="forestillingProdukt" required
+                class="w-full px-4 py-2 rounded-xl border-2"
+                style="border-color: var(--color-primary);">
+                <option value="">Vælg et produkt</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Start dato *</label>
+              <input type="date" id="forestillingStart" required
+                class="w-full px-4 py-2 rounded-xl border-2"
+                style="border-color: var(--color-primary);">
+            </div>
+            <div>
+              <label class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Slut dato *</label>
+              <input type="date" id="forestillingSlut" required
+                class="w-full px-4 py-2 rounded-xl border-2"
+                style="border-color: var(--color-primary);">
+            </div>
+            <div class="md:col-span-2 flex gap-4 mt-4">
+              <button type="button" onclick="skjulOpretForestilling()" class="btn-secondary flex-1" style="border-radius: 100px;">
+                Annuller
+              </button>
+              <button type="submit" class="btn-primary flex-1" style="border-radius: 100px;">
+                Gem periode
+              </button>
+            </div>
+          </form>
+          <div id="forestillingError" class="hidden mt-4 p-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
+          <div id="forestillingSuccess" class="hidden mt-4 p-4 rounded-xl" style="background-color: #dcfce7; color: #16a34a;"></div>
+        </div>
+        
+        <!-- Liste over forestillingsperioder -->
+        <div id="forestillingerListe">
+          <p style="color: var(--color-dark); opacity: 0.7;">Indlæser forestillingsperioder...</p>
+        </div>
+      </div>
+    </section>
+    <% } %>
+    
     <% } else { %>
     <!-- Ikke logget ind -->
     <section class="section max-w-2xl mx-auto text-center">
