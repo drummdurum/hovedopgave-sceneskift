@@ -36,7 +36,7 @@
     <section class="section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       
       <!-- Profil info -->
-      <div class="md:col-span-2 bg-white rounded-2xl shadow-xl p-10">
+      <div class="md:col-span-2 bg-white rounded-2xl shadow-xl p-10 flex flex-col">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-3xl" style="font-family: var(--font-heading); color: var(--color-primary);">Profiloplysninger</h2>
           <% if (user.rolle === 'admin') { %>
@@ -74,7 +74,7 @@
           </div>
         </div>
         
-        <div class="mt-8 flex gap-4">
+        <div class="mt-auto pt-8 flex gap-4">
           <button onclick="logout()" class="btn-secondary" style="border-radius: 100px;">
             Log ud
           </button>
@@ -117,14 +117,14 @@
           
           <div class="space-y-3">
             <a href="/produkter/mine" class="block p-4 rounded-xl transition" style="background-color: #f8f9fa; color: var(--color-dark);" onmouseover="this.style.backgroundColor='var(--color-secondary)'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-              📦 Mine produkter
+              📦 Mine rekvisitter
             </a>
             <a href="/rekvisitter" class="block p-4 rounded-xl transition" style="background-color: #f8f9fa; color: var(--color-dark);" onmouseover="this.style.backgroundColor='var(--color-secondary)'" onmouseout="this.style.backgroundColor='#f8f9fa'">
               🔍 Se alle rekvisitter
             </a>
             <% if (user.godkendt) { %>
             <a href="/produkter/opret" class="block p-4 rounded-xl transition" style="background-color: #f8f9fa; color: var(--color-dark);" onmouseover="this.style.backgroundColor='var(--color-secondary)'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-              ➕ Opret nyt produkt
+              ➕ Opret nyt rekvisit
             </a>
             <% } %>
           </div>
