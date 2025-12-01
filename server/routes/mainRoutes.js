@@ -51,4 +51,12 @@ router.get('/admin', requireAuth, (req, res) => {
   });
 });
 
+// Rekvisitter side (alle kan se)
+router.get('/rekvisitter', (req, res) => {
+  res.render('rekvisitter', { 
+    title: 'Rekvisitter',
+    user: req.session.user || null
+  });
+});
+
 module.exports = router;

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - SceneSkift</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+  <!-- Header fixed på toppen med transparent baggrund -->
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+    <%- include('../header/header') %>
+  </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 80px 20px;">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          📦 Mine produkter
+        </h1>
+        <p class="text-xl" style="color: var(--color-light); opacity: 0.9;">
+          Administrer dine delte rekvisitter
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-6 py-12">
+    
+    <section class="section max-w-6xl mx-auto">
+      <!-- Header med opret knap -->
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-3xl" style="font-family: var(--font-heading); color: var(--color-primary);">Dine produkter</h2>
+          <div class="h-1 w-32 mt-2" style="background-color: var(--color-secondary);"></div>
+        </div>
+        <% if (user && user.godkendt) { %>
+        <a href="/produkter/opret" class="btn-primary" style="border-radius: 100px;">
+          ➕ Opret nyt produkt
+        </a>
+        <% } %>
+      </div>
+      
+      <!-- Produkter grid -->
+      <div id="produkterGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <p style="color: var(--color-dark); opacity: 0.7;">Indlæser dine produkter...</p>
+      </div>
+      
+      <!-- Ingen produkter besked -->
+      <div id="ingenProdukter" class="hidden text-center py-16">
+        <div class="bg-white rounded-2xl shadow-xl p-10 max-w-lg mx-auto">
+          <span class="text-6xl mb-4 block">📦</span>
+          <h3 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Ingen produkter endnu</h3>
+          <p class="mb-6" style="color: var(--color-dark); opacity: 0.8;">
+            Du har ikke oprettet nogen produkter endnu. Start med at dele din første rekvisit!
+          </p>
+          <% if (user && user.godkendt) { %>
+          <a href="/produkter/opret" class="btn-primary" style="border-radius: 100px;">
+            ➕ Opret dit første produkt
+          </a>
+          <% } else { %>
+          <p class="text-sm" style="color: #d97706;">
+            ⏳ Din konto afventer godkendelse før du kan oprette produkter.
+          </p>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <%- include('../footer/footer') %>
+
+  <script src="/compentens/js/mine-produkter.js"></script>
+</body>
+</html>

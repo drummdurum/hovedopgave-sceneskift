@@ -4,6 +4,48 @@ const prisma = require('../../database/prisma');
 const { requireAuth } = require('../middleware/auth');
 const upload = require('../../util/upload');
 
+// Vis mine produkter side (SKAL være før /:id)
+router.get('/mine', requireAuth, (req, res) => {
+  res.render('mine-produkter', { 
+    title: 'Mine produkter',
+    user: req.session.user
+  });
+});
+
+// Hent produkter for den loggede ind bruger API (SKAL være før /:id)
+router.get('/mine/produkter', requireAuth, async (req, res) => {
+  try {
+    const bruger_id = req.session.user.id;
+
+    const produkter = await prisma.produkter.findMany({
+      where: { bruger_id },
+      include: {
+        forestillingsperioder: true,
+        reservationer: true
+      },
+      orderBy: {
+        id: 'desc'
+      }
+    });
+
+    res.json({ produkter });
+  } catch (error) {
+    console.error('Fetch mine produkter error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved hentning af dine produkter' });
+  }
+});
+
+// Vis opret produkt side (SKAL være før /:id)
+router.get('/opret', requireAuth, (req, res) => {
+  if (!req.session.user.godkendt) {
+    return res.redirect('/profile');
+  }
+  res.render('opret-produkt', { 
+    title: 'Opret produkt',
+    user: req.session.user
+  });
+});
+
 // Hent alle produkter (med mulighed for at filtrere)
 router.get('/', async (req, res) => {
   try {
@@ -215,29 +257,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Delete produkt error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved sletning af produkt' });
-  }
-});
-
-// Hent produkter for den loggede ind bruger
-router.get('/mine/produkter', requireAuth, async (req, res) => {
-  try {
-    const bruger_id = req.session.user.id;
-
-    const produkter = await prisma.produkter.findMany({
-      where: { bruger_id },
-      include: {
-        forestillingsperioder: true,
-        reservationer: true
-      },
-      orderBy: {
-        id: 'desc'
-      }
-    });
-
-    res.json({ produkter });
-  } catch (error) {
-    console.error('Fetch mine produkter error:', error);
-    res.status(500).json({ error: 'Der opstod en fejl ved hentning af dine produkter' });
   }
 });
 
