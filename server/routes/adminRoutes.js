@@ -27,12 +27,11 @@ router.get('/users', requireAuth, requireAdmin, async (req, res) => {
         email: true,
         features: true,
         godkendt: true,
-        rolle: true,
-        createdAt: true
+        rolle: true
       },
       orderBy: [
         { godkendt: 'asc' },
-        { createdAt: 'desc' }
+        { id: 'desc' }
       ]
     });
 
