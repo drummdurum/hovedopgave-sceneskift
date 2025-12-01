@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
       formData.append('beskrivelse', document.getElementById('beskrivelse').value);
       formData.append('kategorier', JSON.stringify(selectedKategorier));
       formData.append('skjult', document.getElementById('skjult').checked);
+      formData.append('renoveres', document.getElementById('renoveres').checked);
       formData.append('billede', document.getElementById('billede').files[0]);
       
       try {

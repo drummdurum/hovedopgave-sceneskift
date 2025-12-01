@@ -190,7 +190,7 @@ router.post('/', requireAuth, (req, res, next) => {
   });
 }, async (req, res) => {
   try {
-    const { navn, beskrivelse, kategorier, skjult } = req.body;
+    const { navn, beskrivelse, kategorier, skjult, renoveres } = req.body;
     const bruger_id = req.session.user.id;
 
     // Valider input
@@ -238,6 +238,7 @@ router.post('/', requireAuth, (req, res, next) => {
         beskrivelse,
         billede_url,
         skjult: skjult === true || skjult === 'true',
+        renoveres: renoveres === true || renoveres === 'true',
         bruger_id,
         kategorier: {
           create: kategoriRecords.map(k => ({
@@ -282,7 +283,7 @@ router.post('/', requireAuth, (req, res, next) => {
 router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
   try {
     const { id } = req.params;
-    const { navn, beskrivelse, kategorier, skjult } = req.body;
+    const { navn, beskrivelse, kategorier, skjult, renoveres } = req.body;
     const bruger_id = req.session.user.id;
 
     // Tjek om produkt eksisterer og om brugeren ejer det
@@ -303,6 +304,7 @@ router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
     if (navn) updateData.navn = navn;
     if (beskrivelse) updateData.beskrivelse = beskrivelse;
     if (skjult !== undefined) updateData.skjult = skjult === true || skjult === 'true';
+    if (renoveres !== undefined) updateData.renoveres = renoveres === true || renoveres === 'true';
     
     // Hvis nyt billede er uploadet
     if (req.file) {

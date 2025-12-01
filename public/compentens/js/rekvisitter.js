@@ -102,8 +102,9 @@ function renderProduktKort(produkt) {
 
   return `
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer transition transform hover:scale-105" onclick="visProdukt(${produkt.id})">
-      <div class="h-48 overflow-hidden">
+      <div class="h-48 overflow-hidden relative">
         <img src="${produkt.billede_url}" alt="${produkt.navn}" class="w-full h-full object-cover">
+        ${produkt.renoveres ? '<div class="absolute top-2 right-2 px-3 py-1 rounded-full text-sm font-semibold" style="background-color: #dbeafe; color: #2563eb;">🔧 Renoveres</div>' : ''}
       </div>
       <div class="p-6">
         <div class="flex flex-wrap mb-2">
