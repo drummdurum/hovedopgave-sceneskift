@@ -29,15 +29,30 @@ model Produkter {
   id               Int                  @id @default(autoincrement())
   navn             String
   beskrivelse      String
-  kategori         String
   billede_url      String
   skjult           Boolean              @default(false)
 
   bruger_id        Int
   ejer             Brugere              @relation(fields: [bruger_id], references: [id])
 
+  kategorier       ProduktKategorier[]
   forestillingsperioder Forestillingsperioder[]
   reservationer        Reservationer[]
+}
+
+model Kategorier {
+  id        Int                 @id @default(autoincrement())
+  navn      String              @unique
+  produkter ProduktKategorier[]
+}
+
+model ProduktKategorier {
+  produkt_id  Int
+  kategori_id Int
+  produkt     Produkter  @relation(fields: [produkt_id], references: [id], onDelete: Cascade)
+  kategori    Kategorier @relation(fields: [kategori_id], references: [id], onDelete: Cascade)
+
+  @@id([produkt_id, kategori_id])
 }
 
 model Forestillingsperioder {

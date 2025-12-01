@@ -4,6 +4,19 @@ const prisma = require('../../database/prisma');
 const { requireAuth } = require('../middleware/auth');
 const upload = require('../../util/upload');
 
+// Hent alle kategorier
+router.get('/kategorier', async (req, res) => {
+  try {
+    const kategorier = await prisma.kategorier.findMany({
+      orderBy: { navn: 'asc' }
+    });
+    res.json({ kategorier });
+  } catch (error) {
+    console.error('Fetch kategorier error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved hentning af kategorier' });
+  }
+});
+
 // Vis mine produkter side (SKAL være før /:id)
 router.get('/mine', requireAuth, (req, res) => {
   res.render('mine-produkter', { 
@@ -20,6 +33,11 @@ router.get('/mine/produkter', requireAuth, async (req, res) => {
     const produkter = await prisma.produkter.findMany({
       where: { bruger_id },
       include: {
+        kategorier: {
+          include: {
+            kategori: true
+          }
+        },
         forestillingsperioder: true,
         reservationer: true
       },
@@ -28,7 +46,13 @@ router.get('/mine/produkter', requireAuth, async (req, res) => {
       }
     });
 
-    res.json({ produkter });
+    // Transformer kategorier til et simpelt array
+    const transformedProdukter = produkter.map(p => ({
+      ...p,
+      kategorier: p.kategorier.map(pk => pk.kategori.navn)
+    }));
+
+    res.json({ produkter: transformedProdukter });
   } catch (error) {
     console.error('Fetch mine produkter error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved hentning af dine produkter' });
@@ -53,7 +77,16 @@ router.get('/', async (req, res) => {
     
     const where = {};
     
-    if (kategori) where.kategori = kategori;
+    // Filtrer på kategori via many-to-many relation
+    if (kategori) {
+      where.kategorier = {
+        some: {
+          kategori: {
+            navn: kategori
+          }
+        }
+      };
+    }
     if (bruger_id) where.bruger_id = parseInt(bruger_id);
     if (skjult !== undefined) where.skjult = skjult === 'true';
 
@@ -68,6 +101,11 @@ router.get('/', async (req, res) => {
             lokation: true
           }
         },
+        kategorier: {
+          include: {
+            kategori: true
+          }
+        },
         forestillingsperioder: true,
         reservationer: true
       },
@@ -76,7 +114,13 @@ router.get('/', async (req, res) => {
       }
     });
 
-    res.json({ produkter });
+    // Transformer kategorier til et simpelt array
+    const transformedProdukter = produkter.map(p => ({
+      ...p,
+      kategorier: p.kategorier.map(pk => pk.kategori.navn)
+    }));
+
+    res.json({ produkter: transformedProdukter });
   } catch (error) {
     console.error('Fetch produkter error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved hentning af produkter' });
@@ -100,6 +144,11 @@ router.get('/:id', async (req, res) => {
             email: true
           }
         },
+        kategorier: {
+          include: {
+            kategori: true
+          }
+        },
         forestillingsperioder: {
           orderBy: {
             start_dato: 'asc'
@@ -117,7 +166,13 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Produkt ikke fundet' });
     }
 
-    res.json({ produkt });
+    // Transformer kategorier til et simpelt array
+    const transformedProdukt = {
+      ...produkt,
+      kategorier: produkt.kategorier.map(pk => pk.kategori.navn)
+    };
+
+    res.json({ produkt: transformedProdukt });
   } catch (error) {
     console.error('Fetch produkt error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved hentning af produkt' });
@@ -135,17 +190,40 @@ router.post('/', requireAuth, (req, res, next) => {
   });
 }, async (req, res) => {
   try {
-    const { navn, beskrivelse, kategori, skjult } = req.body;
+    const { navn, beskrivelse, kategorier, skjult } = req.body;
     const bruger_id = req.session.user.id;
 
     // Valider input
-    if (!navn || !beskrivelse || !kategori) {
-      return res.status(400).json({ error: 'Navn, beskrivelse og kategori er påkrævet' });
+    if (!navn || !beskrivelse || !kategorier) {
+      return res.status(400).json({ error: 'Navn, beskrivelse og mindst én kategori er påkrævet' });
     }
 
     // Tjek om billede er uploadet
     if (!req.file) {
       return res.status(400).json({ error: 'Billede er påkrævet' });
+    }
+
+    // Parse kategorier (kan være string eller array)
+    let kategoriNavne = [];
+    if (typeof kategorier === 'string') {
+      kategoriNavne = JSON.parse(kategorier);
+    } else {
+      kategoriNavne = kategorier;
+    }
+
+    if (!Array.isArray(kategoriNavne) || kategoriNavne.length === 0) {
+      return res.status(400).json({ error: 'Mindst én kategori er påkrævet' });
+    }
+
+    // Find kategori IDs
+    const kategoriRecords = await prisma.kategorier.findMany({
+      where: {
+        navn: { in: kategoriNavne }
+      }
+    });
+
+    if (kategoriRecords.length === 0) {
+      return res.status(400).json({ error: 'Ingen gyldige kategorier fundet' });
     }
 
     // Byg korrekt billede URL med teater-undermappen
@@ -158,10 +236,14 @@ router.post('/', requireAuth, (req, res, next) => {
       data: {
         navn,
         beskrivelse,
-        kategori,
         billede_url,
         skjult: skjult === true || skjult === 'true',
-        bruger_id
+        bruger_id,
+        kategorier: {
+          create: kategoriRecords.map(k => ({
+            kategori_id: k.id
+          }))
+        }
       },
       include: {
         ejer: {
@@ -171,13 +253,24 @@ router.post('/', requireAuth, (req, res, next) => {
             teaternavn: true,
             lokation: true
           }
+        },
+        kategorier: {
+          include: {
+            kategori: true
+          }
         }
       }
     });
 
+    // Transformer kategorier til et simpelt array
+    const transformedProdukt = {
+      ...nytProdukt,
+      kategorier: nytProdukt.kategorier.map(pk => pk.kategori.navn)
+    };
+
     res.status(201).json({ 
       message: 'Produkt oprettet succesfuldt',
-      produkt: nytProdukt 
+      produkt: transformedProdukt 
     });
   } catch (error) {
     console.error('Create produkt error:', error);
@@ -189,7 +282,7 @@ router.post('/', requireAuth, (req, res, next) => {
 router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
   try {
     const { id } = req.params;
-    const { navn, beskrivelse, kategori, skjult } = req.body;
+    const { navn, beskrivelse, kategorier, skjult } = req.body;
     const bruger_id = req.session.user.id;
 
     // Tjek om produkt eksisterer og om brugeren ejer det
@@ -209,7 +302,6 @@ router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
     const updateData = {};
     if (navn) updateData.navn = navn;
     if (beskrivelse) updateData.beskrivelse = beskrivelse;
-    if (kategori) updateData.kategori = kategori;
     if (skjult !== undefined) updateData.skjult = skjult === true || skjult === 'true';
     
     // Hvis nyt billede er uploadet
@@ -218,6 +310,36 @@ router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
       const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
       const relativePath = path.relative(uploadsDir, req.file.path).replace(/\\/g, '/');
       updateData.billede_url = `/uploads/${relativePath}`;
+    }
+
+    // Håndter kategorier hvis de er sendt med
+    if (kategorier) {
+      let kategoriNavne = [];
+      if (typeof kategorier === 'string') {
+        kategoriNavne = JSON.parse(kategorier);
+      } else {
+        kategoriNavne = kategorier;
+      }
+
+      if (Array.isArray(kategoriNavne) && kategoriNavne.length > 0) {
+        // Find kategori IDs
+        const kategoriRecords = await prisma.kategorier.findMany({
+          where: {
+            navn: { in: kategoriNavne }
+          }
+        });
+
+        // Slet eksisterende kategori-relationer og opret nye
+        await prisma.produktKategorier.deleteMany({
+          where: { produkt_id: parseInt(id) }
+        });
+
+        updateData.kategorier = {
+          create: kategoriRecords.map(k => ({
+            kategori_id: k.id
+          }))
+        };
+      }
     }
 
     const opdateretProdukt = await prisma.produkter.update({
@@ -231,13 +353,24 @@ router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
             teaternavn: true,
             lokation: true
           }
+        },
+        kategorier: {
+          include: {
+            kategori: true
+          }
         }
       }
     });
 
+    // Transformer kategorier til et simpelt array
+    const transformedProdukt = {
+      ...opdateretProdukt,
+      kategorier: opdateretProdukt.kategorier.map(pk => pk.kategori.navn)
+    };
+
     res.json({ 
       message: 'Produkt opdateret succesfuldt',
-      produkt: opdateretProdukt 
+      produkt: transformedProdukt 
     });
   } catch (error) {
     console.error('Update produkt error:', error);

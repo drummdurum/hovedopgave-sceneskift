@@ -1,24 +1,32 @@
 const prisma = require('./prisma');
 
-async function seedAdmin() {
-  try {
-    // Tjek om admin bruger findes og opdater til admin rolle
-    const adminUser = await prisma.brugere.findUnique({
-      where: { brugernavn: 'admin' }
-    });
+// Standard kategorier
+const standardKategorier = [
+  'Møbler',
+  'Belysning',
+  'Dekoration',
+  'Kostumer',
+  'Rekvisitter',
+  'Teknik',
+  'Scenografi',
+  'Lyd',
+  'Tekstiler',
+  'Andet'
+];
 
-    if (adminUser) {
-      await prisma.brugere.update({
-        where: { id: adminUser.id },
-        data: { 
-          godkendt: true, 
-          rolle: 'admin' 
-        }
+async function seed() {
+  try {
+    console.log('📦 Opretter standard kategorier...');
+    
+    for (const navn of standardKategorier) {
+      await prisma.kategorier.upsert({
+        where: { navn },
+        update: {},
+        create: { navn }
       });
-      console.log('✅ Admin bruger opdateret:', adminUser.brugernavn);
-    } else {
-      console.log('⚠️ Ingen bruger med brugernavn "admin" fundet');
     }
+    
+    console.log(`✅ ${standardKategorier.length} kategorier oprettet/opdateret`);
   } catch (error) {
     console.error('Seed fejl:', error);
   } finally {
@@ -26,4 +34,4 @@ async function seedAdmin() {
   }
 }
 
-seedAdmin();
+seed();

@@ -31,6 +31,15 @@ async function loadMineProdukter() {
 }
 
 function renderProduktKort(produkt, showActions = false) {
+  // Vis kategorier som badges
+  const kategorierHtml = Array.isArray(produkt.kategorier) && produkt.kategorier.length > 0
+    ? produkt.kategorier.map(kat => `
+        <span class="px-2 py-1 rounded-full text-xs font-semibold mr-1" style="background-color: var(--color-secondary); color: var(--color-dark);">
+          ${kat}
+        </span>
+      `).join('')
+    : '<span class="px-2 py-1 rounded-full text-xs" style="background-color: #f3f4f6; color: #6b7280;">Ingen kategori</span>';
+
   return `
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
       <div class="h-48 overflow-hidden">
@@ -38,9 +47,9 @@ function renderProduktKort(produkt, showActions = false) {
       </div>
       <div class="p-6">
         <div class="flex items-center justify-between mb-2">
-          <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: var(--color-secondary); color: var(--color-dark);">
-            ${produkt.kategori}
-          </span>
+          <div class="flex flex-wrap gap-1">
+            ${kategorierHtml}
+          </div>
           ${produkt.skjult ? '<span class="px-3 py-1 rounded-full text-sm" style="background-color: #fef3c7; color: #d97706;">Skjult</span>' : ''}
         </div>
         <h3 class="text-xl font-bold mb-2" style="color: var(--color-dark);">${produkt.navn}</h3>

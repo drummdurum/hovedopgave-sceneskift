@@ -4,6 +4,32 @@ document.addEventListener('DOMContentLoaded', function() {
   const billedeInput = document.getElementById('billede');
   const previewContainer = document.getElementById('billedePreview');
   const previewImg = document.getElementById('previewImg');
+  const kategoriContainer = document.getElementById('kategoriContainer');
+  
+  // Indlæs kategorier fra API
+  async function loadKategorier() {
+    try {
+      const response = await fetch('/produkter/kategorier');
+      const data = await response.json();
+      
+      if (data.kategorier && data.kategorier.length > 0) {
+        kategoriContainer.innerHTML = data.kategorier.map(kat => `
+          <label class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-100 transition">
+            <input type="checkbox" name="kategorier" value="${kat.navn}" 
+              class="w-4 h-4 rounded" style="accent-color: var(--color-primary);">
+            <span style="color: var(--color-dark);">${kat.navn}</span>
+          </label>
+        `).join('');
+      } else {
+        kategoriContainer.innerHTML = '<p class="text-sm col-span-2" style="color: #dc2626;">Ingen kategorier fundet</p>';
+      }
+    } catch (error) {
+      console.error('Error loading kategorier:', error);
+      kategoriContainer.innerHTML = '<p class="text-sm col-span-2" style="color: #dc2626;">Fejl ved indlæsning af kategorier</p>';
+    }
+  }
+  
+  loadKategorier();
   
   // Billede preview
   if (billedeInput) {
@@ -32,10 +58,20 @@ document.addEventListener('DOMContentLoaded', function() {
       errorDiv.classList.add('hidden');
       successDiv.classList.add('hidden');
       
+      // Hent valgte kategorier
+      const selectedKategorier = Array.from(document.querySelectorAll('input[name="kategorier"]:checked'))
+        .map(cb => cb.value);
+      
+      if (selectedKategorier.length === 0) {
+        errorDiv.textContent = 'Vælg mindst én kategori';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
       const formData = new FormData();
       formData.append('navn', document.getElementById('navn').value);
       formData.append('beskrivelse', document.getElementById('beskrivelse').value);
-      formData.append('kategori', document.getElementById('kategori').value);
+      formData.append('kategorier', JSON.stringify(selectedKategorier));
       formData.append('skjult', document.getElementById('skjult').checked);
       formData.append('billede', document.getElementById('billede').files[0]);
       
@@ -52,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
           successDiv.classList.remove('hidden');
           form.reset();
           previewContainer.classList.add('hidden');
+          // Reset checkboxes
+          document.querySelectorAll('input[name="kategorier"]').forEach(cb => cb.checked = false);
           setTimeout(() => {
             window.location.href = '/profile';
           }, 2000);
