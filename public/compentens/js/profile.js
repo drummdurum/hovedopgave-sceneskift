@@ -1,6 +1,6 @@
 // Profile page functions
 document.addEventListener('DOMContentLoaded', function() {
-  loadMineProdukterTilSelect();
+  loadMineProdukterTilCheckboxes();
   loadForestillingsperioder();
   
   // Form submit handler
@@ -34,28 +34,33 @@ function visOpretForestilling() {
 function skjulOpretForestilling() {
   document.getElementById('opretForestillingForm').classList.add('hidden');
   document.getElementById('forestillingForm').reset();
+  // Nulstil checkboxes
+  document.querySelectorAll('#produktCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
   document.getElementById('forestillingError').classList.add('hidden');
   document.getElementById('forestillingSuccess').classList.add('hidden');
 }
 
-async function loadMineProdukterTilSelect() {
-  const select = document.getElementById('forestillingProdukt');
-  if (!select) return;
+async function loadMineProdukterTilCheckboxes() {
+  const container = document.getElementById('produktCheckboxes');
+  if (!container) return;
   
   try {
     const response = await fetch('/produkter/mine/produkter');
     const data = await response.json();
     
     if (data.produkter && data.produkter.length > 0) {
-      data.produkter.forEach(p => {
-        const option = document.createElement('option');
-        option.value = p.id;
-        option.textContent = p.navn;
-        select.appendChild(option);
-      });
+      container.innerHTML = data.produkter.map(p => `
+        <label class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-100">
+          <input type="checkbox" name="produkter" value="${p.id}" class="w-4 h-4 rounded" style="accent-color: var(--color-primary);">
+          <span class="text-sm truncate" style="color: var(--color-dark);">${p.navn}</span>
+        </label>
+      `).join('');
+    } else {
+      container.innerHTML = '<p style="color: var(--color-dark); opacity: 0.7;">Du har ingen produkter endnu.</p>';
     }
   } catch (error) {
     console.error('Fejl ved indlæsning af produkter:', error);
+    container.innerHTML = '<p style="color: #dc2626;">Fejl ved indlæsning</p>';
   }
 }
 
@@ -64,7 +69,7 @@ async function loadForestillingsperioder() {
   if (!container) return;
   
   try {
-    const response = await fetch('/forestillingsperioder/mine');
+    const response = await fetch('/api/forestillingsperioder/mine');
     const data = await response.json();
     
     if (data.forestillingsperioder && data.forestillingsperioder.length > 0) {
@@ -104,15 +109,20 @@ function renderForestillingKort(f) {
     statusBadge = '<span class="px-2 py-1 rounded-full text-xs" style="background-color: #dcfce7; color: #16a34a;">Aktiv</span>';
   }
   
+  // Vis alle produkter
+  const produkterHtml = f.produkter && f.produkter.length > 0
+    ? f.produkter.map(p => `<span class="inline-block px-2 py-1 mr-1 mb-1 rounded text-xs" style="background-color: var(--color-secondary); color: var(--color-dark);">📦 ${p.produkt?.navn || 'Ukendt'}</span>`).join('')
+    : '<span class="text-xs" style="color: var(--color-dark); opacity: 0.5;">Ingen produkter</span>';
+  
   return `
     <div class="p-4 rounded-xl" style="background-color: #f8f9fa; border: 1px solid #e5e7eb;">
       <div class="flex items-center justify-between mb-2">
         <h4 class="font-bold" style="color: var(--color-dark);">${f.navn}</h4>
         ${statusBadge}
       </div>
-      <p class="text-sm mb-2" style="color: var(--color-dark); opacity: 0.7;">
-        📦 ${f.produkt?.navn || 'Ukendt produkt'}
-      </p>
+      <div class="mb-2 flex flex-wrap">
+        ${produkterHtml}
+      </div>
       <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">
         📅 ${startDato} - ${slutDato}
       </p>
@@ -131,15 +141,25 @@ async function opretForestillingsperiode(e) {
   errorDiv.classList.add('hidden');
   successDiv.classList.add('hidden');
   
+  // Hent valgte produkter fra checkboxes
+  const checkboxes = document.querySelectorAll('#produktCheckboxes input[type="checkbox"]:checked');
+  const produkt_ids = Array.from(checkboxes).map(cb => parseInt(cb.value));
+  
+  if (produkt_ids.length === 0) {
+    errorDiv.textContent = 'Vælg mindst ét produkt';
+    errorDiv.classList.remove('hidden');
+    return;
+  }
+  
   const data = {
     navn: document.getElementById('forestillingNavn').value,
-    produkt_id: parseInt(document.getElementById('forestillingProdukt').value),
+    produkt_ids: produkt_ids,
     start_dato: document.getElementById('forestillingStart').value,
     slut_dato: document.getElementById('forestillingSlut').value
   };
   
   try {
-    const response = await fetch('/forestillingsperioder', {
+    const response = await fetch('/api/forestillingsperioder', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -151,6 +171,7 @@ async function opretForestillingsperiode(e) {
       successDiv.textContent = 'Forestillingsperiode oprettet!';
       successDiv.classList.remove('hidden');
       document.getElementById('forestillingForm').reset();
+      document.querySelectorAll('#produktCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
       loadForestillingsperioder();
       setTimeout(() => skjulOpretForestilling(), 1500);
     } else {
@@ -167,7 +188,7 @@ async function sletForestillingsperiode(id) {
   if (!confirm('Er du sikker på at du vil slette denne forestillingsperiode?')) return;
   
   try {
-    const response = await fetch(`/forestillingsperioder/${id}`, { method: 'DELETE' });
+    const response = await fetch(`/api/forestillingsperioder/${id}`, { method: 'DELETE' });
     
     if (response.ok) {
       loadForestillingsperioder();

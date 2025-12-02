@@ -155,13 +155,11 @@
                 style="border-color: var(--color-primary);"
                 placeholder="F.eks. Hamlet 2025">
             </div>
-            <div>
-              <label class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Vælg produkt *</label>
-              <select id="forestillingProdukt" required
-                class="w-full px-4 py-2 rounded-xl border-2"
-                style="border-color: var(--color-primary);">
-                <option value="">Vælg et produkt</option>
-              </select>
+            <div class="md:col-span-2">
+              <label class="block text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Vælg produkter * (vælg én eller flere)</label>
+              <div id="produktCheckboxes" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-48 overflow-y-auto p-2 rounded-xl" style="background-color: white; border: 2px solid var(--color-primary);">
+                <p style="color: var(--color-dark); opacity: 0.7;">Indlæser produkter...</p>
+              </div>
             </div>
             <div>
               <label class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Start dato *</label>

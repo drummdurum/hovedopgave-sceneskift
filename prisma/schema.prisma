@@ -36,9 +36,9 @@ model Produkter {
   bruger_id        Int
   ejer             Brugere              @relation(fields: [bruger_id], references: [id])
 
-  kategorier       ProduktKategorier[]
-  forestillingsperioder Forestillingsperioder[]
-  reservationer        Reservationer[]
+  kategorier                  ProduktKategorier[]
+  forestillingsperioder       ForestillingsperiodeProdukter[]
+  reservationer               Reservationer[]
 }
 
 model Kategorier {
@@ -62,8 +62,16 @@ model Forestillingsperioder {
   start_dato DateTime
   slut_dato  DateTime
 
-  produkt_id Int
-  produkt    Produkter @relation(fields: [produkt_id], references: [id])
+  produkter  ForestillingsperiodeProdukter[]
+}
+
+model ForestillingsperiodeProdukter {
+  forestillingsperiode_id Int
+  produkt_id              Int
+  forestillingsperiode    Forestillingsperioder @relation(fields: [forestillingsperiode_id], references: [id], onDelete: Cascade)
+  produkt                 Produkter             @relation(fields: [produkt_id], references: [id], onDelete: Cascade)
+
+  @@id([forestillingsperiode_id, produkt_id])
 }
 
 model Reservationer {
