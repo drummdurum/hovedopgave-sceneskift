@@ -1,4 +1,5 @@
 const prisma = require('./prisma');
+const bcrypt = require('bcrypt');
 
 async function seed() {
   try {
@@ -8,14 +9,16 @@ async function seed() {
     });
 
     if (adminUser) {
+      const hashedPassword = await bcrypt.hash('admin123', 10);
       await prisma.brugere.update({
         where: { id: adminUser.id },
         data: { 
           godkendt: true, 
-          rolle: 'admin' 
+          rolle: 'admin',
+          password: hashedPassword
         }
       });
-      console.log('✅ Admin bruger opdateret:', adminUser.brugernavn);
+      console.log('✅ Admin bruger opdateret med nyt password:', adminUser.brugernavn);
     } else {
       console.log('⚠️ Ingen bruger med brugernavn "admin" fundet - opret den via /register');
     }
