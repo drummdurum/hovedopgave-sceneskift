@@ -59,4 +59,12 @@ router.get('/rekvisitter', (req, res) => {
   });
 });
 
+// Forestillingsperioder side (kræver login)
+router.get('/forestillingsperioder', requireAuth, (req, res) => {
+  res.render('forestillingsperioder', { 
+    title: 'Mine forestillingsperioder',
+    user: req.session.user
+  });
+});
+
 module.exports = router;

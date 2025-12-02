@@ -139,6 +139,89 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
+// Opdater forestillingsperiode
+router.put('/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { navn, produkt_ids, start_dato, slut_dato } = req.body;
+    const bruger_id = req.session.user.id;
+
+    // Hent eksisterende forestillingsperiode
+    const eksisterende = await prisma.forestillingsperioder.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        produkter: {
+          include: {
+            produkt: true
+          }
+        }
+      }
+    });
+
+    if (!eksisterende) {
+      return res.status(404).json({ error: 'Forestillingsperiode ikke fundet' });
+    }
+
+    // Tjek om brugeren ejer mindst ét af produkterne
+    const ejerProdukt = eksisterende.produkter.some(p => p.produkt.bruger_id === bruger_id);
+    if (!ejerProdukt) {
+      return res.status(403).json({ error: 'Du har ikke tilladelse til at redigere denne periode' });
+    }
+
+    // Hvis nye produkter er angivet, valider dem
+    if (produkt_ids && produkt_ids.length > 0) {
+      const produkter = await prisma.produkter.findMany({
+        where: { 
+          id: { in: produkt_ids },
+          bruger_id: bruger_id
+        }
+      });
+
+      if (produkter.length !== produkt_ids.length) {
+        return res.status(403).json({ error: 'Du har ikke tilladelse til at tilføje alle de valgte produkter' });
+      }
+    }
+
+    // Opdater forestillingsperiode
+    const opdateret = await prisma.forestillingsperioder.update({
+      where: { id: parseInt(id) },
+      data: {
+        ...(navn && { navn }),
+        ...(start_dato && { start_dato: new Date(start_dato) }),
+        ...(slut_dato && { slut_dato: new Date(slut_dato) }),
+        ...(produkt_ids && {
+          produkter: {
+            deleteMany: {},
+            create: produkt_ids.map(pid => ({
+              produkt_id: pid
+            }))
+          }
+        })
+      },
+      include: {
+        produkter: {
+          include: {
+            produkt: {
+              select: {
+                id: true,
+                navn: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    res.json({
+      message: 'Forestillingsperiode opdateret',
+      forestillingsperiode: opdateret
+    });
+  } catch (error) {
+    console.error('Update forestillingsperiode error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved opdatering af forestillingsperiode' });
+  }
+});
+
 // Slet forestillingsperiode
 router.delete('/:id', requireAuth, async (req, res) => {
   try {

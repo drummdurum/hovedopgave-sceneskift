@@ -34,7 +34,7 @@
   --max-width: 1280px;
 
   /* Section spacing scale */
-  --space-section: 160px; /* default vertical space between sections */
+  --space-section: 120px; /* default vertical space between sections */
   --space-section-tight: 4rem;
   --space-section-wide: 10rem;
 
