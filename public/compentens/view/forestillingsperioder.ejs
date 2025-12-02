@@ -1,6 +1,21 @@
-<%- include('../header/header') %>
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forestillingsperioder - SceneSkift</title>
+  <link href="/css/output.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: var(--color-bg);">
+  <!-- Header -->
+  <header style="background: linear-gradient(135deg, var(--color-primary), #1a365d); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <%- include('../header/header') %>
+  </header>
 
-<main>
+  <main>
   <section class="section max-w-6xl mx-auto">
     <div class="bg-white rounded-2xl shadow-xl p-10">
       <div class="flex items-center justify-between mb-6">
@@ -85,6 +100,8 @@
   </div>
 </main>
 
-<script src="/compentens/js/forestillingsperioder.js"></script>
+  <script src="/compentens/js/forestillingsperioder.js"></script>
 
-<%- include('../footer/footer') %>
+  <%- include('../footer/footer') %>
+</body>
+</html>
