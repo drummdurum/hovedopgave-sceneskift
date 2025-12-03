@@ -1,18 +1,24 @@
 const nodemailer = require('nodemailer');
 
-// Opret transporter med Gmail
+// Opret transporter med Gmail via SMTP
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // SSL
   auth: {
     user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD // Brug App Password, ikke din normale Gmail adgangskode
-  }
+    pass: process.env.GMAIL_APP_PASSWORD
+  },
+  // Timeout settings for cloud environments
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000
 });
 
-// Verificer transporter ved opstart
+// Verificer transporter ved opstart (ikke-blokerende)
 transporter.verify((error, success) => {
   if (error) {
-    console.error('Mail transporter fejl:', error);
+    console.error('Mail transporter fejl:', error.message);
   } else {
     console.log('Mail server er klar til at sende emails');
   }
