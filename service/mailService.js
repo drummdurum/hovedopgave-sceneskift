@@ -1,28 +1,9 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-// Opret transporter med Gmail via SMTP
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // SSL
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
-  },
-  // Timeout settings for cloud environments
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000
-});
+// Opret Resend client
+const resend = new Resend(process.env.MAILAPI_KEY);
 
-// Verificer transporter ved opstart (ikke-blokerende)
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('Mail transporter fejl:', error.message);
-  } else {
-    console.log('Mail server er klar til at sende emails');
-  }
-});
+console.log('Resend mail service initialiseret');
 
 /**
  * Send en email
@@ -34,17 +15,21 @@ transporter.verify((error, success) => {
  */
 async function sendMail({ to, subject, text, html }) {
   try {
-    const mailOptions = {
-      from: `"SceneSkift" <${process.env.GMAIL_USER}>`,
-      to,
+    const { data, error } = await resend.emails.send({
+      from: 'SceneSkift <onboarding@resend.dev>',
+      to: [to],
       subject,
       text,
       html
-    };
+    });
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sendt:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    if (error) {
+      console.error('Fejl ved afsendelse af email:', error);
+      throw new Error(error.message);
+    }
+
+    console.log('Email sendt:', data.id);
+    return { success: true, messageId: data.id };
   } catch (error) {
     console.error('Fejl ved afsendelse af email:', error);
     throw error;
