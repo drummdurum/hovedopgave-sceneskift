@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - SceneSkift</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+  <!-- Header fixed på toppen med transparent baggrund -->
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+    <%- include('../header/header') %>
+  </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 100px 20px;">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          Nulstil adgangskode
+        </h1>
+        <p class="text-xl" style="color: var(--color-light); opacity: 0.9;">
+          Opret en ny adgangskode til din konto
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-6 py-12">
+    
+    <section class="section max-w-xl mx-auto">
+      
+      <!-- Loading state -->
+      <div id="loadingState" class="bg-white rounded-2xl shadow-xl p-10 text-center">
+        <div class="animate-spin w-12 h-12 border-4 rounded-full mx-auto mb-4" style="border-color: var(--color-primary); border-top-color: transparent;"></div>
+        <p style="color: var(--color-dark);">Verificerer link...</p>
+      </div>
+
+      <!-- Error state -->
+      <div id="errorState" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background-color: #fee2e2;">
+          <svg class="w-8 h-8" style="color: #dc2626;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </div>
+        <h2 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Ugyldigt link</h2>
+        <p id="errorMessage" class="mb-6" style="color: var(--color-dark); opacity: 0.8;"></p>
+        <a href="/glemt-adgangskode" class="btn-primary inline-block px-8 py-3" style="border-radius: 100px; font-weight: 700;">
+          Anmod om nyt link
+        </a>
+      </div>
+
+      <!-- Reset form -->
+      <div id="resetForm" class="hidden bg-white rounded-2xl shadow-xl p-10">
+        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Ny adgangskode</h2>
+        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+        
+        <p class="mb-6" style="color: var(--color-dark); opacity: 0.8;">
+          Indtast din nye adgangskode nedenfor. Adgangskoden skal være mindst 6 tegn.
+        </p>
+        
+        <form id="newPasswordForm" class="space-y-6">
+          <input type="hidden" id="token" value="<%= token %>">
+          
+          <div>
+            <label for="password" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Ny adgangskode</label>
+            <input type="password" id="password" name="password" required minlength="6"
+              class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+              style="border-color: var(--color-primary); font-size: 1rem;"
+              placeholder="Mindst 6 tegn">
+          </div>
+          
+          <div>
+            <label for="confirmPassword" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Bekræft adgangskode</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6"
+              class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+              style="border-color: var(--color-primary); font-size: 1rem;"
+              placeholder="Gentag adgangskode">
+          </div>
+          
+          <div id="resetError" class="hidden p-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
+          <div id="resetSuccess" class="hidden p-4 rounded-xl" style="background-color: #dcfce7; color: #16a34a;"></div>
+          
+          <button type="submit" id="submitBtn" class="btn-primary w-full py-4 text-lg" style="border-radius: 100px; font-weight: 700;">
+            Nulstil adgangskode
+          </button>
+        </form>
+      </div>
+
+      <!-- Success state -->
+      <div id="successState" class="hidden bg-white rounded-2xl shadow-xl p-10 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background-color: #dcfce7;">
+          <svg class="w-8 h-8" style="color: #16a34a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <h2 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Adgangskode nulstillet!</h2>
+        <p class="mb-6" style="color: var(--color-dark); opacity: 0.8;">
+          Din adgangskode er blevet ændret. Du kan nu logge ind med din nye adgangskode.
+        </p>
+        <a href="/login" class="btn-primary inline-block px-8 py-3" style="border-radius: 100px; font-weight: 700;">
+          Gå til login
+        </a>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <%- include('../footer/footer') %>
+
+  <script src="/compentens/js/nulstil-adgangskode.js"></script>
+</body>
+</html>

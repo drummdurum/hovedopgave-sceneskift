@@ -67,4 +67,21 @@ router.get('/forestillingsperioder', requireAuth, (req, res) => {
   });
 });
 
+// Glemt adgangskode side
+router.get('/glemt-adgangskode', redirectIfAuthenticated, (req, res) => {
+  res.render('glemt-adgangskode', { 
+    title: 'Glemt adgangskode',
+    user: null
+  });
+});
+
+// Nulstil adgangskode side (med token)
+router.get('/nulstil-adgangskode/:token', redirectIfAuthenticated, (req, res) => {
+  res.render('nulstil-adgangskode', { 
+    title: 'Nulstil adgangskode',
+    user: null,
+    token: req.params.token
+  });
+});
+
 module.exports = router;
