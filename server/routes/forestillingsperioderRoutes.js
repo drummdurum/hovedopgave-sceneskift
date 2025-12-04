@@ -24,23 +24,9 @@ router.get('/mine', requireAuth, async (req, res) => {
   try {
     const bruger_id = req.session.user.id;
 
-    // Hent alle produkter for brugeren
-    const mineProdukter = await prisma.produkter.findMany({
-      where: { bruger_id },
-      select: { id: true }
-    });
-
-    const produktIds = mineProdukter.map(p => p.id);
-
-    // Hent forestillingsperioder hvor mindst ét af brugerens produkter er tilknyttet
-    const forestillingsperioder = await prisma.forestillingsperioder.findMany({
-      where: {
-        produkter: {
-          some: {
-            produkt_id: { in: produktIds }
-          }
-        }
-      },
+    // Hent alle forestillingsperioder oprettet af brugeren
+    // Vi henter alle perioder og filtrerer dem der enten har brugerens produkter eller er oprettet af brugeren
+    const alleForestillingsperioder = await prisma.forestillingsperioder.findMany({
       include: {
         produkter: {
           include: {
@@ -48,15 +34,42 @@ router.get('/mine', requireAuth, async (req, res) => {
               select: {
                 id: true,
                 navn: true,
-                billede_url: true
+                billede_url: true,
+                bruger_id: true
               }
             }
+          }
+        },
+        oprettet_af: {
+          select: {
+            id: true,
+            navn: true
           }
         }
       },
       orderBy: {
         start_dato: 'desc'
       }
+    });
+
+    // Filtrer til kun perioder hvor brugeren har mindst ét produkt tilknyttet
+    // eller perioder som brugeren har oprettet (created_by)
+    const mineProdukter = await prisma.produkter.findMany({
+      where: { bruger_id },
+      select: { id: true }
+    });
+    const mineProduktIds = mineProdukter.map(p => p.id);
+
+    const forestillingsperioder = alleForestillingsperioder.filter(fp => {
+      // Hvis brugeren har oprettet perioden, vis den altid
+      if (fp.created_by === bruger_id) {
+        return true;
+      }
+      // Hvis perioden har produkter, tjek om mindst ét tilhører brugeren
+      if (fp.produkter.length > 0) {
+        return fp.produkter.some(p => mineProduktIds.includes(p.produkt?.id));
+      }
+      return false;
     });
 
     res.json({ forestillingsperioder });
@@ -91,27 +104,32 @@ router.get('/produkt/:produktId', async (req, res) => {
   }
 });
 
-// Opret ny forestillingsperiode med flere produkter
+// Opret ny forestillingsperiode (produkter er valgfrit)
 router.post('/', requireAuth, async (req, res) => {
   try {
     const { navn, produkt_ids, start_dato, slut_dato } = req.body;
     const bruger_id = req.session.user.id;
 
     // Valider input
-    if (!navn || !produkt_ids || produkt_ids.length === 0 || !start_dato || !slut_dato) {
-      return res.status(400).json({ error: 'Alle felter er påkrævet (navn, mindst ét produkt, start dato, slut dato)' });
+    if (!navn || !start_dato || !slut_dato) {
+      return res.status(400).json({ error: 'Navn, start dato og slut dato er påkrævet' });
     }
 
-    // Tjek om alle produkter tilhører brugeren
-    const produkter = await prisma.produkter.findMany({
-      where: { 
-        id: { in: produkt_ids },
-        bruger_id: bruger_id
-      }
-    });
+    // Hvis der er produkter, tjek at de tilhører brugeren
+    let produkterData = [];
+    if (produkt_ids && produkt_ids.length > 0) {
+      const produkter = await prisma.produkter.findMany({
+        where: { 
+          id: { in: produkt_ids },
+          bruger_id: bruger_id
+        }
+      });
 
-    if (produkter.length !== produkt_ids.length) {
-      return res.status(403).json({ error: 'Du har ikke tilladelse til at tilføje perioder til alle de valgte produkter' });
+      if (produkter.length !== produkt_ids.length) {
+        return res.status(403).json({ error: 'Du har ikke tilladelse til at tilføje perioder til alle de valgte produkter' });
+      }
+      
+      produkterData = produkt_ids.map(id => ({ produkt_id: id }));
     }
 
     // Tjek at slut_dato er efter start_dato
@@ -119,17 +137,16 @@ router.post('/', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Slutdato skal være efter startdato' });
     }
 
-    // Opret forestillingsperiode med tilknyttede produkter
+    // Opret forestillingsperiode (med eller uden produkter)
     const nyForestillingsperiode = await prisma.forestillingsperioder.create({
       data: {
         navn,
         start_dato: new Date(start_dato),
         slut_dato: new Date(slut_dato),
-        produkter: {
-          create: produkt_ids.map(id => ({
-            produkt_id: id
-          }))
-        }
+        created_by: bruger_id,
+        produkter: produkterData.length > 0 ? {
+          create: produkterData
+        } : undefined
       },
       include: {
         produkter: {

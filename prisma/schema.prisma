@@ -22,7 +22,8 @@ model Brugere {
   godkendt   Boolean   @default(false)
   rolle      String    @default("bruger") // "bruger" eller "admin"
 
-  produkter  Produkter[]
+  produkter              Produkter[]
+  forestillingsperioder  Forestillingsperioder[]
 }
 
 model Produkter {
@@ -68,12 +69,14 @@ model ProduktKategorier {
 }
 
 model Forestillingsperioder {
-  id         Int       @id @default(autoincrement())
-  navn       String
-  start_dato DateTime
-  slut_dato  DateTime
+  id           Int       @id @default(autoincrement())
+  navn         String
+  start_dato   DateTime
+  slut_dato    DateTime
+  created_by   Int?
+  oprettet_af  Brugere?  @relation(fields: [created_by], references: [id])
 
-  produkter  ForestillingsperiodeProdukter[]
+  produkter    ForestillingsperiodeProdukter[]
 }
 
 model ForestillingsperiodeProdukter {

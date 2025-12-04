@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Indlæs forestillingsperioder fra API
+  // Indlæs forestillingsperioder fra API (kun brugerens egne)
   async function loadForestillingsperioder() {
     try {
-      const response = await fetch('/api/forestillingsperioder');
+      const response = await fetch('/api/forestillingsperioder/mine');
       const data = await response.json();
       
       if (data.forestillingsperioder && data.forestillingsperioder.length > 0) {

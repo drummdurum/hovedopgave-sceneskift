@@ -25,11 +25,13 @@ function renderProduktCheckboxes(selectedIds) {
   if (!container) return;
   
   if (mineProdukter.length === 0) {
-    container.innerHTML = '<p style="color: var(--color-dark); opacity: 0.7;">Du har ingen produkter. <a href="/produkter/opret" style="color: var(--color-primary); text-decoration: underline;">Opret et produkt først</a></p>';
+    container.innerHTML = '<p style="color: var(--color-dark); opacity: 0.7;">Du har ingen produkter endnu. Du kan tilføje produkter senere. <a href="/produkter/opret" style="color: var(--color-primary); text-decoration: underline;">Opret et produkt</a></p>';
     return;
   }
   
-  container.innerHTML = mineProdukter.map(p => `
+  container.innerHTML = `
+    <p class="text-sm mb-2" style="color: var(--color-dark); opacity: 0.7;">Vælg produkter (valgfrit - du kan tilføje senere)</p>
+  ` + mineProdukter.map(p => `
     <label class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white transition">
       <input type="checkbox" name="produkter" value="${p.id}" ${selectedIds.includes(p.id) ? 'checked' : ''} 
         class="w-5 h-5 rounded" style="accent-color: var(--color-primary);">
@@ -174,15 +176,9 @@ async function gemPeriode(e) {
   const checkboxes = document.querySelectorAll('#produktCheckboxes input[type="checkbox"]:checked');
   const produkt_ids = Array.from(checkboxes).map(cb => parseInt(cb.value));
   
-  if (produkt_ids.length === 0) {
-    document.getElementById('formError').textContent = 'Vælg mindst ét produkt';
-    document.getElementById('formError').classList.remove('hidden');
-    return;
-  }
-  
   const data = {
     navn: document.getElementById('periodeNavn').value,
-    produkt_ids: produkt_ids,
+    produkt_ids: produkt_ids, // Kan være tomt array
     start_dato: document.getElementById('periodeStart').value,
     slut_dato: document.getElementById('periodeSlut').value
   };
