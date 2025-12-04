@@ -58,8 +58,11 @@ router.post('/glemt-adgangskode', async (req, res) => {
 
   } catch (error) {
     console.error('Glemt adgangskode fejl:', error);
+    console.error('Fejl detaljer:', error.message);
+    console.error('Fejl stack:', error.stack);
     res.status(500).json({ 
-      error: 'Der opstod en fejl. Prøv igen senere.' 
+      error: 'Der opstod en fejl. Prøv igen senere.',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });
