@@ -47,8 +47,47 @@
         </div>
         <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
         
+        <% if (user.rolle === 'admin') { %>
+        <!-- Admin layout: E-mail, Teater + Admin bokse -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
+            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">E-mail</label>
+            <p class="text-lg font-semibold" style="color: var(--color-dark);"><%= user.email %></p>
+          </div>
+          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
+            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Teater</label>
+            <p class="text-lg font-semibold" style="color: var(--color-dark);"><%= user.teaternavn %></p>
+          </div>
+        </div>
+        
+        <!-- Admin bokse (mindre version) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <a href="/admin/hovedlager" class="p-4 rounded-xl flex items-center gap-4 hover:shadow-lg transition" style="background-color: #eff6ff;">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: white;">
+              <span class="text-2xl">📦</span>
+            </div>
+            <div class="flex-grow">
+              <p class="font-bold" style="color: var(--color-primary);">Produkter på hovedlager</p>
+              <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">Se alle produkter på Sceneskifts lager</p>
+            </div>
+            <span class="text-2xl font-bold" style="color: var(--color-primary);" id="hovedlagerCount">-</span>
+          </a>
+          
+          <a href="/admin/reservationer" class="p-4 rounded-xl flex items-center gap-4 hover:shadow-lg transition" style="background-color: #fef3c7;">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: white;">
+              <span class="text-2xl">📅</span>
+            </div>
+            <div class="flex-grow">
+              <p class="font-bold" style="color: var(--color-primary);">Kommende reservationer</p>
+              <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">Se alle kommende reservationer</p>
+            </div>
+            <span class="text-2xl font-bold" style="color: #d97706;" id="reservationerCount">-</span>
+          </a>
+        </div>
+        
+        <% } else { %>
+        <!-- Normal bruger layout -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <% if (user.godkendt && user.rolle !== 'admin') { %>
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Brugernavn</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.brugernavn %></p>
@@ -58,7 +97,7 @@
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Navn</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.navn %></p>
           </div>
-          <% } %>
+          
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">E-mail</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.email %></p>
@@ -68,13 +107,13 @@
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Teater</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.teaternavn %></p>
           </div>
-           <% if (user.godkendt && user.rolle !== 'admin') { %>
+          
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Lokation</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.lokation %></p>
           </div>
-          <% } %>
         </div>
+        <% } %>
         
         <div class="mt-auto pt-8 flex gap-4">
           <button onclick="logout()" class="btn-secondary" style="border-radius: 100px;">
@@ -150,44 +189,6 @@
         <div id="forestillingerPreview">
           <p style="color: var(--color-dark); opacity: 0.7;">Indlæser forestillingsperioder...</p>
         </div>
-      </div>
-    </section>
-    <% } %>
-    
-    <!-- Admin bokse (kun for admins) -->
-    <% if (user.rolle === 'admin') { %>
-    <section class="section max-w-6xl mx-auto mt-8">
-      <h2 class="text-3xl mb-6" style="font-family: var(--font-heading); color: var(--color-primary);">🔧 Admin oversigt</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Produkter på hovedlager -->
-        <a href="/admin/hovedlager" class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition cursor-pointer block">
-          <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style="background-color: #eff6ff;">
-            <span class="text-4xl">📦</span>
-          </div>
-          <h3 class="text-2xl font-bold text-center mb-3" style="color: var(--color-primary);">Produkter på hovedlager</h3>
-          <p class="text-center mb-4" style="color: var(--color-dark); opacity: 0.7;">
-            Se alle produkter der er opbevaret på Sceneskifts lager
-          </p>
-          <div class="text-center">
-            <span class="text-4xl font-bold" style="color: var(--color-primary);" id="hovedlagerCount">-</span>
-            <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">produkter</p>
-          </div>
-        </a>
-        
-        <!-- Kommende reservationer -->
-        <a href="/admin/reservationer" class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition cursor-pointer block">
-          <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style="background-color: #fef3c7;">
-            <span class="text-4xl">📅</span>
-          </div>
-          <h3 class="text-2xl font-bold text-center mb-3" style="color: var(--color-primary);">Kommende reservationer</h3>
-          <p class="text-center mb-4" style="color: var(--color-dark); opacity: 0.7;">
-            Se alle kommende reservationer i systemet
-          </p>
-          <div class="text-center">
-            <span class="text-4xl font-bold" style="color: #d97706;" id="reservationerCount">-</span>
-            <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">reservationer</p>
-          </div>
-        </a>
       </div>
     </section>
     <% } %>
