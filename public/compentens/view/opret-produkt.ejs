@@ -87,18 +87,30 @@
           </div>
           
           <div>
-            <label for="billede" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Billede *</label>
+            <label for="billeder" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Billeder * (op til 10)</label>
             <div class="relative">
-              <input type="file" id="billede" name="billede" accept="image/*" required
+              <input type="file" id="billeder" name="billeder" accept="image/*" required multiple
                 class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
                 style="border-color: var(--color-primary); font-size: 1rem;">
             </div>
             <p class="text-sm mt-2" style="color: var(--color-dark); opacity: 0.7;">
-              Accepterede formater: JPG, PNG, GIF, WebP. Maks 5MB.
+              Accepterede formater: JPG, PNG, GIF, WebP. Maks 5MB pr. billede. Vælg op til 10 billeder.
             </p>
             <div id="billedePreview" class="mt-4 hidden">
-              <img id="previewImg" src="" alt="Preview" class="max-h-64 rounded-xl shadow-lg">
+              <p class="text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Valgte billeder:</p>
+              <div id="previewContainer" class="flex flex-wrap gap-4"></div>
             </div>
+          </div>
+
+          <!-- Forestillingsperiode sektion -->
+          <div>
+            <label class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Tilknyt til forestillingsperiode (valgfrit)</label>
+            <div id="forestillingsperiodeContainer" class="p-4 rounded-xl border-2" style="border-color: var(--color-primary);">
+              <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">Indlæser forestillingsperioder...</p>
+            </div>
+            <p class="text-sm mt-2" style="color: var(--color-dark); opacity: 0.7;">
+              Vælg en forestillingsperiode hvis produktet skal bruges til en specifik forestilling
+            </p>
           </div>
           
           <div id="opretError" class="hidden p-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
@@ -106,13 +118,19 @@
           
           <div class="flex gap-4">
             <a href="/profile" class="btn-secondary flex-1 py-4 text-lg text-center" style="border-radius: 100px; font-weight: 700;">
-              Annuller
+              Tilbage til profil
             </a>
-            <button type="submit" class="btn-primary flex-1 py-4 text-lg" style="border-radius: 100px; font-weight: 700;">
+            <button type="submit" id="submitBtn" class="btn-primary flex-1 py-4 text-lg" style="border-radius: 100px; font-weight: 700;">
               Opret produkt
             </button>
           </div>
         </form>
+
+        <!-- Oprettede produkter sektion -->
+        <div id="oprettedeProdukter" class="hidden mt-8 pt-8 border-t-2" style="border-color: var(--color-secondary);">
+          <h3 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Oprettede produkter i denne session</h3>
+          <div id="produkterListe" class="space-y-4"></div>
+        </div>
       </div>
     </section>
 
