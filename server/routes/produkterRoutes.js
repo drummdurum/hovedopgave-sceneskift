@@ -38,6 +38,9 @@ router.get('/mine/produkter', requireAuth, async (req, res) => {
             kategori: true
           }
         },
+        billeder: {
+          orderBy: { position: 'asc' }
+        },
         forestillingsperioder: true,
         reservationer: true
       },
@@ -46,10 +49,11 @@ router.get('/mine/produkter', requireAuth, async (req, res) => {
       }
     });
 
-    // Transformer kategorier til et simpelt array
+    // Transformer kategorier til et simpelt array og tilføj billeder
     const transformedProdukter = produkter.map(p => ({
       ...p,
-      kategorier: p.kategorier.map(pk => pk.kategori.navn)
+      kategorier: p.kategorier.map(pk => pk.kategori.navn),
+      billeder: p.billeder.map(b => ({ id: b.id, url: b.billede_url, position: b.position }))
     }));
 
     res.json({ produkter: transformedProdukter });
@@ -106,6 +110,9 @@ router.get('/', async (req, res) => {
             kategori: true
           }
         },
+        billeder: {
+          orderBy: { position: 'asc' }
+        },
         forestillingsperioder: true,
         reservationer: true
       },
@@ -114,10 +121,11 @@ router.get('/', async (req, res) => {
       }
     });
 
-    // Transformer kategorier til et simpelt array
+    // Transformer kategorier til et simpelt array og tilføj billeder
     const transformedProdukter = produkter.map(p => ({
       ...p,
-      kategorier: p.kategorier.map(pk => pk.kategori.navn)
+      kategorier: p.kategorier.map(pk => pk.kategori.navn),
+      billeder: p.billeder.map(b => ({ id: b.id, url: b.billede_url, position: b.position }))
     }));
 
     res.json({ produkter: transformedProdukter });
@@ -149,6 +157,9 @@ router.get('/:id', async (req, res) => {
             kategori: true
           }
         },
+        billeder: {
+          orderBy: { position: 'asc' }
+        },
         forestillingsperioder: {
           orderBy: {
             start_dato: 'asc'
@@ -166,10 +177,11 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Produkt ikke fundet' });
     }
 
-    // Transformer kategorier til et simpelt array
+    // Transformer kategorier til et simpelt array og tilføj billeder
     const transformedProdukt = {
       ...produkt,
-      kategorier: produkt.kategorier.map(pk => pk.kategori.navn)
+      kategorier: produkt.kategorier.map(pk => pk.kategori.navn),
+      billeder: produkt.billeder.map(b => ({ id: b.id, url: b.billede_url, position: b.position }))
     };
 
     res.json({ produkt: transformedProdukt });
@@ -179,9 +191,9 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Opret nyt produkt (kræver login og billede upload)
+// Opret nyt produkt (kræver login og billede uploads - op til 10 billeder)
 router.post('/', requireAuth, (req, res, next) => {
-  upload.single('billede')(req, res, (err) => {
+  upload.array('billeder', 10)(req, res, (err) => {
     if (err) {
       console.error('Upload error:', err);
       return res.status(400).json({ error: err.message || 'Fejl ved upload af billede' });
@@ -198,9 +210,9 @@ router.post('/', requireAuth, (req, res, next) => {
       return res.status(400).json({ error: 'Navn, beskrivelse og mindst én kategori er påkrævet' });
     }
 
-    // Tjek om billede er uploadet
-    if (!req.file) {
-      return res.status(400).json({ error: 'Billede er påkrævet' });
+    // Tjek om mindst ét billede er uploadet
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'Mindst ét billede er påkrævet' });
     }
 
     // Parse kategorier (kan være string eller array)
@@ -226,17 +238,22 @@ router.post('/', requireAuth, (req, res, next) => {
       return res.status(400).json({ error: 'Ingen gyldige kategorier fundet' });
     }
 
-    // Byg korrekt billede URL med teater-undermappen
+    // Byg billede URLs med teater-undermappen
     const path = require('path');
     const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
-    const relativePath = path.relative(uploadsDir, req.file.path).replace(/\\/g, '/');
-    const billede_url = `/uploads/${relativePath}`;
+    const billedeData = req.files.map((file, index) => {
+      const relativePath = path.relative(uploadsDir, file.path).replace(/\\/g, '/');
+      return {
+        billede_url: `/uploads/${relativePath}`,
+        position: index
+      };
+    });
 
     const nytProdukt = await prisma.produkter.create({
       data: {
         navn,
         beskrivelse,
-        billede_url,
+        billede_url: billedeData[0]?.billede_url || null, // Primært billede for bagudkompatibilitet
         skjult: skjult === true || skjult === 'true',
         renoveres: renoveres === true || renoveres === 'true',
         bruger_id,
@@ -244,6 +261,9 @@ router.post('/', requireAuth, (req, res, next) => {
           create: kategoriRecords.map(k => ({
             kategori_id: k.id
           }))
+        },
+        billeder: {
+          create: billedeData
         }
       },
       include: {
@@ -259,14 +279,18 @@ router.post('/', requireAuth, (req, res, next) => {
           include: {
             kategori: true
           }
+        },
+        billeder: {
+          orderBy: { position: 'asc' }
         }
       }
     });
 
-    // Transformer kategorier til et simpelt array
+    // Transformer kategorier til et simpelt array og tilføj billeder
     const transformedProdukt = {
       ...nytProdukt,
-      kategorier: nytProdukt.kategorier.map(pk => pk.kategori.navn)
+      kategorier: nytProdukt.kategorier.map(pk => pk.kategori.navn),
+      billeder: nytProdukt.billeder.map(b => ({ id: b.id, url: b.billede_url, position: b.position }))
     };
 
     res.status(201).json({ 
@@ -279,8 +303,8 @@ router.post('/', requireAuth, (req, res, next) => {
   }
 });
 
-// Opdater produkt (kræver login og ejerskab)
-router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
+// Opdater produkt (kræver login og ejerskab) - understøtter tilføjelse af nye billeder
+router.put('/:id', requireAuth, upload.array('billeder', 10), async (req, res) => {
   try {
     const { id } = req.params;
     const { navn, beskrivelse, kategorier, skjult, renoveres } = req.body;
@@ -306,12 +330,35 @@ router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
     if (skjult !== undefined) updateData.skjult = skjult === true || skjult === 'true';
     if (renoveres !== undefined) updateData.renoveres = renoveres === true || renoveres === 'true';
     
-    // Hvis nyt billede er uploadet
-    if (req.file) {
+    // Hvis nye billeder er uploadet, tilføj dem
+    if (req.files && req.files.length > 0) {
       const path = require('path');
       const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
-      const relativePath = path.relative(uploadsDir, req.file.path).replace(/\\/g, '/');
-      updateData.billede_url = `/uploads/${relativePath}`;
+      
+      // Find højeste position for eksisterende billeder
+      const eksisterendeBilleder = await prisma.produktBilleder.findMany({
+        where: { produkt_id: parseInt(id) },
+        orderBy: { position: 'desc' },
+        take: 1
+      });
+      const startPosition = eksisterendeBilleder.length > 0 ? eksisterendeBilleder[0].position + 1 : 0;
+      
+      // Tilføj nye billeder
+      const nyeBilleder = req.files.map((file, index) => {
+        const relativePath = path.relative(uploadsDir, file.path).replace(/\\/g, '/');
+        return {
+          produkt_id: parseInt(id),
+          billede_url: `/uploads/${relativePath}`,
+          position: startPosition + index
+        };
+      });
+      
+      await prisma.produktBilleder.createMany({ data: nyeBilleder });
+      
+      // Opdater primært billede hvis der ikke er ét
+      if (!produkt.billede_url && nyeBilleder.length > 0) {
+        updateData.billede_url = nyeBilleder[0].billede_url;
+      }
     }
 
     // Håndter kategorier hvis de er sendt med
@@ -360,14 +407,18 @@ router.put('/:id', requireAuth, upload.single('billede'), async (req, res) => {
           include: {
             kategori: true
           }
+        },
+        billeder: {
+          orderBy: { position: 'asc' }
         }
       }
     });
 
-    // Transformer kategorier til et simpelt array
+    // Transformer kategorier til et simpelt array og tilføj billeder
     const transformedProdukt = {
       ...opdateretProdukt,
-      kategorier: opdateretProdukt.kategorier.map(pk => pk.kategori.navn)
+      kategorier: opdateretProdukt.kategorier.map(pk => pk.kategori.navn),
+      billeder: opdateretProdukt.billeder.map(b => ({ id: b.id, url: b.billede_url, position: b.position }))
     };
 
     res.json({ 
@@ -407,6 +458,107 @@ router.delete('/:id', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Delete produkt error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved sletning af produkt' });
+  }
+});
+
+// Slet et enkelt billede fra et produkt (kræver login og ejerskab)
+router.delete('/:produktId/billeder/:billedeId', requireAuth, async (req, res) => {
+  try {
+    const { produktId, billedeId } = req.params;
+    const bruger_id = req.session.user.id;
+
+    // Tjek om produkt eksisterer og om brugeren ejer det
+    const produkt = await prisma.produkter.findUnique({
+      where: { id: parseInt(produktId) },
+      include: { billeder: true }
+    });
+
+    if (!produkt) {
+      return res.status(404).json({ error: 'Produkt ikke fundet' });
+    }
+
+    if (produkt.bruger_id !== bruger_id) {
+      return res.status(403).json({ error: 'Du har ikke tilladelse til at slette dette billede' });
+    }
+
+    // Tjek at produktet har mere end ét billede
+    if (produkt.billeder.length <= 1) {
+      return res.status(400).json({ error: 'Et produkt skal have mindst ét billede' });
+    }
+
+    // Slet billedet
+    await prisma.produktBilleder.delete({
+      where: { id: parseInt(billedeId) }
+    });
+
+    // Hvis det slettede billede var det primære, opdater primært billede
+    const slettetBillede = produkt.billeder.find(b => b.id === parseInt(billedeId));
+    if (slettetBillede && produkt.billede_url === slettetBillede.billede_url) {
+      const nytPrimaertBillede = produkt.billeder.find(b => b.id !== parseInt(billedeId));
+      if (nytPrimaertBillede) {
+        await prisma.produkter.update({
+          where: { id: parseInt(produktId) },
+          data: { billede_url: nytPrimaertBillede.billede_url }
+        });
+      }
+    }
+
+    res.json({ message: 'Billede slettet succesfuldt' });
+  } catch (error) {
+    console.error('Delete billede error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved sletning af billede' });
+  }
+});
+
+// Sæt et billede som primært (kræver login og ejerskab)
+router.put('/:produktId/billeder/:billedeId/primaer', requireAuth, async (req, res) => {
+  try {
+    const { produktId, billedeId } = req.params;
+    const bruger_id = req.session.user.id;
+
+    // Tjek om produkt eksisterer og om brugeren ejer det
+    const produkt = await prisma.produkter.findUnique({
+      where: { id: parseInt(produktId) }
+    });
+
+    if (!produkt) {
+      return res.status(404).json({ error: 'Produkt ikke fundet' });
+    }
+
+    if (produkt.bruger_id !== bruger_id) {
+      return res.status(403).json({ error: 'Du har ikke tilladelse til at ændre dette billede' });
+    }
+
+    // Find billedet
+    const billede = await prisma.produktBilleder.findUnique({
+      where: { id: parseInt(billedeId) }
+    });
+
+    if (!billede || billede.produkt_id !== parseInt(produktId)) {
+      return res.status(404).json({ error: 'Billede ikke fundet' });
+    }
+
+    // Opdater alle positioner
+    await prisma.produktBilleder.updateMany({
+      where: { produkt_id: parseInt(produktId), position: { lt: billede.position } },
+      data: { position: { increment: 1 } }
+    });
+
+    await prisma.produktBilleder.update({
+      where: { id: parseInt(billedeId) },
+      data: { position: 0 }
+    });
+
+    // Opdater primært billede på produktet
+    await prisma.produkter.update({
+      where: { id: parseInt(produktId) },
+      data: { billede_url: billede.billede_url }
+    });
+
+    res.json({ message: 'Primært billede opdateret' });
+  } catch (error) {
+    console.error('Set primary image error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved ændring af primært billede' });
   }
 });
 

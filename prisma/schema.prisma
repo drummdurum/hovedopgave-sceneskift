@@ -29,16 +29,27 @@ model Produkter {
   id               Int                  @id @default(autoincrement())
   navn             String
   beskrivelse      String
-  billede_url      String
+  billede_url      String?              // Beholdes for bagudkompatibilitet, kan fjernes senere
   skjult           Boolean              @default(false)
   renoveres        Boolean              @default(false)
 
   bruger_id        Int
   ejer             Brugere              @relation(fields: [bruger_id], references: [id])
 
+  billeder                    ProduktBilleder[]
   kategorier                  ProduktKategorier[]
   forestillingsperioder       ForestillingsperiodeProdukter[]
   reservationer               Reservationer[]
+}
+
+model ProduktBilleder {
+  id          Int       @id @default(autoincrement())
+  produkt_id  Int
+  billede_url String
+  position    Int       @default(0)  // Til at sortere billeder (0 = primært billede)
+  created_at  DateTime  @default(now())
+
+  produkt     Produkter @relation(fields: [produkt_id], references: [id], onDelete: Cascade)
 }
 
 model Kategorier {
