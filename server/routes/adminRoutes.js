@@ -111,4 +111,107 @@ router.delete('/users/:id', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
+// Hent antal produkter på hovedlager (Sceneskifts lager)
+router.get('/hovedlager/count', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const count = await prisma.produkter.count({
+      where: { paa_sceneskift: true }
+    });
+    res.json({ count });
+  } catch (error) {
+    console.error('Error counting hovedlager:', error);
+    res.status(500).json({ error: 'Der opstod en fejl' });
+  }
+});
+
+// Hent alle produkter på hovedlager
+router.get('/hovedlager', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const produkter = await prisma.produkter.findMany({
+      where: { paa_sceneskift: true },
+      include: {
+        ejer: {
+          select: {
+            id: true,
+            navn: true,
+            teaternavn: true,
+            lokation: true
+          }
+        },
+        kategorier: {
+          include: {
+            kategori: true
+          }
+        },
+        billeder: {
+          orderBy: { position: 'asc' }
+        }
+      },
+      orderBy: { id: 'desc' }
+    });
+
+    const transformedProdukter = produkter.map(p => ({
+      ...p,
+      kategorier: p.kategorier.map(pk => pk.kategori.navn),
+      billeder: p.billeder.map(b => ({ id: b.id, url: b.billede_url, position: b.position }))
+    }));
+
+    res.json({ produkter: transformedProdukter });
+  } catch (error) {
+    console.error('Error fetching hovedlager:', error);
+    res.status(500).json({ error: 'Der opstod en fejl' });
+  }
+});
+
+// Hent antal kommende reservationer
+router.get('/reservationer/count', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const now = new Date();
+    const count = await prisma.reservationer.count({
+      where: {
+        fra_dato: { gte: now }
+      }
+    });
+    res.json({ count });
+  } catch (error) {
+    console.error('Error counting reservationer:', error);
+    res.status(500).json({ error: 'Der opstod en fejl' });
+  }
+});
+
+// Hent alle kommende reservationer
+router.get('/reservationer', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const now = new Date();
+    const reservationer = await prisma.reservationer.findMany({
+      where: {
+        fra_dato: { gte: now }
+      },
+      include: {
+        produkt: {
+          include: {
+            ejer: {
+              select: {
+                id: true,
+                navn: true,
+                teaternavn: true
+              }
+            },
+            billeder: {
+              orderBy: { position: 'asc' },
+              take: 1
+            }
+          }
+        }
+      },
+      orderBy: { fra_dato: 'asc' }
+    });
+
+    res.json({ reservationer });
+  } catch (error) {
+    console.error('Error fetching reservationer:', error);
+    res.status(500).json({ error: 'Der opstod en fejl' });
+  }
+});
+
 module.exports = router;

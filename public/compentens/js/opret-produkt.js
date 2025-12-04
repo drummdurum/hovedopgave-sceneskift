@@ -87,6 +87,31 @@ document.addEventListener('DOMContentLoaded', function() {
   loadKategorier();
   loadForestillingsperioder();
   
+  // Placering radio button styling
+  const lagerEget = document.getElementById('lagerEget');
+  const lagerSceneskift = document.getElementById('lagerSceneskift');
+  const lagerEgetLabel = document.getElementById('lagerEgetLabel');
+  const lagerSceneskiftLabel = document.getElementById('lagerSceneskiftLabel');
+  
+  function updatePlaceringStyle() {
+    if (lagerEget.checked) {
+      lagerEgetLabel.style.borderColor = 'var(--color-primary)';
+      lagerEgetLabel.style.backgroundColor = '#f0fdf4';
+      lagerSceneskiftLabel.style.borderColor = '#e5e7eb';
+      lagerSceneskiftLabel.style.backgroundColor = '#f8f9fa';
+    } else {
+      lagerSceneskiftLabel.style.borderColor = 'var(--color-primary)';
+      lagerSceneskiftLabel.style.backgroundColor = '#eff6ff';
+      lagerEgetLabel.style.borderColor = '#e5e7eb';
+      lagerEgetLabel.style.backgroundColor = '#f8f9fa';
+    }
+  }
+  
+  if (lagerEget && lagerSceneskift) {
+    lagerEget.addEventListener('change', updatePlaceringStyle);
+    lagerSceneskift.addEventListener('change', updatePlaceringStyle);
+  }
+  
   // Billede preview for multiple files
   if (billederInput) {
     billederInput.addEventListener('change', function(e) {
@@ -191,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
       formData.append('kategorier', JSON.stringify(selectedKategorier));
       formData.append('skjult', document.getElementById('skjult').checked);
       formData.append('renoveres', document.getElementById('renoveres').checked);
+      formData.append('paa_sceneskift', document.getElementById('lagerSceneskift').checked);
       
       // Tilføj alle billeder
       Array.from(files).forEach(file => {

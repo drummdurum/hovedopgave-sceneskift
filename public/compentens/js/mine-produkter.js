@@ -40,7 +40,7 @@ function renderProduktKort(produkt, showActions = false) {
       `).join('')
     : '<span class="px-2 py-1 rounded-full text-xs" style="background-color: #f3f4f6; color: #6b7280;">Ingen kategori</span>';
 
-  // Status badges (skjult og renoveres)
+  // Status badges (skjult, renoveres og placering)
   let statusBadges = '';
   if (produkt.skjult) {
     statusBadges += '<span class="px-3 py-1 rounded-full text-sm" style="background-color: #fef3c7; color: #d97706;">Skjult</span>';
@@ -48,6 +48,11 @@ function renderProduktKort(produkt, showActions = false) {
   if (produkt.renoveres) {
     statusBadges += '<span class="px-3 py-1 rounded-full text-sm ml-1" style="background-color: #dbeafe; color: #2563eb;">🔧 Renoveres</span>';
   }
+  
+  // Placering badge
+  const placeringBadge = produkt.paa_sceneskift 
+    ? '<span class="px-3 py-1 rounded-full text-sm" style="background-color: #eff6ff; color: #2563eb;">📦 Sceneskifts lager</span>'
+    : '<span class="px-3 py-1 rounded-full text-sm" style="background-color: #f0fdf4; color: #16a34a;">🏠 Eget lager</span>';
 
   return `
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -62,6 +67,7 @@ function renderProduktKort(produkt, showActions = false) {
           </div>
           ${produkt.skjult ? '<span class="px-3 py-1 rounded-full text-sm" style="background-color: #fef3c7; color: #d97706;">Skjult</span>' : ''}
         </div>
+        <div class="mb-2">${placeringBadge}</div>
         <h3 class="text-xl font-bold mb-2" style="color: var(--color-dark);">${produkt.navn}</h3>
         <p class="mb-4 line-clamp-2" style="color: var(--color-dark); opacity: 0.8;">${produkt.beskrivelse}</p>
         ${showActions ? `
@@ -80,8 +86,161 @@ function renderProduktKort(produkt, showActions = false) {
 }
 
 function redigerProdukt(id) {
-  // TODO: Implementer redigering
-  alert('Redigering kommer snart!');
+  // Åbn redigerings modal
+  openRedigerModal(id);
+}
+
+// Redigerings modal
+async function openRedigerModal(produktId) {
+  // Hent produkt data
+  try {
+    const response = await fetch(`/produkter/${produktId}`);
+    const data = await response.json();
+    
+    if (!response.ok) {
+      alert('Kunne ikke hente produkt');
+      return;
+    }
+    
+    const produkt = data.produkt;
+    
+    // Opret modal HTML
+    const modalHtml = `
+      <div id="redigerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background-color: rgba(0,0,0,0.5);">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold" style="color: var(--color-primary);">Rediger produkt</h2>
+            <button onclick="closeRedigerModal()" class="text-2xl" style="color: var(--color-dark);">&times;</button>
+          </div>
+          
+          <form id="redigerForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold mb-1" style="color: var(--color-dark);">Produktnavn</label>
+              <input type="text" id="redigerNavn" value="${produkt.navn}" class="w-full px-4 py-2 rounded-xl border-2" style="border-color: var(--color-primary);">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold mb-1" style="color: var(--color-dark);">Beskrivelse</label>
+              <textarea id="redigerBeskrivelse" rows="3" class="w-full px-4 py-2 rounded-xl border-2" style="border-color: var(--color-primary);">${produkt.beskrivelse}</textarea>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold mb-2" style="color: var(--color-dark);">Placering</label>
+              <div class="flex gap-3">
+                <label class="flex-1 flex items-center gap-2 p-3 rounded-xl cursor-pointer border-2 transition" id="redigerLagerEgetLabel" style="${!produkt.paa_sceneskift ? 'border-color: var(--color-primary); background-color: #f0fdf4;' : 'border-color: #e5e7eb; background-color: #f8f9fa;'}">
+                  <input type="radio" name="redigerPlacering" value="eget" id="redigerLagerEget" ${!produkt.paa_sceneskift ? 'checked' : ''} class="w-4 h-4">
+                  <span>🏠 Mit eget lager</span>
+                </label>
+                <label class="flex-1 flex items-center gap-2 p-3 rounded-xl cursor-pointer border-2 transition" id="redigerLagerSceneskiftLabel" style="${produkt.paa_sceneskift ? 'border-color: var(--color-primary); background-color: #eff6ff;' : 'border-color: #e5e7eb; background-color: #f8f9fa;'}">
+                  <input type="radio" name="redigerPlacering" value="sceneskift" id="redigerLagerSceneskift" ${produkt.paa_sceneskift ? 'checked' : ''} class="w-4 h-4">
+                  <span>📦 Sceneskifts lager</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="flex gap-4">
+              <label class="flex items-center gap-2 p-3 rounded-xl cursor-pointer flex-1" style="background-color: #f8f9fa;">
+                <input type="checkbox" id="redigerSkjult" ${produkt.skjult ? 'checked' : ''} class="w-4 h-4">
+                <span style="color: var(--color-dark);">Skjul produkt</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 rounded-xl cursor-pointer flex-1" style="background-color: #fef3c7;">
+                <input type="checkbox" id="redigerRenoveres" ${produkt.renoveres ? 'checked' : ''} class="w-4 h-4">
+                <span style="color: var(--color-dark);">🔧 Renoveres</span>
+              </label>
+            </div>
+            
+            <div id="redigerError" class="hidden p-3 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
+            
+            <div class="flex gap-3 pt-4">
+              <button type="button" onclick="closeRedigerModal()" class="flex-1 py-3 rounded-xl border-2" style="border-color: var(--color-primary); color: var(--color-primary);">
+                Annuller
+              </button>
+              <button type="submit" id="redigerSubmitBtn" class="flex-1 py-3 rounded-xl font-bold" style="background-color: var(--color-primary); color: white;">
+                Gem ændringer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+    
+    // Tilføj modal til body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Tilføj styling for placering radio buttons
+    const redigerLagerEget = document.getElementById('redigerLagerEget');
+    const redigerLagerSceneskift = document.getElementById('redigerLagerSceneskift');
+    
+    function updateRedigerPlaceringStyle() {
+      const egetLabel = document.getElementById('redigerLagerEgetLabel');
+      const sceneskiftLabel = document.getElementById('redigerLagerSceneskiftLabel');
+      if (redigerLagerEget.checked) {
+        egetLabel.style.borderColor = 'var(--color-primary)';
+        egetLabel.style.backgroundColor = '#f0fdf4';
+        sceneskiftLabel.style.borderColor = '#e5e7eb';
+        sceneskiftLabel.style.backgroundColor = '#f8f9fa';
+      } else {
+        sceneskiftLabel.style.borderColor = 'var(--color-primary)';
+        sceneskiftLabel.style.backgroundColor = '#eff6ff';
+        egetLabel.style.borderColor = '#e5e7eb';
+        egetLabel.style.backgroundColor = '#f8f9fa';
+      }
+    }
+    
+    redigerLagerEget.addEventListener('change', updateRedigerPlaceringStyle);
+    redigerLagerSceneskift.addEventListener('change', updateRedigerPlaceringStyle);
+    
+    // Form submit handler
+    document.getElementById('redigerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const errorDiv = document.getElementById('redigerError');
+      const submitBtn = document.getElementById('redigerSubmitBtn');
+      
+      errorDiv.classList.add('hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Gemmer...';
+      
+      const formData = new FormData();
+      formData.append('navn', document.getElementById('redigerNavn').value);
+      formData.append('beskrivelse', document.getElementById('redigerBeskrivelse').value);
+      formData.append('skjult', document.getElementById('redigerSkjult').checked);
+      formData.append('renoveres', document.getElementById('redigerRenoveres').checked);
+      formData.append('paa_sceneskift', document.getElementById('redigerLagerSceneskift').checked);
+      
+      try {
+        const response = await fetch(`/produkter/${produktId}`, {
+          method: 'PUT',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          closeRedigerModal();
+          loadMineProdukter();
+        } else {
+          errorDiv.textContent = result.error || 'Fejl ved opdatering';
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'Netværksfejl. Prøv igen.';
+        errorDiv.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Gem ændringer';
+      }
+    });
+    
+  } catch (error) {
+    console.error('Fejl:', error);
+    alert('Fejl ved hentning af produkt');
+  }
+}
+
+function closeRedigerModal() {
+  const modal = document.getElementById('redigerModal');
+  if (modal) modal.remove();
 }
 
 async function sletProdukt(id) {

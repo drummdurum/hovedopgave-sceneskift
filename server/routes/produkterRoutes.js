@@ -202,7 +202,7 @@ router.post('/', requireAuth, (req, res, next) => {
   });
 }, async (req, res) => {
   try {
-    const { navn, beskrivelse, kategorier, skjult, renoveres } = req.body;
+    const { navn, beskrivelse, kategorier, skjult, renoveres, paa_sceneskift } = req.body;
     const bruger_id = req.session.user.id;
 
     // Valider input
@@ -256,6 +256,7 @@ router.post('/', requireAuth, (req, res, next) => {
         billede_url: billedeData[0]?.billede_url || null, // Primært billede for bagudkompatibilitet
         skjult: skjult === true || skjult === 'true',
         renoveres: renoveres === true || renoveres === 'true',
+        paa_sceneskift: paa_sceneskift === true || paa_sceneskift === 'true',
         bruger_id,
         kategorier: {
           create: kategoriRecords.map(k => ({
@@ -307,7 +308,7 @@ router.post('/', requireAuth, (req, res, next) => {
 router.put('/:id', requireAuth, upload.array('billeder', 10), async (req, res) => {
   try {
     const { id } = req.params;
-    const { navn, beskrivelse, kategorier, skjult, renoveres } = req.body;
+    const { navn, beskrivelse, kategorier, skjult, renoveres, paa_sceneskift } = req.body;
     const bruger_id = req.session.user.id;
 
     // Tjek om produkt eksisterer og om brugeren ejer det
@@ -329,6 +330,7 @@ router.put('/:id', requireAuth, upload.array('billeder', 10), async (req, res) =
     if (beskrivelse) updateData.beskrivelse = beskrivelse;
     if (skjult !== undefined) updateData.skjult = skjult === true || skjult === 'true';
     if (renoveres !== undefined) updateData.renoveres = renoveres === true || renoveres === 'true';
+    if (paa_sceneskift !== undefined) updateData.paa_sceneskift = paa_sceneskift === true || paa_sceneskift === 'true';
     
     // Hvis nye billeder er uploadet, tilføj dem
     if (req.files && req.files.length > 0) {

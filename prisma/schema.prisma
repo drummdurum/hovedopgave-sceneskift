@@ -33,6 +33,7 @@ model Produkter {
   billede_url      String?              // Beholdes for bagudkompatibilitet, kan fjernes senere
   skjult           Boolean              @default(false)
   renoveres        Boolean              @default(false)
+  paa_sceneskift   Boolean              @default(false) // false = brugerens lager, true = Sceneskifts lager
 
   bruger_id        Int
   ejer             Brugere              @relation(fields: [bruger_id], references: [id])

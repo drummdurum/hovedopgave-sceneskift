@@ -84,4 +84,26 @@ router.get('/nulstil-adgangskode/:token', redirectIfAuthenticated, (req, res) =>
   });
 });
 
+// Admin - Hovedlager side
+router.get('/admin/hovedlager', requireAuth, (req, res) => {
+  if (req.session.user.rolle !== 'admin') {
+    return res.redirect('/');
+  }
+  res.render('admin-hovedlager', { 
+    title: 'Produkter på hovedlager',
+    user: req.session.user
+  });
+});
+
+// Admin - Reservationer side
+router.get('/admin/reservationer', requireAuth, (req, res) => {
+  if (req.session.user.rolle !== 'admin') {
+    return res.redirect('/');
+  }
+  res.render('admin-reservationer', { 
+    title: 'Kommende reservationer',
+    user: req.session.user
+  });
+});
+
 module.exports = router;

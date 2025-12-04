@@ -1,29 +1,28 @@
 // Admin panel functions
 
-// Hent alle brugere
-async function loadUsers() {
+// Indlæs statistikker
+async function loadAdminStats() {
   try {
-    const response = await fetch('/api/admin/users');
-    const data = await response.json();
+    // Hent produkter på hovedlager
+    const hovedlagerResponse = await fetch('/api/admin/hovedlager/count');
+    if (hovedlagerResponse.ok) {
+      const hovedlagerData = await hovedlagerResponse.json();
+      document.getElementById('hovedlagerCount').textContent = hovedlagerData.count;
+    }
     
-    if (response.ok) {
-      const users = data.users;
-      
-      // Opdater stats
-      document.getElementById('totalUsers').textContent = users.length;
-      document.getElementById('pendingUsers').textContent = users.filter(u => !u.godkendt).length;
-      document.getElementById('approvedUsers').textContent = users.filter(u => u.godkendt).length;
-      
-      // Afventende brugere
-      renderPendingUsers(users.filter(u => !u.godkendt));
-      
-      // Alle brugere tabel
-      renderUsersTable(users);
+    // Hent kommende reservationer
+    const reservationerResponse = await fetch('/api/admin/reservationer/count');
+    if (reservationerResponse.ok) {
+      const reservationerData = await reservationerResponse.json();
+      document.getElementById('reservationerCount').textContent = reservationerData.count;
     }
   } catch (error) {
-    console.error('Fejl ved indlæsning af brugere:', error);
+    console.error('Fejl ved indlæsning af statistikker:', error);
   }
 }
+
+// Kør ved side load
+document.addEventListener('DOMContentLoaded', loadAdminStats);
 
 // Render afventende brugere
 function renderPendingUsers(pendingUsers) {
