@@ -1,6 +1,7 @@
 // Profile page functions
 document.addEventListener('DOMContentLoaded', function() {
   loadForestillingsperioderPreview();
+  loadAdminStats();
 });
 
 async function logout() {
@@ -17,6 +18,33 @@ async function logout() {
 function editProfile() {
   // TODO: Implementer profil redigering
   alert('Profil redigering kommer snart!');
+}
+
+// Indlæs admin statistikker (kun hvis admin)
+async function loadAdminStats() {
+  const hovedlagerCount = document.getElementById('hovedlagerCount');
+  const reservationerCount = document.getElementById('reservationerCount');
+  
+  // Hvis elementerne ikke findes, er brugeren ikke admin
+  if (!hovedlagerCount || !reservationerCount) return;
+  
+  try {
+    // Hent produkter på hovedlager
+    const hovedlagerResponse = await fetch('/api/admin/hovedlager/count');
+    if (hovedlagerResponse.ok) {
+      const hovedlagerData = await hovedlagerResponse.json();
+      hovedlagerCount.textContent = hovedlagerData.count;
+    }
+    
+    // Hent kommende reservationer
+    const reservationerResponse = await fetch('/api/admin/reservationer/count');
+    if (reservationerResponse.ok) {
+      const reservationerData = await reservationerResponse.json();
+      reservationerCount.textContent = reservationerData.count;
+    }
+  } catch (error) {
+    console.error('Fejl ved indlæsning af admin statistikker:', error);
+  }
 }
 
 // Forestillingsperioder preview på profil

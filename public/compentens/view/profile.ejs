@@ -152,6 +152,44 @@
     </section>
     <% } %>
     
+    <!-- Admin bokse (kun for admins) -->
+    <% if (user.rolle === 'admin') { %>
+    <section class="section max-w-6xl mx-auto mt-8">
+      <h2 class="text-3xl mb-6" style="font-family: var(--font-heading); color: var(--color-primary);">🔧 Admin oversigt</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Produkter på hovedlager -->
+        <a href="/admin/hovedlager" class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition cursor-pointer block">
+          <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style="background-color: #eff6ff;">
+            <span class="text-4xl">📦</span>
+          </div>
+          <h3 class="text-2xl font-bold text-center mb-3" style="color: var(--color-primary);">Produkter på hovedlager</h3>
+          <p class="text-center mb-4" style="color: var(--color-dark); opacity: 0.7;">
+            Se alle produkter der er opbevaret på Sceneskifts lager
+          </p>
+          <div class="text-center">
+            <span class="text-4xl font-bold" style="color: var(--color-primary);" id="hovedlagerCount">-</span>
+            <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">produkter</p>
+          </div>
+        </a>
+        
+        <!-- Kommende reservationer -->
+        <a href="/admin/reservationer" class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition cursor-pointer block">
+          <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style="background-color: #fef3c7;">
+            <span class="text-4xl">📅</span>
+          </div>
+          <h3 class="text-2xl font-bold text-center mb-3" style="color: var(--color-primary);">Kommende reservationer</h3>
+          <p class="text-center mb-4" style="color: var(--color-dark); opacity: 0.7;">
+            Se alle kommende reservationer i systemet
+          </p>
+          <div class="text-center">
+            <span class="text-4xl font-bold" style="color: #d97706;" id="reservationerCount">-</span>
+            <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">reservationer</p>
+          </div>
+        </a>
+      </div>
+    </section>
+    <% } %>
+    
     <% } else { %>
     <!-- Ikke logget ind -->
     <section class="section max-w-2xl mx-auto text-center">
