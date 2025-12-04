@@ -16,7 +16,7 @@ console.log('Resend mail service initialiseret');
 async function sendMail({ to, subject, text, html }) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'SceneSkift <onboarding@resend.dev>',
+      from: 'SceneSkift <noreply@sceneskift.nu>',
       to: [to],
       subject,
       text,
