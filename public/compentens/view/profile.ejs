@@ -48,6 +48,7 @@
         <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <% if (user.godkendt && user.rolle !== 'admin') { %>
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Brugernavn</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.brugernavn %></p>
@@ -57,7 +58,7 @@
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Navn</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.navn %></p>
           </div>
-          
+          <% } %>
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">E-mail</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.email %></p>
@@ -67,11 +68,12 @@
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Teater</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.teaternavn %></p>
           </div>
-          
+           <% if (user.godkendt && user.rolle !== 'admin') { %>
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Lokation</label>
             <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.lokation %></p>
           </div>
+          <% } %>
         </div>
         
         <div class="mt-auto pt-8 flex gap-4">
@@ -132,8 +134,8 @@
       </div>
     </section>
     
-    <!-- Forestillingsperioder sektion -->
-    <% if (user.godkendt) { %>
+    <!-- Forestillingsperioder sektion (kun for ikke-admin brugere) -->
+    <% if (user.godkendt && user.rolle !== 'admin') { %>
     <section class="section max-w-6xl mx-auto mt-8">
       <div class="bg-white rounded-2xl shadow-xl p-10">
         <div class="flex items-center justify-between mb-6">
