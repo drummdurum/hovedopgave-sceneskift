@@ -10,10 +10,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body style="background-color: var(--color-bg);">
-  <!-- Header -->
-  <header style="background: linear-gradient(135deg, var(--color-primary), #1a365d); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <!-- Header fixed på toppen med transparent baggrund -->
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
     <%- include('../header/header') %>
   </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+    
+    <!-- Dark overlay -->
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.6); z-index: 0;"></div>
+    
+    <!-- Hero indhold -->
+    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 80px 20px;">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          Forestillingsperioder
+        </h1>
+      </div>
+    </div>
+  </section>
+
 
   <main>
   <section class="section max-w-6xl mx-auto">
