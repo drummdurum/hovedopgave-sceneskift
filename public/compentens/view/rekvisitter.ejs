@@ -14,18 +14,18 @@
   </header>
     
   <!-- Hero sektion med baggrundsbillede -->
-  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+  <section class="relative min-h-[30vh] md:min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 20px;">
     
     <!-- Dark overlay -->
     <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
     
     <!-- Hero indhold -->
-    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
-      <div class="text-center" style="padding: 80px 20px;">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+    <div class="flex flex-col items-center justify-center w-full px-4 md:px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 60px 16px;">
+        <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
           🔍 Alle rekvisitter
         </h1>
-        <p class="text-xl" style="color: var(--color-light); opacity: 0.9;">
+        <p class="text-base md:text-xl" style="color: var(--color-light); opacity: 0.9;">
           Udforsk rekvisitter fra teatre i hele Danmark
         </p>
       </div>
@@ -33,26 +33,36 @@
   </section>
 
   <!-- Main content -->
-  <main class="flex-grow container-max px-6 py-12">
+  <main class="flex-grow container-max px-4 md:px-6 py-6 md:py-12">
     
     <section class="section max-w-6xl mx-auto">
       <!-- Filtrering -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
-        <div class="flex flex-wrap gap-4 items-center">
-          <div class="flex-1 min-w-[200px]">
+      <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6 mb-6 md:mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <div>
             <label for="kategoriFilter" class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Kategori</label>
-            <select id="kategoriFilter" class="w-full px-4 py-2 rounded-xl border-2" style="border-color: var(--color-primary);">
+            <select id="kategoriFilter" class="w-full px-3 md:px-4 py-2 rounded-xl border-2 text-sm md:text-base" style="border-color: var(--color-primary);">
               <option value="">Alle kategorier</option>
               <!-- Kategorier indlæses via JavaScript -->
             </select>
           </div>
-          <div class="flex-1 min-w-[200px]">
+          <div>
+            <label for="lokationFilter" class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Lokation</label>
+            <select id="lokationFilter" class="w-full px-3 md:px-4 py-2 rounded-xl border-2 text-sm md:text-base" style="border-color: var(--color-primary);">
+              <option value="">Alle områder</option>
+              <option value="Hovedstadsområdet">Hovedstadsområdet</option>
+              <option value="Nordsjælland">Nordsjælland</option>
+              <option value="Sydsjælland og Lolland-Falster">Sydsjælland og Lolland-Falster</option>
+              <option value="Vestsjælland">Vestsjælland</option>
+            </select>
+          </div>
+          <div>
             <label for="soegning" class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Søg</label>
             <input type="text" id="soegning" placeholder="Søg efter rekvisitter..." 
-              class="w-full px-4 py-2 rounded-xl border-2" style="border-color: var(--color-primary);">
+              class="w-full px-3 md:px-4 py-2 rounded-xl border-2 text-sm md:text-base" style="border-color: var(--color-primary);">
           </div>
-          <div class="pt-6">
-            <button onclick="filtrerProdukter()" class="btn-primary" style="border-radius: 100px;">
+          <div class="flex items-end">
+            <button onclick="filtrerProdukter()" class="btn-primary w-full sm:w-auto py-2" style="border-radius: 100px;">
               🔍 Søg
             </button>
           </div>
@@ -60,16 +70,16 @@
       </div>
       
       <!-- Produkter grid -->
-      <div id="produkterGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div id="produkterGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <p style="color: var(--color-dark); opacity: 0.7;">Indlæser rekvisitter...</p>
       </div>
       
       <!-- Ingen produkter besked -->
-      <div id="ingenProdukter" class="hidden text-center py-16">
-        <div class="bg-white rounded-2xl shadow-xl p-10 max-w-lg mx-auto">
-          <span class="text-6xl mb-4 block">🔍</span>
-          <h3 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Ingen rekvisitter fundet</h3>
-          <p style="color: var(--color-dark); opacity: 0.8;">
+      <div id="ingenProdukter" class="hidden text-center py-8 md:py-16">
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10 max-w-lg mx-auto">
+          <span class="text-4xl md:text-6xl mb-3 md:mb-4 block">🔍</span>
+          <h3 class="text-xl md:text-2xl mb-3 md:mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Ingen rekvisitter fundet</h3>
+          <p class="text-sm md:text-base" style="color: var(--color-dark); opacity: 0.8;">
             Prøv at ændre dine filtre eller søgeord.
           </p>
         </div>

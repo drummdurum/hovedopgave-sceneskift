@@ -54,6 +54,7 @@ async function loadAlleProdukter() {
 
 function filtrerProdukter() {
   const kategori = document.getElementById('kategoriFilter').value;
+  const lokation = document.getElementById('lokationFilter').value;
   const soegning = document.getElementById('soegning').value.toLowerCase();
   
   let filtrerede = alleProdukter;
@@ -62,6 +63,13 @@ function filtrerProdukter() {
     // Filtrer produkter der har den valgte kategori
     filtrerede = filtrerede.filter(p => 
       Array.isArray(p.kategorier) && p.kategorier.includes(kategori)
+    );
+  }
+  
+  if (lokation) {
+    // Filtrer produkter efter ejerens lokation
+    filtrerede = filtrerede.filter(p => 
+      p.ejer?.lokation === lokation
     );
   }
   

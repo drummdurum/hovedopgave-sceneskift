@@ -14,18 +14,18 @@
   </header>
     
   <!-- Hero sektion med baggrundsbillede -->
-  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+  <section class="relative min-h-[30vh] md:min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 20px;">
     
     <!-- Dark overlay -->
     <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
     
     <!-- Hero indhold -->
-    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
-      <div class="text-center" style="padding: 80px 20px;">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+    <div class="flex flex-col items-center justify-center w-full px-4 md:px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 60px 16px;">
+        <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
           ➕ Opret produkt
         </h1>
-        <p class="text-xl" style="color: var(--color-light); opacity: 0.9;">
+        <p class="text-base md:text-xl" style="color: var(--color-light); opacity: 0.9;">
           Del din rekvisit med andre teatre
         </p>
       </div>
@@ -33,107 +33,107 @@
   </section>
 
   <!-- Main content -->
-  <main class="flex-grow container-max px-6 py-12">
+  <main class="flex-grow container-max px-4 md:px-6 py-6 md:py-12">
     
     <section class="section max-w-4xl mx-auto">
-      <div class="bg-white rounded-2xl shadow-xl p-10">
-        <h2 class="text-3xl mb-4 text-center" style="font-family: var(--font-heading); color: var(--color-primary);">Opret nyt produkt</h2>
-        <div class="h-1 w-32 mx-auto mb-8" style="background-color: var(--color-secondary);"></div>
+      <div class="bg-white rounded-2xl shadow-xl p-5 sm:p-6 md:p-10">
+        <h2 class="text-xl sm:text-2xl md:text-3xl mb-3 md:mb-4 text-center" style="font-family: var(--font-heading); color: var(--color-primary);">Opret nyt produkt</h2>
+        <div class="h-1 w-24 md:w-32 mx-auto mb-5 md:mb-8" style="background-color: var(--color-secondary);"></div>
         
-        <form id="opretProduktForm" enctype="multipart/form-data" class="space-y-6">
+        <form id="opretProduktForm" enctype="multipart/form-data" class="space-y-4 md:space-y-6">
           <div>
-            <label for="navn" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Produktnavn *</label>
+            <label for="navn" class="block text-base md:text-lg mb-1 md:mb-2" style="color: var(--color-dark); font-weight: 600;">Produktnavn *</label>
             <input type="text" id="navn" name="navn" required
-              class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
-              style="border-color: var(--color-primary); font-size: 1rem;"
+              class="w-full px-3 md:px-4 py-2 md:py-3 rounded-xl border-2 focus:outline-none transition text-sm md:text-base"
+              style="border-color: var(--color-primary);"
               placeholder="F.eks. Antik lænestol">
           </div>
           
           <div>
-            <label for="beskrivelse" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Beskrivelse *</label>
-            <textarea id="beskrivelse" name="beskrivelse" required rows="4"
-              class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
-              style="border-color: var(--color-primary); font-size: 1rem;"
+            <label for="beskrivelse" class="block text-base md:text-lg mb-1 md:mb-2" style="color: var(--color-dark); font-weight: 600;">Beskrivelse *</label>
+            <textarea id="beskrivelse" name="beskrivelse" required rows="3"
+              class="w-full px-3 md:px-4 py-2 md:py-3 rounded-xl border-2 focus:outline-none transition text-sm md:text-base"
+              style="border-color: var(--color-primary);"
               placeholder="Beskriv produktet, mål, stand, historie osv."></textarea>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <div>
-              <label class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Kategorier *</label>
-              <div id="kategoriContainer" class="grid grid-cols-2 gap-2 p-4 rounded-xl border-2" style="border-color: var(--color-primary);">
+              <label class="block text-base md:text-lg mb-1 md:mb-2" style="color: var(--color-dark); font-weight: 600;">Kategorier *</label>
+              <div id="kategoriContainer" class="grid grid-cols-2 gap-2 p-3 md:p-4 rounded-xl border-2" style="border-color: var(--color-primary);">
                 <!-- Kategorier indlæses via JavaScript -->
-                <p class="text-sm col-span-2" style="color: var(--color-dark); opacity: 0.7;">Indlæser kategorier...</p>
+                <p class="text-xs md:text-sm col-span-2" style="color: var(--color-dark); opacity: 0.7;">Indlæser kategorier...</p>
               </div>
-              <p class="text-sm mt-2" style="color: var(--color-dark); opacity: 0.7;">
+              <p class="text-xs md:text-sm mt-1 md:mt-2" style="color: var(--color-dark); opacity: 0.7;">
                 Vælg en eller flere kategorier
               </p>
             </div>
             
-            <div class="space-y-4">
+            <div class="space-y-3 md:space-y-4">
               <div>
-                <label class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Placering</label>
-                <div class="flex gap-4">
-                  <label class="flex-1 flex items-center gap-3 p-4 rounded-xl cursor-pointer border-2 transition" id="lagerEgetLabel" style="border-color: var(--color-primary); background-color: #f0fdf4;">
-                    <input type="radio" name="placering" value="eget" id="lagerEget" checked class="w-5 h-5" style="accent-color: var(--color-primary);">
-                    <span style="color: var(--color-dark);">🏠 Mit eget lager</span>
+                <label class="block text-base md:text-lg mb-1 md:mb-2" style="color: var(--color-dark); font-weight: 600;">Placering</label>
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                  <label class="flex-1 flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-xl cursor-pointer border-2 transition" id="lagerEgetLabel" style="border-color: var(--color-primary); background-color: #f0fdf4;">
+                    <input type="radio" name="placering" value="eget" id="lagerEget" checked class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" style="accent-color: var(--color-primary);">
+                    <span class="text-sm md:text-base" style="color: var(--color-dark);">🏠 Mit eget lager</span>
                   </label>
-                  <label class="flex-1 flex items-center gap-3 p-4 rounded-xl cursor-pointer border-2 transition" id="lagerSceneskiftLabel" style="border-color: #e5e7eb; background-color: #f8f9fa;">
-                    <input type="radio" name="placering" value="sceneskift" id="lagerSceneskift" class="w-5 h-5" style="accent-color: var(--color-primary);">
-                    <span style="color: var(--color-dark);">📦 Sceneskifts lager</span>
+                  <label class="flex-1 flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-xl cursor-pointer border-2 transition" id="lagerSceneskiftLabel" style="border-color: #e5e7eb; background-color: #f8f9fa;">
+                    <input type="radio" name="placering" value="sceneskift" id="lagerSceneskift" class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" style="accent-color: var(--color-primary);">
+                    <span class="text-sm md:text-base" style="color: var(--color-dark);">📦 Sceneskifts lager</span>
                   </label>
                 </div>
               </div>
               <div>
-                <label class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Indstillinger</label>
-                <label class="flex items-center gap-3 p-4 rounded-xl cursor-pointer" style="background-color: #f8f9fa;">
-                  <input type="checkbox" id="skjult" name="skjult" class="w-5 h-5">
-                  <span style="color: var(--color-dark);">Skjul produkt (kun synligt for dig)</span>
+                <label class="block text-base md:text-lg mb-1 md:mb-2" style="color: var(--color-dark); font-weight: 600;">Indstillinger</label>
+                <label class="flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-xl cursor-pointer" style="background-color: #f8f9fa;">
+                  <input type="checkbox" id="skjult" name="skjult" class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0">
+                  <span class="text-sm md:text-base" style="color: var(--color-dark);">Skjul produkt (kun synligt for dig)</span>
                 </label>
               </div>
               <div>
-                <label class="flex items-center gap-3 p-4 rounded-xl cursor-pointer" style="background-color: #fef3c7;">
-                  <input type="checkbox" id="renoveres" name="renoveres" class="w-5 h-5">
-                  <span style="color: var(--color-dark);">🔧 Renoveres (under reparation/vedligeholdelse)</span>
+                <label class="flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-xl cursor-pointer" style="background-color: #fef3c7;">
+                  <input type="checkbox" id="renoveres" name="renoveres" class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0">
+                  <span class="text-sm md:text-base" style="color: var(--color-dark);">🔧 Renoveres (under reparation)</span>
                 </label>
               </div>
             </div>
           </div>
           
           <div>
-            <label for="billeder" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Billeder * (op til 10)</label>
+            <label for="billeder" class="block text-base md:text-lg mb-1 md:mb-2" style="color: var(--color-dark); font-weight: 600;">Billeder * (op til 10)</label>
             <div class="relative">
               <input type="file" id="billeder" name="billeder" accept="image/*" required multiple
-                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
-                style="border-color: var(--color-primary); font-size: 1rem;">
+                class="w-full px-3 md:px-4 py-2 md:py-3 rounded-xl border-2 focus:outline-none transition text-sm md:text-base"
+                style="border-color: var(--color-primary);">
             </div>
-            <p class="text-sm mt-2" style="color: var(--color-dark); opacity: 0.7;">
-              Accepterede formater: JPG, PNG, GIF, WebP. Maks 5MB pr. billede. Vælg op til 10 billeder.
+            <p class="text-xs md:text-sm mt-1 md:mt-2" style="color: var(--color-dark); opacity: 0.7;">
+              JPG, PNG, GIF, WebP. Maks 5MB pr. billede.
             </p>
-            <div id="billedePreview" class="mt-4 hidden">
-              <p class="text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Valgte billeder:</p>
-              <div id="previewContainer" class="flex flex-wrap gap-4"></div>
+            <div id="billedePreview" class="mt-3 md:mt-4 hidden">
+              <p class="text-xs md:text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Valgte billeder:</p>
+              <div id="previewContainer" class="flex flex-wrap gap-2 md:gap-4"></div>
             </div>
           </div>
 
           <!-- Forestillingsperiode sektion -->
           <div>
-            <label class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Tilknyt til forestillingsperiode (valgfrit)</label>
-            <div id="forestillingsperiodeContainer" class="p-4 rounded-xl border-2" style="border-color: var(--color-primary);">
-              <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">Indlæser forestillingsperioder...</p>
+            <label class="block text-base md:text-lg mb-1 md:mb-2" style="color: var(--color-dark); font-weight: 600;">Tilknyt til forestillingsperiode (valgfrit)</label>
+            <div id="forestillingsperiodeContainer" class="p-3 md:p-4 rounded-xl border-2" style="border-color: var(--color-primary);">
+              <p class="text-xs md:text-sm" style="color: var(--color-dark); opacity: 0.7;">Indlæser forestillingsperioder...</p>
             </div>
-            <p class="text-sm mt-2" style="color: var(--color-dark); opacity: 0.7;">
+            <p class="text-xs md:text-sm mt-1 md:mt-2" style="color: var(--color-dark); opacity: 0.7;">
               Vælg en forestillingsperiode hvis produktet skal bruges til en specifik forestilling
             </p>
           </div>
           
-          <div id="opretError" class="hidden p-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
-          <div id="opretSuccess" class="hidden p-4 rounded-xl" style="background-color: #dcfce7; color: #16a34a;"></div>
+          <div id="opretError" class="hidden p-3 md:p-4 rounded-xl text-sm md:text-base" style="background-color: #fee2e2; color: #dc2626;"></div>
+          <div id="opretSuccess" class="hidden p-3 md:p-4 rounded-xl text-sm md:text-base" style="background-color: #dcfce7; color: #16a34a;"></div>
           
-          <div class="flex gap-4">
-            <a href="/profile" class="btn-secondary flex-1 py-4 text-lg text-center" style="border-radius: 100px; font-weight: 700;">
+          <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
+            <a href="/profile" class="btn-secondary flex-1 py-3 md:py-4 text-sm md:text-lg text-center" style="border-radius: 100px; font-weight: 700;">
               Tilbage til profil
             </a>
-            <button type="submit" id="submitBtn" class="btn-primary flex-1 py-4 text-lg" style="border-radius: 100px; font-weight: 700;">
+            <button type="submit" id="submitBtn" class="btn-primary flex-1 py-3 md:py-4 text-sm md:text-lg" style="border-radius: 100px; font-weight: 700;">
               Opret produkt
             </button>
           </div>
