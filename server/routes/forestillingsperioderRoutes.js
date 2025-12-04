@@ -3,6 +3,22 @@ const router = express.Router();
 const prisma = require('../../database/prisma');
 const { requireAuth } = require('../middleware/auth');
 
+// Hent alle forestillingsperioder (for dropdown etc.)
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const forestillingsperioder = await prisma.forestillingsperioder.findMany({
+      orderBy: {
+        start_dato: 'desc'
+      }
+    });
+
+    res.json({ forestillingsperioder });
+  } catch (error) {
+    console.error('Fetch all forestillingsperioder error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved hentning af forestillingsperioder' });
+  }
+});
+
 // Hent alle forestillingsperioder for den loggede ind bruger
 router.get('/mine', requireAuth, async (req, res) => {
   try {
