@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - SceneSkift</title>
+  <link rel="stylesheet" href="/css/output.css">
+  <style>
+    /* Image gallery styles */
+    .gallery-main {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      border-radius: 1rem;
+    }
+    
+    .gallery-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s ease;
+    }
+    
+    .gallery-thumbnails {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    
+    .gallery-thumb {
+      width: 80px;
+      height: 60px;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 3px solid transparent;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    
+    .gallery-thumb:hover {
+      border-color: var(--color-secondary);
+    }
+    
+    .gallery-thumb.active {
+      border-color: var(--color-primary);
+    }
+    
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--color-dark);
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+    
+    .gallery-nav:hover {
+      background: var(--color-secondary);
+    }
+    
+    .gallery-nav.prev { left: 1rem; }
+    .gallery-nav.next { right: 1rem; }
+    
+    /* Kurv badge */
+    .kurv-badge {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+    }
+    
+    .kurv-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: var(--color-light);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .kurv-btn:hover {
+      background: var(--color-dark-red);
+      transform: scale(1.1);
+    }
+    
+    .kurv-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--color-secondary);
+      color: var(--color-dark);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: bold;
+    }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .status-renoveres {
+      background-color: #dbeafe;
+      color: #2563eb;
+    }
+    
+    .status-sceneskift {
+      background-color: #dcfce7;
+      color: #16a34a;
+    }
+
+    /* Info grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    @media (max-width: 640px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .info-item {
+      padding: 1rem;
+      background: var(--color-light);
+      border-radius: 0.75rem;
+    }
+    
+    .info-label {
+      font-size: 0.875rem;
+      color: var(--color-dark);
+      opacity: 0.7;
+      margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+      font-weight: 600;
+      color: var(--color-dark);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+  <!-- Header -->
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+    <%- include('../header/header') %>
+  </header>
+    
+  <!-- Hero sektion med baggrundsbillede -->
+  <section class="relative min-h-[20vh] md:min-h-[25vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 20px;">
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
+    <div class="flex flex-col items-center justify-center w-full px-4 md:px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 60px 16px;">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          <span id="produktNavnHero">Indlæser...</span>
+        </h1>
+        <p class="text-base md:text-lg" style="color: var(--color-light); opacity: 0.9;">
+          <a href="/rekvisitter" class="hover:underline">← Tilbage til alle rekvisitter</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-4 md:px-6 py-6 md:py-12">
+    
+    <!-- Loading state -->
+    <div id="loadingState" class="text-center py-16">
+      <div class="animate-pulse">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full" style="background-color: var(--color-secondary);"></div>
+        <p style="color: var(--color-dark);">Indlæser produkt...</p>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    <div id="errorState" class="hidden text-center py-16">
+      <div class="bg-white rounded-2xl shadow-xl p-10 max-w-lg mx-auto">
+        <span class="text-6xl mb-4 block">😕</span>
+        <h3 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Produkt ikke fundet</h3>
+        <p class="mb-6" style="color: var(--color-dark); opacity: 0.8;">
+          Det produkt du leder efter findes ikke eller er blevet fjernet.
+        </p>
+        <a href="/rekvisitter" class="btn-primary">Se alle rekvisitter</a>
+      </div>
+    </div>
+
+    <!-- Product content -->
+    <div id="produktContent" class="hidden">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+          
+          <!-- Venstre kolonne: Billeder -->
+          <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6">
+            <div class="gallery-main" id="galleryMain">
+              <img id="mainImage" src="" alt="Produkt billede">
+              <button class="gallery-nav prev" onclick="prevImage()">‹</button>
+              <button class="gallery-nav next" onclick="nextImage()">›</button>
+            </div>
+            <div class="gallery-thumbnails" id="galleryThumbnails">
+              <!-- Thumbnails genereres via JavaScript -->
+            </div>
+          </div>
+          
+          <!-- Højre kolonne: Info -->
+          <div>
+            <!-- Titel og status badges -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6">
+              <div class="flex flex-wrap gap-2 mb-4" id="kategorierContainer">
+                <!-- Kategorier genereres via JavaScript -->
+              </div>
+              
+              <h2 id="produktNavn" class="text-2xl md:text-3xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-primary);"></h2>
+              
+              <div class="flex flex-wrap gap-2 mb-6" id="statusBadges">
+                <!-- Status badges genereres via JavaScript -->
+              </div>
+              
+              <div class="mb-6">
+                <h4 class="text-lg font-semibold mb-2" style="color: var(--color-dark);">Beskrivelse</h4>
+                <p id="produktBeskrivelse" class="leading-relaxed" style="color: var(--color-dark); opacity: 0.85;"></p>
+              </div>
+              
+              <!-- Tilføj til kurv knap -->
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button id="tilfoejKurvBtn" onclick="tilfoejTilKurv()" class="btn-primary flex-1 py-3 flex items-center justify-center gap-2">
+                  🛒 Tilføj til forespørgsel
+                </button>
+                <button id="fjernKurvBtn" onclick="fjernFraKurv()" class="btn-secondary flex-1 py-3 hidden flex items-center justify-center gap-2">
+                  ✕ Fjern fra forespørgsel
+                </button>
+              </div>
+            </div>
+            
+            <!-- Ejer information -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6">
+              <h4 class="text-lg font-semibold mb-4" style="color: var(--color-dark);">Udbydes af</h4>
+              <div class="flex items-center gap-4" id="ejerInfo">
+                <!-- Ejer info genereres via JavaScript -->
+              </div>
+            </div>
+            
+            <!-- Ekstra info -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+              <h4 class="text-lg font-semibold mb-4" style="color: var(--color-dark);">Detaljer</h4>
+              <div class="info-grid" id="detailsGrid">
+                <!-- Detaljer genereres via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Reservationer sektion -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mt-8" id="reservationerSection">
+          <h3 class="text-xl md:text-2xl font-bold mb-6" style="font-family: var(--font-heading); color: var(--color-primary);">
+            📅 Reservationer
+          </h3>
+          <div id="reservationerListe">
+            <!-- Reservationer genereres via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Kurv floating button -->
+  <div class="kurv-badge" id="kurvBadge" style="display: none;">
+    <a href="/kurv" class="kurv-btn">
+      🛒
+      <span class="kurv-count" id="kurvCount">0</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <%- include('../footer/footer') %>
+
+  <script>
+    const produktId = JSON.parse('<%- JSON.stringify(produktId) %>');
+  </script>
+  <script src="/compentens/js/produkt-detalje.js"></script>
+</body>
+</html>

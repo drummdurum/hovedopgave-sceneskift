@@ -106,4 +106,19 @@ router.get('/admin/reservationer', requireAuth, (req, res) => {
   });
 });
 
+// Produkt detalje side (enkelt rekvisit)
+router.get('/rekvisitter/:id', (req, res) => {
+  const produktId = parseInt(req.params.id);
+  
+  if (isNaN(produktId)) {
+    return res.redirect('/rekvisitter');
+  }
+  
+  res.render('produkt-detalje', { 
+    title: 'Rekvisit',
+    user: req.session.user || null,
+    produktId: produktId
+  });
+});
+
 module.exports = router;
