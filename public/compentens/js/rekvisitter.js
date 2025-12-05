@@ -1,9 +1,11 @@
 // Rekvisitter side
 let alleProdukter = [];
+let mineForestillingsperioder = [];
 
 document.addEventListener('DOMContentLoaded', function() {
   loadKategorier();
   loadAlleProdukter();
+  loadMineForestillingsperioder();
   
   // Enter-tast i søgefelt
   document.getElementById('soegning').addEventListener('keypress', function(e) {
@@ -11,6 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
       filtrerProdukter();
     }
   });
+  
+  // Auto-filtrer når datoer ændres
+  document.getElementById('datoFra').addEventListener('change', filtrerProdukter);
+  document.getElementById('datoTil').addEventListener('change', filtrerProdukter);
 });
 
 async function loadKategorier() {
@@ -29,6 +35,70 @@ async function loadKategorier() {
     }
   } catch (error) {
     console.error('Fejl ved indlæsning af kategorier:', error);
+  }
+}
+
+async function loadMineForestillingsperioder() {
+  try {
+    const response = await fetch('/api/forestillingsperioder/mine');
+    const data = await response.json();
+    
+    if (response.ok && data.perioder && data.perioder.length > 0) {
+      mineForestillingsperioder = data.perioder;
+      
+      // Vis forestillingsperiode dropdown
+      const container = document.getElementById('forestillingsperiodeContainer');
+      const select = document.getElementById('forestillingsperiodeFilter');
+      
+      container.classList.remove('hidden');
+      
+      data.perioder.forEach(periode => {
+        const option = document.createElement('option');
+        option.value = periode.id;
+        option.textContent = `${periode.navn} (${formatDato(periode.start_dato)} - ${formatDato(periode.slut_dato)})`;
+        option.dataset.startDato = periode.start_dato;
+        option.dataset.slutDato = periode.slut_dato;
+        select.appendChild(option);
+      });
+    }
+  } catch (error) {
+    // Bruger er sandsynligvis ikke logget ind - det er ok
+    console.log('Kunne ikke hente forestillingsperioder (ikke logget ind?)');
+  }
+}
+
+function formatDato(datoString) {
+  const dato = new Date(datoString);
+  return dato.toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function toggleDatoFilter() {
+  const checkbox = document.getElementById('datoFilterAktiv');
+  const container = document.getElementById('datoFilterContainer');
+  
+  if (checkbox.checked) {
+    container.classList.remove('hidden');
+  } else {
+    container.classList.add('hidden');
+    // Nulstil datoer og filtrer igen
+    document.getElementById('datoFra').value = '';
+    document.getElementById('datoTil').value = '';
+    document.getElementById('forestillingsperiodeFilter').value = '';
+    filtrerProdukter();
+  }
+}
+
+function valgForestillingsperiode() {
+  const select = document.getElementById('forestillingsperiodeFilter');
+  const selectedOption = select.options[select.selectedIndex];
+  
+  if (selectedOption.value) {
+    const startDato = selectedOption.dataset.startDato.split('T')[0];
+    const slutDato = selectedOption.dataset.slutDato.split('T')[0];
+    
+    document.getElementById('datoFra').value = startDato;
+    document.getElementById('datoTil').value = slutDato;
+    filtrerProdukter();
   }
 }
 
@@ -56,6 +126,9 @@ function filtrerProdukter() {
   const kategori = document.getElementById('kategoriFilter').value;
   const lokation = document.getElementById('lokationFilter').value;
   const soegning = document.getElementById('soegning').value.toLowerCase();
+  const datoFilterAktiv = document.getElementById('datoFilterAktiv').checked;
+  const datoFra = document.getElementById('datoFra').value;
+  const datoTil = document.getElementById('datoTil').value;
   
   let filtrerede = alleProdukter;
   
@@ -80,6 +153,31 @@ function filtrerProdukter() {
       p.ejer?.teaternavn?.toLowerCase().includes(soegning) ||
       (Array.isArray(p.kategorier) && p.kategorier.some(k => k.toLowerCase().includes(soegning)))
     );
+  }
+  
+  // Dato-filtrering - tjek om produktet er ledigt i den valgte periode
+  if (datoFilterAktiv && datoFra && datoTil) {
+    const filterStart = new Date(datoFra);
+    const filterSlut = new Date(datoTil);
+    
+    filtrerede = filtrerede.filter(p => {
+      // Hvis produktet ikke har reservationer, er det ledigt
+      if (!p.reservationer || p.reservationer.length === 0) {
+        return true;
+      }
+      
+      // Tjek om nogen reservationer overlapper med den valgte periode
+      const harOverlap = p.reservationer.some(res => {
+        const resStart = new Date(res.fra_dato);
+        const resSlut = new Date(res.til_dato);
+        
+        // Overlap sker hvis: filterStart <= resSlut OG filterSlut >= resStart
+        return filterStart <= resSlut && filterSlut >= resStart;
+      });
+      
+      // Produktet er ledigt hvis der IKKE er overlap
+      return !harOverlap;
+    });
   }
   
   renderProdukter(filtrerede);

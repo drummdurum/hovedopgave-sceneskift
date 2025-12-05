@@ -54,10 +54,10 @@
     <!-- Product content -->
     <div id="produktContent" class="hidden">
       <div class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-stretch">
           
           <!-- Venstre kolonne: Billeder -->
-          <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6">
+          <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6 flex flex-col">
             <div class="gallery-main" id="galleryMain">
               <img id="mainImage" src="" alt="Produkt billede">
               <button class="gallery-nav prev" onclick="prevImage()">‹</button>
@@ -66,21 +66,23 @@
             <div class="gallery-thumbnails" id="galleryThumbnails">
               <!-- Thumbnails genereres via JavaScript -->
             </div>
+            <!-- Spacer til at pushe knappen ned -->
+            <div class="flex-grow"></div>
             <!-- Tilføj til kurv knap -->
-              <div class="flex flex-col sm:flex-row gap-3">
-                <button id="tilfoejKurvBtn" onclick="tilfoejTilKurv()" class="btn-primary flex-1 py-3 flex items-center justify-center gap-2">
-                  🛒 Tilføj til forespørgsel
+              <div class="flex flex-col sm:flex-row gap-3" style="padding-top: 15px;">
+                <button id="tilfoejKurvBtn" onclick="tilfoejTilKurv()" class="btn-primary flex-1 py-3 flex items-center justify-center gap-2" style="padding: 0 0;">
+                  🛒 Tilføj
                 </button>
-                <button id="fjernKurvBtn" onclick="fjernFraKurv()" class="btn-secondary flex-1 py-3 hidden flex items-center justify-center gap-2">
-                  ✕ Fjern fra forespørgsel
+                <button id="fjernKurvBtn" onclick="fjernFraKurv()" class="btn-secondary flex-1 py-3 hidden flex items-center justify-center gap-2" style="padding: 0 0;">
+                  ✕ Fjern
                 </button>
               </div>
           </div>
           
           <!-- Højre kolonne: Info -->
-          <div>
+          <div class="flex flex-col">
             <!-- Titel og status badges -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6 flex-grow flex flex-col">
               <div class="flex flex-wrap gap-2 mb-4" id="kategorierContainer">
                 <!-- Kategorier genereres via JavaScript -->
               </div>
@@ -96,8 +98,11 @@
                 <p id="produktBeskrivelse" class="leading-relaxed" style="color: var(--color-dark); opacity: 0.85;"></p>
               </div>
               
+              <!-- Spacer til at pushe placeringsboks ned -->
+              <div class="flex-grow"></div>
+              
               <!-- Placering boks -->
-              <div id="placeringBoks" class="p-4 rounded-xl" style="background-color: #f3f4f6;">
+              <div id="placeringBoks" class="p-4 rounded-xl mt-auto" style="background-color: #f3f4f6;">
                 <div class="flex items-center gap-3">
                   <span class="text-2xl">📍</span>
                   <div>
@@ -109,7 +114,7 @@
             </div>
             
             <!-- Ejer information -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
               <h4 class="text-lg font-semibold mb-4" style="color: var(--color-dark);">Udbydes af</h4>
               <div class="flex items-center gap-4" id="ejerInfo">
                 <!-- Ejer info genereres via JavaScript -->

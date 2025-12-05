@@ -38,7 +38,8 @@
     <section class="section max-w-6xl mx-auto">
       <!-- Filtrering -->
       <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6 mb-6 md:mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <!-- Basis filtre -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
           <div>
             <label for="kategoriFilter" class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Kategori</label>
             <select id="kategoriFilter" class="w-full px-3 md:px-4 py-2 rounded-xl border-2 text-sm md:text-base" style="border-color: var(--color-primary);">
@@ -65,6 +66,47 @@
             <button onclick="filtrerProdukter()" class="btn-primary w-full sm:w-auto py-2" style="border-radius: 100px;">
               🔍 Søg
             </button>
+          </div>
+        </div>
+        
+        <!-- Tilgængeligheds-filter -->
+        <div class="pt-4 mt-4" style="border-top: 1px solid #e5e7eb;">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-lg">📅</span>
+            <h4 class="font-semibold" style="color: var(--color-dark);">Tjek tilgængelighed</h4>
+            <label class="relative inline-flex items-center cursor-pointer ml-auto">
+              <input type="checkbox" id="datoFilterAktiv" class="sr-only peer" onchange="toggleDatoFilter()">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+            </label>
+          </div>
+          
+          <div id="datoFilterContainer" class="hidden">
+            <!-- Forestillingsperiode dropdown (kun for loggede brugere) -->
+            <div id="forestillingsperiodeContainer" class="mb-3 hidden">
+              <label for="forestillingsperiodeFilter" class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Eller vælg din forestillingsperiode</label>
+              <select id="forestillingsperiodeFilter" class="w-full px-3 md:px-4 py-2 rounded-xl border-2 text-sm md:text-base" style="border-color: var(--color-secondary);" onchange="valgForestillingsperiode()">
+                <option value="">-- Vælg periode --</option>
+                <!-- Perioder indlæses via JavaScript -->
+              </select>
+            </div>
+            
+            <!-- Manuel dato-valg -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="datoFra" class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Fra dato</label>
+                <input type="date" id="datoFra" 
+                  class="w-full px-3 md:px-4 py-2 rounded-xl border-2 text-sm md:text-base" style="border-color: var(--color-secondary);">
+              </div>
+              <div>
+                <label for="datoTil" class="block text-sm mb-1" style="color: var(--color-dark); font-weight: 600;">Til dato</label>
+                <input type="date" id="datoTil" 
+                  class="w-full px-3 md:px-4 py-2 rounded-xl border-2 text-sm md:text-base" style="border-color: var(--color-secondary);">
+              </div>
+            </div>
+            
+            <p class="text-xs mt-2" style="color: var(--color-dark); opacity: 0.6;">
+              💡 Viser kun produkter der er ledige i den valgte periode
+            </p>
           </div>
         </div>
       </div>
