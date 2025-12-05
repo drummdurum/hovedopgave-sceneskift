@@ -83,8 +83,8 @@ function renderProdukt() {
   // Ejer info
   renderEjerInfo();
   
-  // Detaljer
-  renderDetails();
+  // Placering
+  renderPlacering();
   
   // Reservationer
   renderReservationer();
@@ -177,46 +177,16 @@ function renderEjerInfo() {
   `;
 }
 
-function renderDetails() {
-  const detailsGrid = document.getElementById('detailsGrid');
+function renderPlacering() {
+  const placeringEl = document.getElementById('produktPlacering');
   
-  let html = '';
-  
-  // Produkt ID
-  html += `
-    <div class="info-item">
-      <div class="info-label">Produkt ID</div>
-      <div class="info-value">#${produkt.id}</div>
-    </div>
-  `;
-  
-  // Lokation
-  if (produkt.ejer?.lokation) {
-    html += `
-      <div class="info-item">
-        <div class="info-label">Lokation</div>
-        <div class="info-value">📍 ${produkt.ejer.lokation}</div>
-      </div>
-    `;
+  if (produkt.paa_sceneskift) {
+    placeringEl.textContent = 'Sceneskifts hovedlager';
+  } else if (produkt.ejer?.lokation) {
+    placeringEl.textContent = produkt.ejer.lokation;
+  } else {
+    placeringEl.textContent = 'Ikke angivet';
   }
-  
-  // Antal billeder
-  html += `
-    <div class="info-item">
-      <div class="info-label">Antal billeder</div>
-      <div class="info-value">📷 ${billeder.length}</div>
-    </div>
-  `;
-  
-  // Status
-  html += `
-    <div class="info-item">
-      <div class="info-label">Status</div>
-      <div class="info-value">${produkt.renoveres ? '🔧 Under renovering' : '✅ Tilgængelig'}</div>
-    </div>
-  `;
-  
-  detailsGrid.innerHTML = html;
 }
 
 function renderReservationer() {

@@ -5,179 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %> - SceneSkift</title>
   <link rel="stylesheet" href="/css/output.css">
-  <style>
-    /* Image gallery styles */
-    .gallery-main {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 4/3;
-      overflow: hidden;
-      border-radius: 1rem;
-    }
-    
-    .gallery-main img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: opacity 0.3s ease;
-    }
-    
-    .gallery-thumbnails {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-    }
-    
-    .gallery-thumb {
-      width: 80px;
-      height: 60px;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      cursor: pointer;
-      border: 3px solid transparent;
-      flex-shrink: 0;
-      transition: all 0.2s ease;
-    }
-    
-    .gallery-thumb:hover {
-      border-color: var(--color-secondary);
-    }
-    
-    .gallery-thumb.active {
-      border-color: var(--color-primary);
-    }
-    
-    .gallery-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .gallery-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      color: var(--color-dark);
-      transition: all 0.2s ease;
-      z-index: 10;
-    }
-    
-    .gallery-nav:hover {
-      background: var(--color-secondary);
-    }
-    
-    .gallery-nav.prev { left: 1rem; }
-    .gallery-nav.next { right: 1rem; }
-    
-    /* Kurv badge */
-    .kurv-badge {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 100;
-    }
-    
-    .kurv-btn {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: var(--color-primary);
-      color: var(--color-light);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-    }
-    
-    .kurv-btn:hover {
-      background: var(--color-dark-red);
-      transform: scale(1.1);
-    }
-    
-    .kurv-count {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background: var(--color-secondary);
-      color: var(--color-dark);
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.875rem;
-      font-weight: bold;
-    }
-
-    /* Status badges */
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 100px;
-      font-size: 0.875rem;
-      font-weight: 600;
-    }
-    
-    .status-renoveres {
-      background-color: #dbeafe;
-      color: #2563eb;
-    }
-    
-    .status-sceneskift {
-      background-color: #dcfce7;
-      color: #16a34a;
-    }
-
-    /* Info grid */
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-    
-    @media (max-width: 640px) {
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .info-item {
-      padding: 1rem;
-      background: var(--color-light);
-      border-radius: 0.75rem;
-    }
-    
-    .info-label {
-      font-size: 0.875rem;
-      color: var(--color-dark);
-      opacity: 0.7;
-      margin-bottom: 0.25rem;
-    }
-    
-    .info-value {
-      font-weight: 600;
-      color: var(--color-dark);
-    }
-  </style>
 </head>
 <body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
   
@@ -239,6 +66,15 @@
             <div class="gallery-thumbnails" id="galleryThumbnails">
               <!-- Thumbnails genereres via JavaScript -->
             </div>
+            <!-- Tilføj til kurv knap -->
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button id="tilfoejKurvBtn" onclick="tilfoejTilKurv()" class="btn-primary flex-1 py-3 flex items-center justify-center gap-2">
+                  🛒 Tilføj til forespørgsel
+                </button>
+                <button id="fjernKurvBtn" onclick="fjernFraKurv()" class="btn-secondary flex-1 py-3 hidden flex items-center justify-center gap-2">
+                  ✕ Fjern fra forespørgsel
+                </button>
+              </div>
           </div>
           
           <!-- Højre kolonne: Info -->
@@ -260,14 +96,15 @@
                 <p id="produktBeskrivelse" class="leading-relaxed" style="color: var(--color-dark); opacity: 0.85;"></p>
               </div>
               
-              <!-- Tilføj til kurv knap -->
-              <div class="flex flex-col sm:flex-row gap-3">
-                <button id="tilfoejKurvBtn" onclick="tilfoejTilKurv()" class="btn-primary flex-1 py-3 flex items-center justify-center gap-2">
-                  🛒 Tilføj til forespørgsel
-                </button>
-                <button id="fjernKurvBtn" onclick="fjernFraKurv()" class="btn-secondary flex-1 py-3 hidden flex items-center justify-center gap-2">
-                  ✕ Fjern fra forespørgsel
-                </button>
+              <!-- Placering boks -->
+              <div id="placeringBoks" class="p-4 rounded-xl" style="background-color: #f3f4f6;">
+                <div class="flex items-center gap-3">
+                  <span class="text-2xl">📍</span>
+                  <div>
+                    <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">Placering</p>
+                    <p id="produktPlacering" class="font-semibold" style="color: var(--color-dark);">Indlæser...</p>
+                  </div>
+                </div>
               </div>
             </div>
             
@@ -276,14 +113,6 @@
               <h4 class="text-lg font-semibold mb-4" style="color: var(--color-dark);">Udbydes af</h4>
               <div class="flex items-center gap-4" id="ejerInfo">
                 <!-- Ejer info genereres via JavaScript -->
-              </div>
-            </div>
-            
-            <!-- Ekstra info -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
-              <h4 class="text-lg font-semibold mb-4" style="color: var(--color-dark);">Detaljer</h4>
-              <div class="info-grid" id="detailsGrid">
-                <!-- Detaljer genereres via JavaScript -->
               </div>
             </div>
           </div>
