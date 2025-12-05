@@ -70,10 +70,10 @@
             <div class="flex-grow"></div>
             <!-- Tilføj til kurv knap -->
               <div class="flex flex-col sm:flex-row gap-3" style="padding-top: 15px;">
-                <button id="tilfoejKurvBtn" onclick="tilfoejTilKurv()" class="btn-primary flex-1 py-3 flex items-center justify-center gap-2" style="padding: 0 0;">
+                <button id="tilfoejKurvBtn" onclick="tilfoejTilKurv()" class="btn-primary flex-1 py-3 flex items-center justify-center gap-2" style="padding: 10px 10px;">
                   🛒 Tilføj
                 </button>
-                <button id="fjernKurvBtn" onclick="fjernFraKurv()" class="btn-secondary flex-1 py-3 hidden flex items-center justify-center gap-2" style="padding: 0 0;">
+                <button id="fjernKurvBtn" onclick="fjernFraKurv()" class="btn-secondary flex-1 py-3 hidden flex items-center justify-center gap-2" style="padding: 10px 10px;">
                   ✕ Fjern
                 </button>
               </div>
@@ -137,20 +137,13 @@
 
   </main>
 
-  <!-- Kurv floating button -->
-  <div class="kurv-badge" id="kurvBadge" style="display: none;">
-    <a href="/kurv" class="kurv-btn">
-      🛒
-      <span class="kurv-count" id="kurvCount">0</span>
-    </a>
-  </div>
-
   <!-- Footer -->
   <%- include('../footer/footer') %>
 
   <script>
     const produktId = JSON.parse('<%- JSON.stringify(produktId) %>');
   </script>
+  <script src="/compentens/js/kurv-global.js"></script>
   <script src="/compentens/js/produkt-detalje.js"></script>
 </body>
 </html>

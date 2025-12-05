@@ -396,3 +396,300 @@ main > .section + .section { margin-top: 0; }
   font-weight: 600;
   color: var(--color-dark);
 }
+
+/* Kurv notification */
+.kurv-notification {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  z-index: 1000;
+  animation: kurvSlideIn 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes kurvSlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/***********************************************************
+    * Kurv Modal Styles
+***********************************************************/
+
+.kurv-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.kurv-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kurv-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.kurv-modal-content {
+  position: relative;
+  background: white;
+  border-radius: 1.5rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  animation: modalSlideUp 0.3s ease;
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.kurv-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--color-secondary);
+}
+
+.kurv-modal-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.kurv-modal-close {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: var(--color-dark);
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kurv-modal-close:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.kurv-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.kurv-modal-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Kurv produkter liste */
+.kurv-produkter-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.kurv-produkt-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+}
+
+.kurv-produkt-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.kurv-produkt-info {
+  flex: 1;
+}
+
+.kurv-produkt-info h4 {
+  font-weight: 600;
+  color: var(--color-dark);
+  margin: 0 0 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.kurv-produkt-info p {
+  font-size: 0.85rem;
+  color: var(--color-dark);
+  opacity: 0.7;
+  margin: 0;
+}
+
+.kurv-fjern-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #dc2626;
+  background: #fee2e2;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kurv-fjern-btn:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* Tom kurv besked */
+.kurv-tom-besked {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--color-dark);
+}
+
+.kurv-tom-besked p {
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
+/* Reservations periode valg */
+.reservations-periode-valg {
+  background: #f9fafb;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #e5e7eb;
+}
+
+.reservations-periode-valg h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  margin: 0 0 1rem 0;
+}
+
+.periode-metode-valg {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.periode-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+.periode-radio:hover {
+  background: #e5e7eb;
+}
+
+.periode-radio input[type="radio"] {
+  accent-color: var(--color-primary);
+  width: 18px;
+  height: 18px;
+}
+
+.periode-radio span {
+  color: var(--color-dark);
+  font-weight: 500;
+}
+
+.periode-input-group {
+  margin-top: 1rem;
+}
+
+.periode-input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-dark);
+  margin-bottom: 0.5rem;
+}
+
+.periode-input-group select,
+.periode-input-group input[type="date"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--color-secondary);
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--color-dark);
+  background: white;
+}
+
+.periode-input-group select:focus,
+.periode-input-group input[type="date"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.dato-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .dato-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.valgt-periode-info {
+  margin-top: 1rem;
+}
+
+.periode-info-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #dcfce7;
+  border-radius: 0.5rem;
+  border: 1px solid #16a34a;
+}
+
+.periode-label {
+  font-size: 0.85rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.periode-tekst {
+  font-size: 0.9rem;
+  color: #16a34a;
+}

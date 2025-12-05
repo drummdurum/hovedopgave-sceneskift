@@ -256,57 +256,33 @@ function formatDate(date) {
   });
 }
 
-// ============= KURV FUNKTIONER =============
-
-function getKurv() {
-  const kurv = localStorage.getItem('sceneskift_kurv');
-  return kurv ? JSON.parse(kurv) : [];
-}
-
-function saveKurv(kurv) {
-  localStorage.setItem('sceneskift_kurv', JSON.stringify(kurv));
-  updateKurvBadge();
-  updateKurvButtons();
-}
+// ============= KURV FUNKTIONER (bruger kurv-global.js) =============
 
 function tilfoejTilKurv() {
   if (!produkt) return;
   
-  const kurv = getKurv();
-  
-  // Tjek om produktet allerede er i kurven
-  if (kurv.some(item => item.id === produkt.id)) {
-    showNotification('Produktet er allerede i din forespørgsel', 'info');
-    return;
-  }
-  
-  // Tilføj produkt med nødvendig info
-  kurv.push({
+  const success = tilfoejProduktTilKurv({
     id: produkt.id,
     navn: produkt.navn,
     billede: billeder[0],
-    ejer: produkt.ejer?.teaternavn || 'Ukendt',
-    tilfojetDato: new Date().toISOString()
+    ejer: produkt.ejer
   });
   
-  saveKurv(kurv);
-  showNotification('Tilføjet til forespørgsel! 🛒', 'success');
+  if (success) {
+    updateKurvButtons();
+  }
 }
 
 function fjernFraKurv() {
   if (!produkt) return;
-  
-  let kurv = getKurv();
-  kurv = kurv.filter(item => item.id !== produkt.id);
-  saveKurv(kurv);
-  showNotification('Fjernet fra forespørgsel', 'info');
+  fjernProduktFraKurv(produkt.id);
+  updateKurvButtons();
 }
 
 function updateKurvButtons() {
   if (!produkt) return;
   
-  const kurv = getKurv();
-  const erIKurv = kurv.some(item => item.id === produkt.id);
+  const erIKurv = erProduktIKurv(produkt.id);
   
   const tilfoejBtn = document.getElementById('tilfoejKurvBtn');
   const fjernBtn = document.getElementById('fjernKurvBtn');
@@ -318,67 +294,4 @@ function updateKurvButtons() {
     tilfoejBtn.classList.remove('hidden');
     fjernBtn.classList.add('hidden');
   }
-}
-
-function updateKurvBadge() {
-  const kurv = getKurv();
-  const badge = document.getElementById('kurvBadge');
-  const count = document.getElementById('kurvCount');
-  
-  if (kurv.length > 0) {
-    badge.style.display = 'block';
-    count.textContent = kurv.length;
-  } else {
-    badge.style.display = 'none';
-  }
-}
-
-function showNotification(message, type = 'info') {
-  // Fjern eksisterende notifikationer
-  const existing = document.querySelector('.notification');
-  if (existing) existing.remove();
-  
-  const notification = document.createElement('div');
-  notification.className = 'notification';
-  notification.style.cssText = `
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    padding: 1rem 1.5rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    z-index: 1000;
-    animation: slideIn 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  `;
-  
-  if (type === 'success') {
-    notification.style.backgroundColor = '#dcfce7';
-    notification.style.color = '#16a34a';
-  } else if (type === 'error') {
-    notification.style.backgroundColor = '#fee2e2';
-    notification.style.color = '#dc2626';
-  } else {
-    notification.style.backgroundColor = '#dbeafe';
-    notification.style.color = '#2563eb';
-  }
-  
-  notification.textContent = message;
-  document.body.appendChild(notification);
-  
-  // Tilføj animation styles
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-  `;
-  document.head.appendChild(style);
-  
-  // Fjern efter 3 sekunder
-  setTimeout(() => {
-    notification.style.animation = 'slideIn 0.3s ease reverse';
-    setTimeout(() => notification.remove(), 300);
-  }, 3000);
 }
