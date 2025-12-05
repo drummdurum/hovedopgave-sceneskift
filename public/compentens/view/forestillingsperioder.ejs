@@ -16,97 +16,99 @@
   </header>
     
   <!-- Hero sektion med baggrundsbillede -->
-  <section class="relative min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+  <section class="relative min-h-[30vh] md:min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 20px;">
     
     <!-- Dark overlay -->
     <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.6); z-index: 0;"></div>
     
     <!-- Hero indhold -->
-    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
-      <div class="text-center" style="padding: 80px 20px;">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
-          Forestillingsperioder
+    <div class="flex flex-col items-center justify-center w-full px-4 md:px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 60px 16px;">
+        <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          🎭 Forestillingsperioder
         </h1>
+        <p class="text-sm md:text-base" style="color: var(--color-light); opacity: 0.9;">
+          Administrer dine forestillingsperioder og tilknyttede rekvisitter
+        </p>
       </div>
     </div>
   </section>
 
 
-  <main>
+  <main class="px-4 md:px-6 pb-8">
   <section class="section max-w-6xl mx-auto">
-    <div class="bg-white rounded-2xl shadow-xl p-10">
-      <div class="flex items-center justify-between mb-6">
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-10">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 class="text-4xl mb-2" style="font-family: var(--font-heading); color: var(--color-primary);">🎭 Mine forestillingsperioder</h1>
-          <p style="color: var(--color-dark); opacity: 0.7;">Administrer dine forestillingsperioder og tilknyttede rekvisitter</p>
+          <h2 class="text-xl sm:text-2xl md:text-3xl mb-1" style="font-family: var(--font-heading); color: var(--color-primary);">Mine perioder</h2>
         </div>
-        <button onclick="visOpretModal()" class="btn-primary" style="border-radius: 100px;">
+        <button onclick="visOpretModal()" class="btn-primary w-full sm:w-auto text-center" style="border-radius: 100px;">
           ➕ Opret ny periode
         </button>
       </div>
-      <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+      <div class="h-1 w-24 md:w-32 mb-6 md:mb-8" style="background-color: var(--color-secondary);"></div>
       
       <!-- Liste over forestillingsperioder -->
       <div id="perioderListe">
         <div class="text-center py-8">
           <div class="animate-spin inline-block w-8 h-8 border-4 rounded-full" style="border-color: var(--color-primary); border-top-color: transparent;"></div>
-          <p class="mt-4" style="color: var(--color-dark); opacity: 0.7;">Indlæser forestillingsperioder...</p>
+          <p class="mt-4 text-sm md:text-base" style="color: var(--color-dark); opacity: 0.7;">Indlæser forestillingsperioder...</p>
         </div>
       </div>
     </div>
   </section>
   
   <!-- Opret/Rediger Modal -->
-  <div id="periodeModal" class="fixed inset-0 hidden z-50" style="background-color: rgba(0,0,0,0.5);">
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="p-8">
-          <div class="flex items-center justify-between mb-6">
-            <h2 id="modalTitle" class="text-2xl" style="font-family: var(--font-heading); color: var(--color-primary);">Ny forestillingsperiode</h2>
-            <button onclick="skjulModal()" class="text-2xl" style="color: var(--color-dark);">&times;</button>
+  <div id="periodeModal" class="fixed inset-0 hidden z-50 overflow-y-auto" style="background-color: rgba(0,0,0,0.5);">
+    <div class="flex items-start sm:items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-4 sm:my-8">
+        <div class="p-4 sm:p-6 md:p-8">
+          <div class="flex items-center justify-between mb-4 md:mb-6">
+            <h2 id="modalTitle" class="text-xl md:text-2xl" style="font-family: var(--font-heading); color: var(--color-primary);">Ny forestillingsperiode</h2>
+            <button onclick="skjulModal()" class="text-2xl p-2" style="color: var(--color-dark);">&times;</button>
           </div>
           
-          <form id="periodeForm" class="space-y-6">
+          <form id="periodeForm" class="space-y-4 md:space-y-6">
             <input type="hidden" id="periodeId" value="">
             
             <div>
               <label class="block text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Forestillingsnavn *</label>
               <input type="text" id="periodeNavn" required
-                class="w-full px-4 py-3 rounded-xl border-2"
+                class="w-full px-3 md:px-4 py-2 md:py-3 rounded-xl border-2 text-sm md:text-base"
                 style="border-color: var(--color-primary);"
                 placeholder="F.eks. Hamlet 2025">
             </div>
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               <div>
                 <label class="block text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Start dato *</label>
                 <input type="date" id="periodeStart" required
-                  class="w-full px-4 py-3 rounded-xl border-2"
+                  class="w-full px-3 md:px-4 py-2 md:py-3 rounded-xl border-2 text-sm md:text-base"
                   style="border-color: var(--color-primary);">
               </div>
               <div>
                 <label class="block text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Slut dato *</label>
                 <input type="date" id="periodeSlut" required
-                  class="w-full px-4 py-3 rounded-xl border-2"
+                  class="w-full px-3 md:px-4 py-2 md:py-3 rounded-xl border-2 text-sm md:text-base"
                   style="border-color: var(--color-primary);">
               </div>
             </div>
             
             <div>
-              <label class="block text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Vælg produkter * (vælg én eller flere)</label>
-              <div id="produktCheckboxes" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto p-3 rounded-xl" style="background-color: #f8f9fa; border: 2px solid var(--color-primary);">
+              <label class="block text-sm mb-2" style="color: var(--color-dark); font-weight: 600;">Vælg produkter *</label>
+              <div id="produktCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 md:max-h-60 overflow-y-auto p-3 rounded-xl text-sm md:text-base" style="background-color: #f8f9fa; border: 2px solid var(--color-primary);">
                 <p style="color: var(--color-dark); opacity: 0.7;">Indlæser produkter...</p>
               </div>
             </div>
             
-            <div id="formError" class="hidden p-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
-            <div id="formSuccess" class="hidden p-4 rounded-xl" style="background-color: #dcfce7; color: #16a34a;"></div>
+            <div id="formError" class="hidden p-3 md:p-4 rounded-xl text-sm md:text-base" style="background-color: #fee2e2; color: #dc2626;"></div>
+            <div id="formSuccess" class="hidden p-3 md:p-4 rounded-xl text-sm md:text-base" style="background-color: #dcfce7; color: #16a34a;"></div>
             
-            <div class="flex gap-4 pt-4">
-              <button type="button" onclick="skjulModal()" class="btn-secondary flex-1" style="border-radius: 100px;">
+            <div class="flex flex-col sm:flex-row gap-3 pt-2 md:pt-4">
+              <button type="button" onclick="skjulModal()" class="btn-secondary flex-1 order-2 sm:order-1" style="border-radius: 100px;">
                 Annuller
               </button>
-              <button type="submit" id="submitBtn" class="btn-primary flex-1" style="border-radius: 100px;">
+              <button type="submit" id="submitBtn" class="btn-primary flex-1 order-1 sm:order-2" style="border-radius: 100px;">
                 Gem periode
               </button>
             </div>

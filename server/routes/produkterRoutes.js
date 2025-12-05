@@ -161,8 +161,13 @@ router.get('/:id', async (req, res) => {
           orderBy: { position: 'asc' }
         },
         forestillingsperioder: {
+          include: {
+            forestillingsperiode: true
+          },
           orderBy: {
-            start_dato: 'asc'
+            forestillingsperiode: {
+              start_dato: 'asc'
+            }
           }
         },
         reservationer: {
