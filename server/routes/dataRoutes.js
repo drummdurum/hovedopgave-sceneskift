@@ -126,15 +126,6 @@ router.post('/reservationer/bulk', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Et eller flere produkter blev ikke fundet' });
     }
 
-    // Filtrer produkter som brugeren selv ejer
-    const egneProdukter = produkter.filter(p => p.bruger_id === bruger_id);
-    if (egneProdukter.length > 0) {
-      return res.status(400).json({ 
-        error: 'Du kan ikke reservere dine egne produkter',
-        egneProdukter: egneProdukter.map(p => p.navn)
-      });
-    }
-
     // Opret reservationer for alle produkter
     const reservationer = await Promise.all(
       produkter.map(produkt => 
