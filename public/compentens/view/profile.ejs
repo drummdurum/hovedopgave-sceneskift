@@ -247,6 +247,64 @@
   <!-- Footer -->
   <%- include('../footer/footer') %>
 
+  <!-- Rediger Profil Modal -->
+  <div id="editProfileModal" class="fixed inset-0 z-[10000] hidden items-center justify-center p-4" style="background-color: rgba(0,0,0,0.5);">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div class="p-6 border-b">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold" style="font-family: var(--font-heading); color: var(--color-primary);">Rediger profil</h2>
+          <button onclick="closeEditProfile()" class="text-2xl hover:opacity-70" style="color: var(--color-dark);">&times;</button>
+        </div>
+      </div>
+      
+      <form id="editProfileForm" class="p-6 space-y-4">
+        <div>
+          <label for="editNavn" class="block text-sm font-medium mb-1" style="color: var(--color-dark);">Navn</label>
+          <input type="text" id="editNavn" name="navn" required
+            class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:outline-none"
+            style="border-color: #e5e7eb; background-color: #f9fafb;"
+            value="<%= user.navn %>">
+        </div>
+        
+        <div>
+          <label for="editTeaternavn" class="block text-sm font-medium mb-1" style="color: var(--color-dark);">Teaternavn</label>
+          <input type="text" id="editTeaternavn" name="teaternavn" required
+            class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:outline-none"
+            style="border-color: #e5e7eb; background-color: #f9fafb;"
+            value="<%= user.teaternavn %>">
+        </div>
+        
+        <div>
+          <label for="editLokation" class="block text-sm font-medium mb-1" style="color: var(--color-dark);">Lokation</label>
+          <input type="text" id="editLokation" name="lokation" required
+            class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:outline-none"
+            style="border-color: #e5e7eb; background-color: #f9fafb;"
+            value="<%= user.lokation %>">
+        </div>
+        
+        <div>
+          <label for="editEmail" class="block text-sm font-medium mb-1" style="color: var(--color-dark);">E-mail</label>
+          <input type="email" id="editEmail" name="email" required
+            class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:outline-none"
+            style="border-color: #e5e7eb; background-color: #f9fafb;"
+            value="<%= user.email %>">
+        </div>
+        
+        <div id="editProfileError" class="hidden p-3 rounded-xl text-sm" style="background-color: #fee2e2; color: #dc2626;"></div>
+        <div id="editProfileSuccess" class="hidden p-3 rounded-xl text-sm" style="background-color: #dcfce7; color: #16a34a;"></div>
+        
+        <div class="flex gap-3 pt-4">
+          <button type="button" onclick="closeEditProfile()" class="btn-secondary flex-1" style="border-radius: 100px;">
+            Annuller
+          </button>
+          <button type="submit" class="btn-primary flex-1" style="border-radius: 100px;">
+            Gem ændringer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="/compentens/js/kurv-global.js"></script>
   <script src="/compentens/js/profile.js"></script>
 </body>

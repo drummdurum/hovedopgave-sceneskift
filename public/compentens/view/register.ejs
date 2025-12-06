@@ -45,11 +45,11 @@
         <form id="registerForm" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="brugernavn" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Brugernavn *</label>
-              <input type="text" id="brugernavn" name="brugernavn" required
+              <label for="email" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">E-mail *</label>
+              <input type="email" id="email" name="email" required
                 class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
                 style="border-color: var(--color-primary); font-size: 1rem;"
-                placeholder="Vælg et brugernavn">
+                placeholder="din@email.dk">
             </div>
             
             <div>
@@ -71,33 +71,24 @@
             </div>
             
             <div>
-              <label for="email" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">E-mail *</label>
-              <input type="email" id="email" name="email" required
-                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
-                style="border-color: var(--color-primary); font-size: 1rem;"
-                placeholder="din@email.dk">
-            </div>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
               <label for="teaternavn" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Teater / Organisation *</label>
               <input type="text" id="teaternavn" name="teaternavn" required
                 class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
                 style="border-color: var(--color-primary); font-size: 1rem;"
                 placeholder="Navn på dit teater">
             </div>
-            
-            <div>
-              <label for="lokation" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Lokation *</label>
-              <select id="lokation" name="lokation" required
-                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
-                style="border-color: var(--color-primary); font-size: 1rem;">
-                <option value="">Vælg område...</option>
-                <option value="Hovedstadsområdet">Hovedstadsområdet</option>
-                <option value="Nordsjælland">Nordsjælland</option>
-                <option value="Sydsjælland og Lolland-Falster">Sydsjælland og Lolland-Falster</option>
-                <option value="Vestsjælland">Vestsjælland</option>
+          </div>
+          
+          <div>
+            <label for="lokation" class="block text-lg mb-2" style="color: var(--color-dark); font-weight: 600;">Lokation *</label>
+            <select id="lokation" name="lokation" required
+              class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+              style="border-color: var(--color-primary); font-size: 1rem;">
+              <option value="">Vælg område...</option>
+              <option value="Hovedstadsområdet">Hovedstadsområdet</option>
+              <option value="Nordsjælland">Nordsjælland</option>
+              <option value="Sydsjælland og Lolland-Falster">Sydsjælland og Lolland-Falster</option>
+              <option value="Vestsjælland">Vestsjælland</option>
               </select>
             </div>
           </div>

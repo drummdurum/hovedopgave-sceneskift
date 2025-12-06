@@ -2,30 +2,25 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const prisma = require('../../database/prisma');
-const { redirectIfAuthenticated } = require('../middleware/auth');
+const { redirectIfAuthenticated, requireAuth } = require('../middleware/auth');
 
 // Register ny bruger
 router.post('/register', async (req, res) => {
   try {
-    const { brugernavn, password, navn, teaternavn, lokation, email, features } = req.body;
+    const { password, navn, teaternavn, lokation, email, features } = req.body;
 
     // Valider input
-    if (!brugernavn || !password || !navn || !teaternavn || !lokation || !email) {
+    if (!password || !navn || !teaternavn || !lokation || !email) {
       return res.status(400).json({ error: 'Alle felter er påkrævet' });
     }
 
-    // Tjek om bruger allerede eksisterer
-    const existingUser = await prisma.brugere.findFirst({
-      where: {
-        OR: [
-          { brugernavn: brugernavn },
-          { email: email }
-        ]
-      }
+    // Tjek om email allerede eksisterer
+    const existingUser = await prisma.brugere.findUnique({
+      where: { email: email }
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: 'Brugernavn eller email er allerede i brug' });
+      return res.status(400).json({ error: 'Email er allerede i brug' });
     }
 
     // Hash password
@@ -34,7 +29,6 @@ router.post('/register', async (req, res) => {
     // Opret ny bruger
     const newUser = await prisma.brugere.create({
       data: {
-        brugernavn,
         password: hashedPassword,
         navn,
         teaternavn,
@@ -47,7 +41,6 @@ router.post('/register', async (req, res) => {
     // Gem bruger i session (uden password)
     req.session.user = {
       id: newUser.id,
-      brugernavn: newUser.brugernavn,
       navn: newUser.navn,
       teaternavn: newUser.teaternavn,
       lokation: newUser.lokation,
@@ -75,33 +68,32 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   try {
-    const { brugernavn, password } = req.body;
+    const { email, password } = req.body;
 
     // Valider input
-    if (!brugernavn || !password) {
-      return res.status(400).json({ error: 'Brugernavn og password er påkrævet' });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email og password er påkrævet' });
     }
 
-    // Find bruger
+    // Find bruger via email
     const user = await prisma.brugere.findUnique({
-      where: { brugernavn }
+      where: { email }
     });
 
     if (!user) {
-      return res.status(401).json({ error: 'Forkert brugernavn eller password' });
+      return res.status(401).json({ error: 'Forkert email eller password' });
     }
 
     // Verificer password
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
-      return res.status(401).json({ error: 'Forkert brugernavn eller password' });
+      return res.status(401).json({ error: 'Forkert email eller password' });
     }
 
     // Gem bruger i session (uden password)
     req.session.user = {
       id: user.id,
-      brugernavn: user.brugernavn,
       navn: user.navn,
       teaternavn: user.teaternavn,
       lokation: user.lokation,
@@ -122,6 +114,54 @@ router.post('/login', async (req, res) => {
       error: 'Der opstod en fejl ved login',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
+  }
+});
+
+// Opdater profil
+router.put('/profile', requireAuth, async (req, res) => {
+  try {
+    const { navn, teaternavn, lokation, email } = req.body;
+    const bruger_id = req.session.user.id;
+
+    // Valider input
+    if (!navn || !teaternavn || !lokation || !email) {
+      return res.status(400).json({ error: 'Alle felter er påkrævet' });
+    }
+
+    // Tjek om email allerede bruges af en anden bruger
+    const existingUser = await prisma.brugere.findFirst({
+      where: {
+        email: email,
+        NOT: { id: bruger_id }
+      }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email er allerede i brug af en anden bruger' });
+    }
+
+    // Opdater bruger
+    const updatedUser = await prisma.brugere.update({
+      where: { id: bruger_id },
+      data: { navn, teaternavn, lokation, email }
+    });
+
+    // Opdater session
+    req.session.user = {
+      ...req.session.user,
+      navn: updatedUser.navn,
+      teaternavn: updatedUser.teaternavn,
+      lokation: updatedUser.lokation,
+      email: updatedUser.email
+    };
+
+    res.json({ 
+      message: 'Profil opdateret',
+      user: req.session.user 
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved opdatering af profil' });
   }
 });
 

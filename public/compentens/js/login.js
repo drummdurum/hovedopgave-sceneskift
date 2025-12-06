@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
       errorDiv.classList.add('hidden');
       successDiv.classList.add('hidden');
       
-      const brugernavn = document.getElementById('brugernavn').value;
+      const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       
       try {
         const response = await fetch('/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ brugernavn, password })
+          body: JSON.stringify({ email, password })
         });
         
         const data = await response.json();

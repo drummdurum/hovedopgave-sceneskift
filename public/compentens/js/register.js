@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
       successDiv.classList.add('hidden');
       
       const formData = {
-        brugernavn: document.getElementById('brugernavn').value,
         password: document.getElementById('password').value,
         navn: document.getElementById('navn').value,
         email: document.getElementById('email').value,

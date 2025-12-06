@@ -3,6 +3,63 @@ document.addEventListener('DOMContentLoaded', function() {
   loadForestillingsperioderPreview();
   loadAdminStats();
   loadReservationStats();
+  
+  // Håndter profil formular
+  const form = document.getElementById('editProfileForm');
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const errorDiv = document.getElementById('editProfileError');
+      const successDiv = document.getElementById('editProfileSuccess');
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+      
+      const formData = {
+        navn: document.getElementById('editNavn').value.trim(),
+        teaternavn: document.getElementById('editTeaternavn').value.trim(),
+        lokation: document.getElementById('editLokation').value.trim(),
+        email: document.getElementById('editEmail').value.trim()
+      };
+      
+      try {
+        const response = await fetch('/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          successDiv.textContent = 'Profil opdateret!';
+          successDiv.classList.remove('hidden');
+          
+          // Genindlæs siden efter 1 sekund for at vise opdaterede data
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          errorDiv.textContent = data.error || 'Der opstod en fejl';
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Fejl ved opdatering af profil:', error);
+        errorDiv.textContent = 'Der opstod en netværksfejl. Prøv igen.';
+        errorDiv.classList.remove('hidden');
+      }
+    });
+  }
+  
+  // Luk modal ved klik udenfor
+  const modal = document.getElementById('editProfileModal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeEditProfile();
+      }
+    });
+  }
 });
 
 async function logout() {
@@ -16,8 +73,27 @@ async function logout() {
   }
 }
 
+// Åbn rediger profil modal
 function editProfile() {
-  alert('Profil redigering kommer snart!');
+  const modal = document.getElementById('editProfileModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// Luk rediger profil modal
+function closeEditProfile() {
+  const modal = document.getElementById('editProfileModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+    // Nulstil fejl/success beskeder
+    document.getElementById('editProfileError').classList.add('hidden');
+    document.getElementById('editProfileSuccess').classList.add('hidden');
+  }
 }
 
 // Indlæs reservations statistikker for normal bruger
