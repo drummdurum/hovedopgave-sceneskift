@@ -41,7 +41,6 @@ router.get('/mine/produkter', requireAuth, async (req, res) => {
         billeder: {
           orderBy: { position: 'asc' }
         },
-        forestillingsperioder: true,
         reservationer: true
       },
       orderBy: {
@@ -113,7 +112,6 @@ router.get('/', async (req, res) => {
         billeder: {
           orderBy: { position: 'asc' }
         },
-        forestillingsperioder: true,
         reservationer: true
       },
       orderBy: {
@@ -159,16 +157,6 @@ router.get('/:id', async (req, res) => {
         },
         billeder: {
           orderBy: { position: 'asc' }
-        },
-        forestillingsperioder: {
-          include: {
-            forestillingsperiode: true
-          },
-          orderBy: {
-            forestillingsperiode: {
-              start_dato: 'asc'
-            }
-          }
         },
         reservationer: {
           orderBy: {
