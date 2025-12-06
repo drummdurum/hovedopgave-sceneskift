@@ -20,7 +20,6 @@ router.get('/users', requireAuth, requireAdmin, async (req, res) => {
     const users = await prisma.brugere.findMany({
       select: {
         id: true,
-        brugernavn: true,
         navn: true,
         teaternavn: true,
         lokation: true,

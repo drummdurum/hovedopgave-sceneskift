@@ -63,76 +63,7 @@ function renderUsersTable(users) {
   usersList.innerHTML = users.map(user => `
     <tr style="border-bottom: 1px solid #e5e7eb;">
       <td class="p-4 font-semibold" style="color: var(--color-dark);">${user.navn}</td>
-      <td class="p-4" style="color: var(--color-dark);">${user.brugernavn}</td>
-      <td class="p-4" style="color: var(--color-dark);">${user.teaternavn}</td>
-      <td class="p-4" style="color: var(--color-dark);">${user.lokation}</td>
-      <td class="p-4">
-        ${user.godkendt 
-          ? '<span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: #dcfce7; color: #16a34a;">Godkendt</span>'
-          : '<span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: #fef3c7; color: #d97706;">Afventer</span>'
-        }
-      </td>
-      <td class="p-4">
-        <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: ${user.rolle === 'admin' ? 'var(--color-primary)' : '#f3f4f6'}; color: ${user.rolle === 'admin' ? 'white' : 'var(--color-dark)'};">
-          ${user.rolle}
-        </span>
-      </td>
-      <td class="p-4">
-        <div class="flex gap-2">
-          ${!user.godkendt ? `
-            <button onclick="approveUser(${user.id})" class="px-3 py-1 rounded-lg text-sm" style="background-color: #16a34a; color: white;">Godkend</button>
-          ` : ''}
-          ${user.rolle !== 'admin' ? `
-            <button onclick="makeAdmin(${user.id})" class="px-3 py-1 rounded-lg text-sm" style="background-color: var(--color-primary); color: white;">Gør admin</button>
-          ` : ''}
-        </div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-// Kør ved side load
-document.addEventListener('DOMContentLoaded', loadUsers);
-
-// Render afventende brugere
-function renderPendingUsers(pendingUsers) {
-  const pendingList = document.getElementById('pendingList');
-  
-  if (pendingUsers.length === 0) {
-    pendingList.innerHTML = '<p class="p-4 rounded-xl text-center" style="background-color: #dcfce7; color: #16a34a;">🎉 Ingen afventende godkendelser!</p>';
-  } else {
-    pendingList.innerHTML = pendingUsers.map(user => `
-      <div class="flex items-center justify-between p-6 rounded-xl" style="background-color: #fef3c7;">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: var(--color-secondary);">
-            <span class="text-xl font-bold" style="color: var(--color-dark);">${user.navn.charAt(0)}</span>
-          </div>
-          <div>
-            <p class="font-bold text-lg" style="color: var(--color-dark);">${user.navn}</p>
-            <p style="color: var(--color-dark); opacity: 0.7;">${user.teaternavn} · ${user.lokation}</p>
-            <p class="text-sm" style="color: var(--color-dark); opacity: 0.6;">${user.email}</p>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <button onclick="approveUser(${user.id})" class="px-4 py-2 rounded-xl font-bold transition" style="background-color: #16a34a; color: white;">
-            ✓ Godkend
-          </button>
-          <button onclick="rejectUser(${user.id})" class="px-4 py-2 rounded-xl font-bold transition" style="background-color: #dc2626; color: white;">
-            ✗ Afvis
-          </button>
-        </div>
-      </div>
-    `).join('');
-  }
-}
-
-// Render brugere tabel
-function renderUsersTable(users) {
-  const usersList = document.getElementById('usersList');
-  usersList.innerHTML = users.map(user => `
-    <tr style="border-bottom: 1px solid #e5e7eb;">
-      <td class="p-4 font-semibold" style="color: var(--color-dark);">${user.navn}</td>
-      <td class="p-4" style="color: var(--color-dark);">${user.brugernavn}</td>
+      <td class="p-4" style="color: var(--color-dark);">${user.email}</td>
       <td class="p-4" style="color: var(--color-dark);">${user.teaternavn}</td>
       <td class="p-4" style="color: var(--color-dark);">${user.lokation}</td>
       <td class="p-4">

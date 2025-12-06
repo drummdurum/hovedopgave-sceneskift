@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const prisma = require('../../database/prisma');
 const { redirectIfAuthenticated, requireAuth } = require('../middleware/auth');
+const { sendRegistrationEmails } = require('../../service/mail/registrationMailService');
 
 // Register ny bruger
 router.post('/register', async (req, res) => {
@@ -49,6 +50,15 @@ router.post('/register', async (req, res) => {
       godkendt: newUser.godkendt,
       rolle: newUser.rolle
     };
+
+    // Send velkomst-email til bruger og notifikation til admin
+    sendRegistrationEmails({
+      navn,
+      teaternavn,
+      lokation,
+      email,
+      features: features === true || features === 'true'
+    });
 
     res.status(201).json({ 
       message: 'Bruger oprettet succesfuldt',
