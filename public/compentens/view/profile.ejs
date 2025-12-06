@@ -87,32 +87,49 @@
         
         <% } else { %>
         <!-- Normal bruger layout -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
-            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Brugernavn</label>
-            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.brugernavn %></p>
-          </div>
-          
-          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
-            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Navn</label>
-            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.navn %></p>
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">E-mail</label>
-            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.email %></p>
+            <p class="text-lg font-semibold" style="color: var(--color-dark);"><%= user.email %></p>
           </div>
           
           <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
             <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Teater</label>
-            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.teaternavn %></p>
+            <p class="text-lg font-semibold" style="color: var(--color-dark);"><%= user.teaternavn %></p>
           </div>
           
-          <div class="p-4 rounded-xl" style="background-color: #f8f9fa;">
-            <label class="block text-sm mb-1" style="color: var(--color-dark); opacity: 0.7;">Lokation</label>
-            <p class="text-xl font-semibold" style="color: var(--color-dark);"><%= user.lokation %></p>
-          </div>
         </div>
+        
+        <!-- Reservations bokse -->
+        <% if (user.godkendt) { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Produkter jeg skal hente -->
+          <a href="/mine-reservationer/hente" class="p-4 rounded-xl flex items-center gap-4 hover:shadow-lg transition" style="background-color: #dbeafe; border: 2px solid #3b82f6;">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: white;">
+              <span class="text-2xl">📥</span>
+            </div>
+            <div class="flex-grow min-w-0">
+              <p class="font-bold text-base" style="color: var(--color-primary);">Produkter jeg skal hente</p>
+              <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">Reservationer hos andre teatre</p>
+            </div>
+            <span class="text-2xl font-bold flex-shrink-0" style="color: #3b82f6;" id="henteCount">-</span>
+          </a>
+          
+          <!-- Mine produkter der er reserveret -->
+          <a href="/mine-reservationer/udlaant" class="p-4 rounded-xl flex items-center gap-4 hover:shadow-lg transition" style="background-color: #fef3c7; border: 2px solid #f59e0b;">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: white;">
+              <span class="text-2xl">📤</span>
+            </div>
+            <div class="flex-grow min-w-0">
+              <p class="font-bold text-base" style="color: var(--color-primary);">Mine produkter der er reserveret</p>
+              <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">Andre teatre har reserveret</p>
+            </div>
+            <span class="text-2xl font-bold flex-shrink-0" style="color: #f59e0b;" id="udlaantCount">-</span>
+          </a>
+        </div>
+        <% } %>
+
         <% } %>
         
         <div class="mt-auto pt-6 md:pt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">

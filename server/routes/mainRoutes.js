@@ -106,6 +106,22 @@ router.get('/admin/reservationer', requireAuth, (req, res) => {
   });
 });
 
+// Mine reservationer - Produkter jeg skal hente
+router.get('/mine-reservationer/hente', requireAuth, (req, res) => {
+  res.render('mine-reservationer-hente', { 
+    title: 'Produkter jeg skal hente',
+    user: req.session.user
+  });
+});
+
+// Mine reservationer - Mine produkter der er reserveret
+router.get('/mine-reservationer/udlaant', requireAuth, (req, res) => {
+  res.render('mine-reservationer-udlaant', { 
+    title: 'Mine produkter der er reserveret',
+    user: req.session.user
+  });
+});
+
 // Produkt detalje side (enkelt rekvisit)
 router.get('/rekvisitter/:id', (req, res) => {
   const produktId = parseInt(req.params.id);

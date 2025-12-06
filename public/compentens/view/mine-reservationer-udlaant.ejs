@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - SceneSkift</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+  
+  <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
+    <%- include('../header/header') %>
+  </header>
+    
+  <!-- Hero sektion -->
+  <section class="relative min-h-[20vh] md:min-h-[25vh] flex flex-col" style="background-image: url('/compentens/image/moensterGuld.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 20px;">
+    <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.5); z-index: 0;"></div>
+    <div class="flex flex-col items-center justify-center w-full px-4 md:px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 60px 16px;">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+          📤 Mine produkter der er reserveret
+        </h1>
+        <p class="text-base md:text-lg" style="color: var(--color-light); opacity: 0.9;">
+          <a href="/profile" class="hover:underline">← Tilbage til profil</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="flex-grow container-max px-4 md:px-6 py-6 md:py-12">
+    <div class="max-w-4xl mx-auto">
+      
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl md:text-2xl" style="font-family: var(--font-heading); color: var(--color-primary);">
+            Reservationer på mine produkter
+          </h2>
+          <span id="totalCount" class="px-4 py-2 rounded-full text-lg font-bold" style="background-color: #fef3c7; color: #f59e0b;">
+            -
+          </span>
+        </div>
+        <div class="h-1 w-24 mb-6" style="background-color: var(--color-secondary);"></div>
+        
+        <p class="mb-6" style="color: var(--color-dark); opacity: 0.8;">
+          Her ser du kommende reservationer på dine produkter. Andre teatre har bedt om at låne disse.
+        </p>
+        
+        <!-- Loading state -->
+        <div id="loadingState" class="text-center py-8">
+          <div class="animate-pulse">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full" style="background-color: var(--color-secondary);"></div>
+            <p style="color: var(--color-dark);">Indlæser reservationer...</p>
+          </div>
+        </div>
+        
+        <!-- Tom liste -->
+        <div id="emptyState" class="hidden text-center py-12">
+          <span class="text-5xl mb-4 block">📭</span>
+          <p class="text-lg mb-2" style="color: var(--color-dark);">Ingen har reserveret dine produkter</p>
+          <p class="mb-6" style="color: var(--color-dark); opacity: 0.7;">Når andre teatre reserverer dine rekvisitter, vises de her.</p>
+          <a href="/produkter/mine" class="btn-primary" style="border-radius: 100px;">Se mine produkter</a>
+        </div>
+        
+        <!-- Liste -->
+        <div id="reservationerListe" class="hidden space-y-4">
+          <!-- Genereres via JavaScript -->
+        </div>
+      </div>
+      
+    </div>
+  </main>
+
+  <%- include('../footer/footer') %>
+
+  <script src="/compentens/js/kurv-global.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', loadReservationer);
+    
+    async function loadReservationer() {
+      const loadingState = document.getElementById('loadingState');
+      const emptyState = document.getElementById('emptyState');
+      const liste = document.getElementById('reservationerListe');
+      const totalCount = document.getElementById('totalCount');
+      
+      try {
+        const response = await fetch('/api/reservationer/mine/udlaant');
+        const data = await response.json();
+        
+        loadingState.classList.add('hidden');
+        totalCount.textContent = data.count || 0;
+        
+        if (!data.reservationer || data.reservationer.length === 0) {
+          emptyState.classList.remove('hidden');
+          return;
+        }
+        
+        liste.classList.remove('hidden');
+        liste.innerHTML = data.reservationer.map(r => renderReservation(r)).join('');
+        
+      } catch (error) {
+        console.error('Fejl:', error);
+        loadingState.innerHTML = '<p style="color: #dc2626;">Fejl ved indlæsning</p>';
+      }
+    }
+    
+    function renderReservation(r) {
+      const fraDato = new Date(r.fra_dato).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
+      const tilDato = new Date(r.til_dato).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
+      const billede = r.produkt?.billede_url || '/compentens/image/placeholder.webp';
+      
+      return `
+        <a href="/rekvisitter/${r.produkt?.id}" class="flex items-center gap-4 p-4 rounded-xl hover:shadow-lg transition" style="background-color: #f9fafb; border: 1px solid #e5e7eb;">
+          <img src="${billede}" alt="${r.produkt?.navn}" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover flex-shrink-0" onerror="this.src='/compentens/image/placeholder.webp'">
+          <div class="flex-grow min-w-0">
+            <h3 class="font-bold text-lg truncate" style="color: var(--color-dark);">${r.produkt?.navn || 'Ukendt produkt'}</h3>
+            <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">🏛️ Reserveret af: ${r.teaternavn || 'Ukendt'}</p>
+            <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">📅 ${fraDato} - ${tilDato}</p>
+          </div>
+          <span class="text-2xl">→</span>
+        </a>
+      `;
+    }
+  </script>
+</body>
+</html>

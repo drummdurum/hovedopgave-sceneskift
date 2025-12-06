@@ -5,7 +5,7 @@ let billeder = [];
 
 document.addEventListener('DOMContentLoaded', function() {
   loadProdukt();
-  updateKurvBadge();
+  updateGlobalKurvBadge();
 });
 
 async function loadProdukt() {

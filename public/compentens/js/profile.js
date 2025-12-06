@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   loadForestillingsperioderPreview();
   loadAdminStats();
+  loadReservationStats();
 });
 
 async function logout() {
@@ -16,8 +17,38 @@ async function logout() {
 }
 
 function editProfile() {
-  // TODO: Implementer profil redigering
   alert('Profil redigering kommer snart!');
+}
+
+// Indlæs reservations statistikker for normal bruger
+async function loadReservationStats() {
+  const henteCount = document.getElementById('henteCount');
+  const udlaantCount = document.getElementById('udlaantCount');
+  
+  // Hvis elementerne ikke findes, skip
+  if (!henteCount && !udlaantCount) return;
+  
+  try {
+    // Hent produkter brugeren skal hente
+    if (henteCount) {
+      const henteResponse = await fetch('/api/reservationer/mine/hente');
+      if (henteResponse.ok) {
+        const henteData = await henteResponse.json();
+        henteCount.textContent = henteData.count || 0;
+      }
+    }
+    
+    // Hent brugerens produkter der er reserveret
+    if (udlaantCount) {
+      const udlaantResponse = await fetch('/api/reservationer/mine/udlaant');
+      if (udlaantResponse.ok) {
+        const udlaantData = await udlaantResponse.json();
+        udlaantCount.textContent = udlaantData.count || 0;
+      }
+    }
+  } catch (error) {
+    console.error('Fejl ved indlæsning af reservation statistikker:', error);
+  }
 }
 
 // Indlæs admin statistikker (kun hvis admin)
@@ -25,18 +56,15 @@ async function loadAdminStats() {
   const hovedlagerCount = document.getElementById('hovedlagerCount');
   const reservationerCount = document.getElementById('reservationerCount');
   
-  // Hvis elementerne ikke findes, er brugeren ikke admin
   if (!hovedlagerCount || !reservationerCount) return;
   
   try {
-    // Hent produkter på hovedlager
     const hovedlagerResponse = await fetch('/api/admin/hovedlager/count');
     if (hovedlagerResponse.ok) {
       const hovedlagerData = await hovedlagerResponse.json();
       hovedlagerCount.textContent = hovedlagerData.count;
     }
     
-    // Hent kommende reservationer
     const reservationerResponse = await fetch('/api/admin/reservationer/count');
     if (reservationerResponse.ok) {
       const reservationerData = await reservationerResponse.json();

@@ -1,10 +1,37 @@
 // Global kurv funktionalitet
 // Inkluder denne fil på alle sider hvor kurv-badge skal vises
 
-document.addEventListener('DOMContentLoaded', function() {
+// Bruger ID til bruger-specifik kurv
+let currentUserId = null;
+
+document.addEventListener('DOMContentLoaded', async function() {
+  // Hent bruger ID først
+  await fetchCurrentUserId();
   initKurvBadge();
   initKurvModal();
 });
+
+// Hent nuværende bruger ID fra session
+async function fetchCurrentUserId() {
+  try {
+    const response = await fetch('/auth/me');
+    if (response.ok) {
+      const data = await response.json();
+      currentUserId = data.user?.id || null;
+    }
+  } catch (error) {
+    console.log('Bruger ikke logget ind');
+    currentUserId = null;
+  }
+}
+
+// Få kurv-nøgle for nuværende bruger
+function getKurvKey() {
+  if (currentUserId) {
+    return `sceneskift_kurv_user_${currentUserId}`;
+  }
+  return 'sceneskift_kurv_guest';
+}
 
 function initKurvBadge() {
   // Opret kurv badge element hvis det ikke allerede findes
@@ -190,7 +217,8 @@ async function loadForestillingsperioderTilKurv() {
       return;
     }
     
-    const perioder = await response.json();
+    const data = await response.json();
+    const perioder = data.forestillingsperioder || [];
     
     // Filtrer kun aktive/kommende perioder
     const now = new Date();
@@ -348,8 +376,21 @@ async function bekraeftReservation() {
         updateKurvButtons();
       }
     } else {
-      const error = await response.json();
-      throw new Error(error.error || 'Kunne ikke sende forespørgsel');
+      const errorData = await response.json();
+      
+      // Håndter overlap-fejl specifikt
+      if (response.status === 409 && errorData.konflikter) {
+        const konfliktNavne = errorData.konflikter.map(k => k.produktNavn).join(', ');
+        showKurvNotification(`⚠️ Disse produkter er allerede reserveret i perioden: ${konfliktNavne}`, 'error');
+        
+        // Vis detaljer i konsollen
+        console.warn('Reservation konflikter:', errorData.konflikter);
+      } else {
+        throw new Error(errorData.error || 'Kunne ikke sende forespørgsel');
+      }
+      
+      bekraeftBtn.disabled = false;
+      bekraeftBtn.textContent = '✉️ Send forespørgsel';
     }
   } catch (error) {
     console.error('Fejl ved reservation:', error);
@@ -360,12 +401,14 @@ async function bekraeftReservation() {
 }
 
 function getKurv() {
-  const kurv = localStorage.getItem('sceneskift_kurv');
+  const key = getKurvKey();
+  const kurv = localStorage.getItem(key);
   return kurv ? JSON.parse(kurv) : [];
 }
 
 function saveKurv(kurv) {
-  localStorage.setItem('sceneskift_kurv', JSON.stringify(kurv));
+  const key = getKurvKey();
+  localStorage.setItem(key, JSON.stringify(kurv));
   updateGlobalKurvBadge();
 }
 
