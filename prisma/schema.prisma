@@ -24,6 +24,7 @@ model Brugere {
 
   produkter              Produkter[]
   forestillingsperioder  Forestillingsperioder[]
+  reservationer          Reservationer[]
 }
 
 model Produkter {
@@ -40,7 +41,6 @@ model Produkter {
 
   billeder                    ProduktBilleder[]
   kategorier                  ProduktKategorier[]
-  forestillingsperioder       ForestillingsperiodeProdukter[]
   reservationer               Reservationer[]
 }
 
@@ -76,28 +76,19 @@ model Forestillingsperioder {
   slut_dato    DateTime
   created_by   Int?
   oprettet_af  Brugere?  @relation(fields: [created_by], references: [id])
-
-  produkter    ForestillingsperiodeProdukter[]
-}
-
-model ForestillingsperiodeProdukter {
-  forestillingsperiode_id Int
-  produkt_id              Int
-  forestillingsperiode    Forestillingsperioder @relation(fields: [forestillingsperiode_id], references: [id], onDelete: Cascade)
-  produkt                 Produkter             @relation(fields: [produkt_id], references: [id], onDelete: Cascade)
-
-  @@id([forestillingsperiode_id, produkt_id])
 }
 
 model Reservationer {
   id         Int      @id @default(autoincrement())
   produkt_id Int
-  bruger     String
-  teaternavn String
+  laaner_id  Int
+  bruger     String   // Navn på låner (beholdes for visning)
+  teaternavn String   // Teater navn (beholdes for visning)
   fra_dato   DateTime
   til_dato   DateTime
 
   produkt    Produkter @relation(fields: [produkt_id], references: [id])
+  laaner     Brugere   @relation(fields: [laaner_id], references: [id])
 }
 
 model PasswordReset {

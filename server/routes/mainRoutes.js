@@ -106,6 +106,17 @@ router.get('/admin/reservationer', requireAuth, (req, res) => {
   });
 });
 
+// Admin - Lager reservationer side
+router.get('/admin/lager-reservationer', requireAuth, (req, res) => {
+  if (req.session.user.rolle !== 'admin') {
+    return res.redirect('/');
+  }
+  res.render('admin-lager-reservationer', { 
+    title: 'Reserverede produkter på lager',
+    user: req.session.user
+  });
+});
+
 // Mine reservationer - Produkter jeg skal hente
 router.get('/mine-reservationer/hente', requireAuth, (req, res) => {
   res.render('mine-reservationer-hente', { 

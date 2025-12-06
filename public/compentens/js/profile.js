@@ -55,20 +55,33 @@ async function loadReservationStats() {
 async function loadAdminStats() {
   const hovedlagerCount = document.getElementById('hovedlagerCount');
   const reservationerCount = document.getElementById('reservationerCount');
+  const lagerReservationerCount = document.getElementById('lagerReservationerCount');
   
-  if (!hovedlagerCount || !reservationerCount) return;
+  if (!hovedlagerCount && !reservationerCount && !lagerReservationerCount) return;
   
   try {
-    const hovedlagerResponse = await fetch('/api/admin/hovedlager/count');
-    if (hovedlagerResponse.ok) {
-      const hovedlagerData = await hovedlagerResponse.json();
-      hovedlagerCount.textContent = hovedlagerData.count;
+    if (hovedlagerCount) {
+      const hovedlagerResponse = await fetch('/api/admin/hovedlager/count');
+      if (hovedlagerResponse.ok) {
+        const hovedlagerData = await hovedlagerResponse.json();
+        hovedlagerCount.textContent = hovedlagerData.count;
+      }
     }
     
-    const reservationerResponse = await fetch('/api/admin/reservationer/count');
-    if (reservationerResponse.ok) {
-      const reservationerData = await reservationerResponse.json();
-      reservationerCount.textContent = reservationerData.count;
+    if (reservationerCount) {
+      const reservationerResponse = await fetch('/api/admin/reservationer/count');
+      if (reservationerResponse.ok) {
+        const reservationerData = await reservationerResponse.json();
+        reservationerCount.textContent = reservationerData.count;
+      }
+    }
+    
+    if (lagerReservationerCount) {
+      const lagerResponse = await fetch('/api/admin/lager-reservationer/count');
+      if (lagerResponse.ok) {
+        const lagerData = await lagerResponse.json();
+        lagerReservationerCount.textContent = lagerData.count;
+      }
     }
   } catch (error) {
     console.error('Fejl ved indlæsning af admin statistikker:', error);

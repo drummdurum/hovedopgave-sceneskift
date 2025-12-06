@@ -17,12 +17,12 @@ const {
 // Hent brugerens reservationer (produkter de skal hente)
 router.get('/reservationer/mine/hente', requireAuth, async (req, res) => {
   try {
-    const teaternavn = req.session.user.teaternavn;
+    const bruger_id = req.session.user.id;
     const now = new Date();
 
     const reservationer = await prisma.reservationer.findMany({
       where: { 
-        teaternavn: teaternavn,
+        laaner_id: bruger_id,
         til_dato: { gte: now },
         produkt: {
           paa_sceneskift: false  // Kun produkter der IKKE er på SceneSkift lager
@@ -170,6 +170,7 @@ router.post('/produkt/:produkt_id/reservationer', requireAuth, async (req, res) 
 
     const nyReservation = await createReservation({
       produktId,
+      laanerId: req.session.user.id,
       bruger,
       teaternavn,
       startDato: fra_dato,
@@ -234,7 +235,8 @@ router.post('/reservationer/bulk', requireAuth, async (req, res) => {
 
     // Opret reservationer for alle produkter
     const reservationer = await createBulkReservations(
-      produktIdsParsed, 
+      produktIdsParsed,
+      bruger_id,
       bruger, 
       teaternavn, 
       start_dato, 

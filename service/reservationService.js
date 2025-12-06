@@ -99,11 +99,12 @@ async function checkBulkReservationOverlap(produktIds, startDato, slutDato) {
  * @param {Object} data - Reservation data
  * @returns {Promise<Object>} Den oprettede reservation
  */
-async function createReservation({ produktId, bruger, teaternavn, startDato, slutDato }) {
+async function createReservation({ produktId, laanerId, bruger, teaternavn, startDato, slutDato }) {
   return prisma.reservationer.create({
     data: {
       bruger,
       teaternavn,
+      laaner_id: laanerId,
       fra_dato: new Date(startDato),
       til_dato: new Date(slutDato),
       produkt_id: produktId
@@ -114,16 +115,17 @@ async function createReservation({ produktId, bruger, teaternavn, startDato, slu
 /**
  * Opret flere reservationer på én gang
  * @param {Array<number>} produktIds - Liste af produkt IDs
+ * @param {number} laanerId - Lånerens bruger ID
  * @param {string} bruger - Brugerens navn
  * @param {string} teaternavn - Teaternavnet
  * @param {Date|string} startDato - Start dato
  * @param {Date|string} slutDato - Slut dato
  * @returns {Promise<Array>} Liste af oprettede reservationer
  */
-async function createBulkReservations(produktIds, bruger, teaternavn, startDato, slutDato) {
+async function createBulkReservations(produktIds, laanerId, bruger, teaternavn, startDato, slutDato) {
   const reservationer = await Promise.all(
     produktIds.map(produktId => 
-      createReservation({ produktId, bruger, teaternavn, startDato, slutDato })
+      createReservation({ produktId, laanerId, bruger, teaternavn, startDato, slutDato })
     )
   );
   return reservationer;

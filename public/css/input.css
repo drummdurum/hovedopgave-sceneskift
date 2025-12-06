@@ -405,7 +405,7 @@ main > .section + .section { margin-top: 0; }
   padding: 1rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
-  z-index: 1000;
+  z-index: 10000;
   animation: kurvSlideIn 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
