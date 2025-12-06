@@ -142,8 +142,75 @@ async function sendRegistrationEmails(user) {
   await sendAdminNotification(user);
 }
 
+/**
+ * Send godkendelses-email til bruger
+ * @param {Object} user - Brugeroplysninger
+ */
+async function sendApprovalEmail(user) {
+  const { navn, teaternavn, email } = user;
+  
+  try {
+    await sendMail({
+      to: email,
+      subject: 'Din konto er godkendt! ✅',
+      text: `Hej ${navn},\n\nGode nyheder! Din konto hos SceneSkift er nu blevet godkendt.\n\nDu har nu fuld adgang til alle funktioner på platformen:\n- Opret og del dine rekvisitter\n- Søg og lån rekvisitter fra andre teatre\n- Opret forestillingsperioder\n\nLog ind nu og kom i gang:\nhttps://sceneskift.nu/login\n\nVenlig hilsen,\nSceneSkift`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #2563eb; margin: 0;">🎭 SceneSkift</h1>
+          </div>
+          
+          <h2 style="color: #1e40af;">Tillykke, ${navn}! 🎉</h2>
+          
+          <div style="background-color: #dcfce7; border-left: 4px solid #16a34a; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="color: #166534; margin: 0;">
+              <strong>✅ Din konto er godkendt!</strong><br>
+              Du har nu fuld adgang til SceneSkift.
+            </p>
+          </div>
+          
+          <p style="color: #374151; line-height: 1.6;">
+            Din konto hos SceneSkift er nu blevet godkendt, og du har fuld adgang til alle funktioner på platformen.
+          </p>
+          
+          <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #1e40af; margin-top: 0;">Du kan nu:</h3>
+            <ul style="color: #374151; line-height: 1.8; margin: 0; padding-left: 20px;">
+              <li>📦 Opret og del dine rekvisitter</li>
+              <li>🔍 Søg og lån rekvisitter fra andre teatre</li>
+              <li>🎭 Opret forestillingsperioder</li>
+              <li>📅 Administrer dine reservationer</li>
+            </ul>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://sceneskift.nu/login" style="display: inline-block; background-color: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 100px; font-weight: bold;">
+              Log ind nu →
+            </a>
+          </div>
+          
+          <p style="color: #374151; line-height: 1.6;">
+            Har du spørgsmål? Kontakt os på <a href="mailto:info@sceneskift.nu" style="color: #2563eb;">info@sceneskift.nu</a>
+          </p>
+          
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+          
+          <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+            Venlig hilsen,<br>
+            <strong>SceneSkift</strong> – ${teaternavn}
+          </p>
+        </div>
+      `
+    });
+    console.log('Godkendelses-email sendt til:', email);
+  } catch (error) {
+    console.error('Kunne ikke sende godkendelses-email:', error);
+  }
+}
+
 module.exports = {
   sendWelcomeEmail,
   sendAdminNotification,
-  sendRegistrationEmails
+  sendRegistrationEmails,
+  sendApprovalEmail
 };

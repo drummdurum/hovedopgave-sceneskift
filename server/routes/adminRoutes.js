@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../../database/prisma');
 const { requireAuth } = require('../middleware/auth');
+const { sendApprovalEmail } = require('../../service/mail/registrationMailService');
 
 // Middleware til at tjekke admin rolle
 const requireAdmin = (req, res, next) => {
@@ -49,6 +50,13 @@ router.post('/users/:id/approve', requireAuth, requireAdmin, async (req, res) =>
     const user = await prisma.brugere.update({
       where: { id: parseInt(id) },
       data: { godkendt: true }
+    });
+
+    // Send godkendelses-email til brugeren
+    sendApprovalEmail({
+      navn: user.navn,
+      teaternavn: user.teaternavn,
+      email: user.email
     });
 
     res.json({ 
