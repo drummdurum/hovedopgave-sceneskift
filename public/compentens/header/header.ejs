@@ -28,7 +28,7 @@
         <a href="/rekvisitter" class="dropdown-item" style="display:block; padding: 12px 14px; border-radius: 8px; color: var(--color-dark); text-decoration: none;">Rekvisitter</a>
         <hr style="margin: 8px 0; border: none; border-top: 1px solid #e5e7eb;">
         <% if (typeof user !== 'undefined' && user) { %>
-          <a href="/logout" class="dropdown-item" style="display:block; padding: 12px 14px; border-radius: 8px; color: #dc2626; text-decoration: none; font-weight: 600;">Log ud</a>
+          <a href="/auth/logout" class="dropdown-item" style="display:block; padding: 12px 14px; border-radius: 8px; color: #dc2626; text-decoration: none; font-weight: 600;">Log ud</a>
         <% } else { %>
           <a href="/login" class="dropdown-item" style="display:block; padding: 12px 14px; border-radius: 8px; color: var(--color-primary); text-decoration: none; font-weight: 600;">Log ind</a>
         <% } %>
