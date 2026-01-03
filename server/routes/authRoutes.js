@@ -185,6 +185,16 @@ router.post('/logout', (req, res) => {
   });
 });
 
+// Logout GET route (for direkte links)
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Logout error:', err);
+    }
+    res.redirect('/');
+  });
+});
+
 // Hent nuværende bruger (hvis logget ind)
 router.get('/me', (req, res) => {
   if (!req.session.user) {

@@ -4,6 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
+const { startReservationReminderJob } = require('./service/scheduled/reservationReminders');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -79,6 +80,9 @@ app.use('/password', passwordResetRoutes);
 // Start serveren
 app.listen(PORT, () => {
   console.log(`Server kører på http://localhost:${PORT}`);
+  
+  // Start cron job for reservation påmindelser
+  startReservationReminderJob();
 });
 
 module.exports = app;

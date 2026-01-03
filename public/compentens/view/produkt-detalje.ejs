@@ -22,7 +22,11 @@
           <span id="produktNavnHero">Indlæser...</span>
         </h1>
         <p class="text-base md:text-lg" style="color: var(--color-light); opacity: 0.9;">
-          <a href="#" id="tilbageLink" class="hover:underline">← Tilbage til alle rekvisitter</a>
+          <a href="/rekvisitter" class="hover:underline">← Tilbage til alle rekvisitter</a>
+          <% if (typeof user !== 'undefined' && user && user.rolle === 'admin') { %>
+            <span style="margin: 0 8px;">|</span>
+            <a href="/admin/hovedlager" class="hover:underline">← Tilbage til hovedlager</a>
+          <% } %>
         </p>
       </div>
     </div>
@@ -30,13 +34,6 @@
 
   <!-- Main content -->
   <main class="flex-grow container-max px-4 md:px-6 py-6 md:py-12">
-    
-    <!-- Admin tilbage knap -->
-    <div id="adminTilbageKnap" class="hidden max-w-6xl mx-auto mb-6">
-      <a href="/admin/hovedlager" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl" style="background-color: var(--color-primary); color: white;">
-        ← Tilbage til hovedlager
-      </a>
-    </div>
     
     <!-- Loading state -->
     <div id="loadingState" class="text-center py-16">

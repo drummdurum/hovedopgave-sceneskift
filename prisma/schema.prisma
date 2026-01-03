@@ -80,6 +80,7 @@ model Reservationer {
   laaner_id         Int
   er_hentet         Boolean   @default(false)
   er_tilbageleveret Boolean   @default(false)
+  paamindelse_sendt Boolean   @default(false)
   laaner            Brugere   @relation(fields: [laaner_id], references: [id])
   produkt           Produkter @relation(fields: [produkt_id], references: [id])
 }

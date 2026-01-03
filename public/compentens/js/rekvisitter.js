@@ -43,8 +43,8 @@ async function loadMineForestillingsperioder() {
     const response = await fetch('/api/forestillingsperioder/mine');
     const data = await response.json();
     
-    if (response.ok && data.perioder && data.perioder.length > 0) {
-      mineForestillingsperioder = data.perioder;
+    if (response.ok && data.forestillingsperioder && data.forestillingsperioder.length > 0) {
+      mineForestillingsperioder = data.forestillingsperioder;
       
       // Vis forestillingsperiode dropdown
       const container = document.getElementById('forestillingsperiodeContainer');
@@ -52,7 +52,7 @@ async function loadMineForestillingsperioder() {
       
       container.classList.remove('hidden');
       
-      data.perioder.forEach(periode => {
+      data.forestillingsperioder.forEach(periode => {
         const option = document.createElement('option');
         option.value = periode.id;
         option.textContent = `${periode.navn} (${formatDato(periode.start_dato)} - ${formatDato(periode.slut_dato)})`;

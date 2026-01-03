@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../../database/prisma');
 const { requireAuth } = require('../middleware/auth');
-const { sendReservationNotifikation, sendReservationBekraeftelse } = require('../../service/mail');
+const { sendReservationNotifikation, sendReservationBekraeftelse, sendHovedlagerNotifikation } = require('../../service/mail');
 const { 
   checkReservationOverlap, 
   checkBulkReservationOverlap, 
@@ -290,6 +290,33 @@ router.post('/reservationer/bulk', requireAuth, async (req, res) => {
       );
     }
 
+    // Send mail til hovedlager hvis der er lagerprodukter
+    const lagerProdukter = produkter.filter(p => p.paa_sceneskift === true);
+    if (lagerProdukter.length > 0) {
+      // Hent admin email (første bruger med rolle 'admin')
+      const adminBruger = await prisma.brugere.findFirst({
+        where: { rolle: 'admin' },
+        select: { email: true }
+      });
+
+      if (adminBruger?.email) {
+        mailPromises.push(
+          sendHovedlagerNotifikation({
+            adminEmail: adminBruger.email,
+            reserveretAf: bruger,
+            teaterNavn: teaternavn,
+            produkter: lagerProdukter.map(p => ({
+              navn: p.navn,
+              billede: p.billede_url
+            })),
+            fraDato: start_dato,
+            tilDato: slut_dato,
+            baseUrl
+          }).catch(err => console.error('Fejl ved hovedlager notifikation:', err))
+        );
+      }
+    }
+
     // Vent på alle mails (men fejl stopper ikke response)
     Promise.all(mailPromises).catch(err => console.error('Mail errors:', err));
 
@@ -353,6 +380,7 @@ router.patch('/reservationer/:id/hentet', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const bruger_id = req.session.user.id;
+    const bruger_rolle = req.session.user.rolle;
 
     const reservation = await prisma.reservationer.findUnique({
       where: { id: parseInt(id) },
@@ -363,8 +391,8 @@ router.patch('/reservationer/:id/hentet', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Reservation ikke fundet' });
     }
 
-    // Kun ejer af produkt kan markere som hentet
-    if (reservation.produkt.bruger_id !== bruger_id) {
+    // Kun ejer af produkt eller admin kan markere som hentet
+    if (reservation.produkt.bruger_id !== bruger_id && bruger_rolle !== 'admin') {
       return res.status(403).json({ error: 'Du har ikke tilladelse til at opdatere denne reservation' });
     }
 
@@ -388,6 +416,7 @@ router.patch('/reservationer/:id/tilbageleveret', requireAuth, async (req, res) 
   try {
     const { id } = req.params;
     const bruger_id = req.session.user.id;
+    const bruger_rolle = req.session.user.rolle;
 
     const reservation = await prisma.reservationer.findUnique({
       where: { id: parseInt(id) },
@@ -398,8 +427,8 @@ router.patch('/reservationer/:id/tilbageleveret', requireAuth, async (req, res) 
       return res.status(404).json({ error: 'Reservation ikke fundet' });
     }
 
-    // Kun ejer af produkt kan markere som tilbageleveret
-    if (reservation.produkt.bruger_id !== bruger_id) {
+    // Kun ejer af produkt eller admin kan markere som tilbageleveret
+    if (reservation.produkt.bruger_id !== bruger_id && bruger_rolle !== 'admin') {
       return res.status(403).json({ error: 'Du har ikke tilladelse til at opdatere denne reservation' });
     }
 
