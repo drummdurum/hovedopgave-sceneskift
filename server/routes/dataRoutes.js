@@ -187,10 +187,10 @@ router.post('/produkt/:produkt_id/reservationer', requireAuth, async (req, res) 
   }
 });
 
-// Bulk opret reservationer for flere produkter (kræver login)
+// Bulk opret reservationer 
 router.post('/reservationer/bulk', requireAuth, async (req, res) => {
   try {
-    const { produkt_ids, start_dato, slut_dato, forestillingsperiode_id } = req.body;
+    const { produkt_ids, start_dato, slut_dato} = req.body;
     const bruger = req.session.user.navn;
     const teaternavn = req.session.user.teaternavn;
     const bruger_id = req.session.user.id;
@@ -345,6 +345,79 @@ router.put('/reservationer/:id', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Update reservation error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved opdatering af reservation' });
+  }
+});
+
+// Markér reservation som hentet
+router.patch('/reservationer/:id/hentet', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const bruger_id = req.session.user.id;
+
+    const reservation = await prisma.reservationer.findUnique({
+      where: { id: parseInt(id) },
+      include: { produkt: true }
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ error: 'Reservation ikke fundet' });
+    }
+
+    // Kun ejer af produkt kan markere som hentet
+    if (reservation.produkt.bruger_id !== bruger_id) {
+      return res.status(403).json({ error: 'Du har ikke tilladelse til at opdatere denne reservation' });
+    }
+
+    const opdateret = await prisma.reservationer.update({
+      where: { id: parseInt(id) },
+      data: { er_hentet: true }
+    });
+
+    res.json({ 
+      message: 'Reservation markeret som hentet',
+      reservation: opdateret 
+    });
+  } catch (error) {
+    console.error('Update hentet status error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved opdatering af status' });
+  }
+});
+
+// Markér reservation som tilbageleveret
+router.patch('/reservationer/:id/tilbageleveret', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const bruger_id = req.session.user.id;
+
+    const reservation = await prisma.reservationer.findUnique({
+      where: { id: parseInt(id) },
+      include: { produkt: true }
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ error: 'Reservation ikke fundet' });
+    }
+
+    // Kun ejer af produkt kan markere som tilbageleveret
+    if (reservation.produkt.bruger_id !== bruger_id) {
+      return res.status(403).json({ error: 'Du har ikke tilladelse til at opdatere denne reservation' });
+    }
+
+    const opdateret = await prisma.reservationer.update({
+      where: { id: parseInt(id) },
+      data: { 
+        er_hentet: true,  // Sikr at den også er markeret som hentet
+        er_tilbageleveret: true 
+      }
+    });
+
+    res.json({ 
+      message: 'Reservation markeret som tilbageleveret',
+      reservation: opdateret 
+    });
+  } catch (error) {
+    console.error('Update tilbageleveret status error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved opdatering af status' });
   }
 });
 

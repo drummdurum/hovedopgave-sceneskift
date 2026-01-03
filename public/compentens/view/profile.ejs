@@ -160,7 +160,19 @@
           <h3 class="text-lg md:text-xl mb-3 md:mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Kontostatus</h3>
           <div class="h-1 w-16 mb-4 md:mb-6" style="background-color: var(--color-secondary);"></div>
           
-          <% if (user.godkendt) { %>
+          <% if (user.rolle === 'admin') { %>
+          <!-- Admin ser pending users -->
+          <a href="/admin" class="block">
+            <div class="flex items-center gap-3 p-4 rounded-xl hover:shadow-lg transition" style="background-color: #fef3c7;">
+              <span class="text-2xl">⏳</span>
+              <div class="flex-grow">
+                <p class="font-bold text-lg" style="color: #d97706;">Brugere afventer godkendelse</p>
+                <p class="text-sm" style="color: #92400e;">Klik for at godkende nye brugere</p>
+              </div>
+              <span class="text-2xl font-bold flex-shrink-0" style="color: #dc2626;" id="pendingUsersCount">-</span>
+            </div>
+          </a>
+          <% } else if (user.godkendt) { %>
           <div class="flex items-center gap-3 p-4 rounded-xl" style="background-color: #dcfce7;">
             <span class="text-2xl">✅</span>
             <div>

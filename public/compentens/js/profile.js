@@ -129,13 +129,26 @@ async function loadReservationStats() {
 
 // Indlæs admin statistikker (kun hvis admin)
 async function loadAdminStats() {
+  const pendingUsersCount = document.getElementById('pendingUsersCount');
   const hovedlagerCount = document.getElementById('hovedlagerCount');
   const reservationerCount = document.getElementById('reservationerCount');
   const lagerReservationerCount = document.getElementById('lagerReservationerCount');
   
-  if (!hovedlagerCount && !reservationerCount && !lagerReservationerCount) return;
+  if (!pendingUsersCount && !hovedlagerCount && !reservationerCount && !lagerReservationerCount) return;
   
   try {
+    if (pendingUsersCount) {
+      const pendingResponse = await fetch('/api/admin/pending-users/count');
+      if (pendingResponse.ok) {
+        const pendingData = await pendingResponse.json();
+        pendingUsersCount.textContent = pendingData.count;
+        // Highlight hvis der er brugere der venter
+        if (pendingData.count > 0) {
+          pendingUsersCount.style.color = '#dc2626';
+        }
+      }
+    }
+    
     if (hovedlagerCount) {
       const hovedlagerResponse = await fetch('/api/admin/hovedlager/count');
       if (hovedlagerResponse.ok) {

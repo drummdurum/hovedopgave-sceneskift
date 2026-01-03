@@ -40,14 +40,47 @@ function renderProduktKort(produkt) {
     ? produkt.reservationer.map(res => {
         const fraDato = new Date(res.fra_dato).toLocaleDateString('da-DK');
         const tilDato = new Date(res.til_dato).toLocaleDateString('da-DK');
+        
+        // Status badge
+        let statusBadge = '';
+        if (res.er_tilbageleveret) {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold" style="background-color: #d1fae5; color: #065f46;">✓ Tilbage</span>';
+        } else if (res.er_hentet) {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold" style="background-color: #dbeafe; color: #1e40af;">↗ Udlånt</span>';
+        } else {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold" style="background-color: #fef3c7; color: #d97706;">⏳ Afventer</span>';
+        }
+        
+        // Action knapper
+        let actionButtons = '';
+        if (!res.er_tilbageleveret) {
+          if (!res.er_hentet) {
+            actionButtons = `
+              <button onclick="markerSomHentet(${res.id})" class="mt-1 px-2 py-1 rounded text-xs font-semibold transition hover:opacity-80" style="background-color: #3b82f6; color: white;">
+                ✓ Hentet
+              </button>
+            `;
+          } else {
+            actionButtons = `
+              <button onclick="markerSomTilbageleveret(${res.id})" class="mt-1 px-2 py-1 rounded text-xs font-semibold transition hover:opacity-80" style="background-color: #10b981; color: white;">
+                ✓ Leveret tilbage
+              </button>
+            `;
+          }
+        }
+        
         return `
           <div class="py-2 border-b last:border-b-0" style="border-color: #e5e7eb;">
-            <p class="text-sm font-semibold" style="color: var(--color-dark);">
-              ${fraDato} - ${tilDato}
-            </p>
-            <p class="text-xs" style="color: var(--color-dark); opacity: 0.7;">
+            <div class="flex items-center justify-between mb-1">
+              <p class="text-sm font-semibold" style="color: var(--color-dark);">
+                ${fraDato} - ${tilDato}
+              </p>
+              ${statusBadge}
+            </div>
+            <p class="text-xs mb-1" style="color: var(--color-dark); opacity: 0.7;">
               Låner: ${res.laaner.navn} (${res.laaner.teaternavn || 'Intet teater'})
             </p>
+            ${actionButtons}
           </div>
         `;
       }).join('')
@@ -85,4 +118,44 @@ function renderProduktKort(produkt) {
       </div>
     </div>
   `;
+}
+
+async function markerSomHentet(reservationId) {
+  if (!confirm('Markér produktet som hentet?')) return;
+  
+  try {
+    const response = await fetch(`/api/reservationer/${reservationId}/hentet`, {
+      method: 'PATCH'
+    });
+    
+    if (response.ok) {
+      loadLagerReservationer(); // Genindlæs listen
+    } else {
+      const data = await response.json();
+      alert(data.error || 'Fejl ved opdatering');
+    }
+  } catch (error) {
+    console.error('Fejl:', error);
+    alert('Fejl ved opdatering');
+  }
+}
+
+async function markerSomTilbageleveret(reservationId) {
+  if (!confirm('Markér produktet som tilbageleveret?')) return;
+  
+  try {
+    const response = await fetch(`/api/reservationer/${reservationId}/tilbageleveret`, {
+      method: 'PATCH'
+    });
+    
+    if (response.ok) {
+      loadLagerReservationer(); // Genindlæs listen
+    } else {
+      const data = await response.json();
+      alert(data.error || 'Fejl ved opdatering');
+    }
+  } catch (error) {
+    console.error('Fejl:', error);
+    alert('Fejl ved opdatering');
+  }
 }

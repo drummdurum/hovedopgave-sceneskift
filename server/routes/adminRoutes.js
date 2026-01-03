@@ -95,6 +95,19 @@ router.delete('/users/:id', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
+// Hent antal brugere der mangler godkendelse
+router.get('/pending-users/count', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const count = await prisma.brugere.count({
+      where: { godkendt: false }
+    });
+    res.json({ count });
+  } catch (error) {
+    console.error('Error counting pending users:', error);
+    res.status(500).json({ error: 'Der opstod en fejl' });
+  }
+});
+
 // Hent antal produkter på hovedlager (Sceneskifts lager)
 router.get('/hovedlager/count', requireAuth, requireAdmin, async (req, res) => {
   try {

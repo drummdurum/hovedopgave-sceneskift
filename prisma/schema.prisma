@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,45 +8,41 @@ datasource db {
 }
 
 model Brugere {
-  id         Int       @id @default(autoincrement())
-  password   String
-  navn       String
-  teaternavn String
-  lokation   String
-  email      String    @unique
-  features   Boolean   @default(false)
-  godkendt   Boolean   @default(false)
-  rolle      String    @default("bruger") // "bruger" eller "admin"
-
-  produkter              Produkter[]
-  forestillingsperioder  Forestillingsperioder[]
-  reservationer          Reservationer[]
+  id                    Int                     @id @default(autoincrement())
+  password              String
+  navn                  String
+  teaternavn            String
+  lokation              String
+  email                 String                  @unique
+  features              Boolean                 @default(false)
+  godkendt              Boolean                 @default(false)
+  rolle                 String                  @default("bruger")
+  forestillingsperioder Forestillingsperioder[]
+  produkter             Produkter[]
+  reservationer         Reservationer[]
 }
 
 model Produkter {
-  id               Int                  @id @default(autoincrement())
-  navn             String
-  beskrivelse      String
-  billede_url      String?              // Beholdes for bagudkompatibilitet, kan fjernes senere
-  skjult           Boolean              @default(false)
-  renoveres        Boolean              @default(false)
-  paa_sceneskift   Boolean              @default(false) // false = brugerens lager, true = Sceneskifts lager
-
-  bruger_id        Int
-  ejer             Brugere              @relation(fields: [bruger_id], references: [id])
-
-  billeder                    ProduktBilleder[]
-  kategorier                  ProduktKategorier[]
-  reservationer               Reservationer[]
+  id             Int                 @id @default(autoincrement())
+  navn           String
+  beskrivelse    String
+  billede_url    String?
+  skjult         Boolean             @default(false)
+  bruger_id      Int
+  paa_sceneskift Boolean             @default(false)
+  renoveres      Boolean             @default(false)
+  billeder       ProduktBilleder[]
+  kategorier     ProduktKategorier[]
+  ejer           Brugere             @relation(fields: [bruger_id], references: [id])
+  reservationer  Reservationer[]
 }
 
 model ProduktBilleder {
   id          Int       @id @default(autoincrement())
   produkt_id  Int
   billede_url String
-  position    Int       @default(0)  // Til at sortere billeder (0 = primært billede)
+  position    Int       @default(0)
   created_at  DateTime  @default(now())
-
   produkt     Produkter @relation(fields: [produkt_id], references: [id], onDelete: Cascade)
 }
 
@@ -62,32 +55,33 @@ model Kategorier {
 model ProduktKategorier {
   produkt_id  Int
   kategori_id Int
-  produkt     Produkter  @relation(fields: [produkt_id], references: [id], onDelete: Cascade)
   kategori    Kategorier @relation(fields: [kategori_id], references: [id], onDelete: Cascade)
+  produkt     Produkter  @relation(fields: [produkt_id], references: [id], onDelete: Cascade)
 
   @@id([produkt_id, kategori_id])
 }
 
 model Forestillingsperioder {
-  id           Int       @id @default(autoincrement())
-  navn         String
-  start_dato   DateTime
-  slut_dato    DateTime
-  created_by   Int?
-  oprettet_af  Brugere?  @relation(fields: [created_by], references: [id])
+  id          Int      @id @default(autoincrement())
+  navn        String
+  start_dato  DateTime
+  slut_dato   DateTime
+  created_by  Int?
+  oprettet_af Brugere? @relation(fields: [created_by], references: [id])
 }
 
 model Reservationer {
-  id         Int      @id @default(autoincrement())
-  produkt_id Int
-  laaner_id  Int
-  bruger     String   // Navn på låner (beholdes for visning)
-  teaternavn String   // Teater navn (beholdes for visning)
-  fra_dato   DateTime
-  til_dato   DateTime
-
-  produkt    Produkter @relation(fields: [produkt_id], references: [id])
-  laaner     Brugere   @relation(fields: [laaner_id], references: [id])
+  id                Int       @id @default(autoincrement())
+  produkt_id        Int
+  bruger            String
+  teaternavn        String
+  fra_dato          DateTime
+  til_dato          DateTime
+  laaner_id         Int
+  er_hentet         Boolean   @default(false)
+  er_tilbageleveret Boolean   @default(false)
+  laaner            Brugere   @relation(fields: [laaner_id], references: [id])
+  produkt           Produkter @relation(fields: [produkt_id], references: [id])
 }
 
 model PasswordReset {
@@ -99,3 +93,10 @@ model PasswordReset {
   created_at DateTime @default(now())
 }
 
+model session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+}

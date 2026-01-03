@@ -44,7 +44,7 @@ function renderProduktKort(produkt) {
     : produkt.billede_url || '/compentens/image/placeholder.webp';
 
   return `
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden border" style="border-color: #e5e7eb;">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden border cursor-pointer transition transform hover:scale-105" style="border-color: #e5e7eb;" onclick="visProdukt(${produkt.id})">
       <div class="h-48 overflow-hidden relative">
         <img src="${billedeUrl}" alt="${produkt.navn}" class="w-full h-full object-cover">
         <div class="absolute top-2 right-2 px-3 py-1 rounded-full text-sm font-semibold" style="background-color: #eff6ff; color: #2563eb;">
@@ -69,4 +69,10 @@ function renderProduktKort(produkt) {
       </div>
     </div>
   `;
+}
+
+function visProdukt(id) {
+  // Gem den aktuelle side i sessionStorage så vi kan komme tilbage
+  sessionStorage.setItem('returSide', '/admin/hovedlager');
+  window.location.href = `/rekvisitter/${id}`;
 }

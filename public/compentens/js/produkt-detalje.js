@@ -6,7 +6,26 @@ let billeder = [];
 document.addEventListener('DOMContentLoaded', function() {
   loadProdukt();
   updateGlobalKurvBadge();
+  setupTilbageLinks();
 });
+
+function setupTilbageLinks() {
+  // Tjek om vi kommer fra admin-hovedlager
+  const returSide = sessionStorage.getItem('returSide');
+  const tilbageLink = document.getElementById('tilbageLink');
+  const adminTilbageKnap = document.getElementById('adminTilbageKnap');
+  
+  if (returSide === '/admin/hovedlager') {
+    // Vis admin tilbage-knap
+    adminTilbageKnap.classList.remove('hidden');
+    // Opdater hero link
+    tilbageLink.href = '/admin/hovedlager';
+    tilbageLink.innerHTML = '← Tilbage til hovedlager';
+  } else {
+    // Standard link til rekvisitter
+    tilbageLink.href = '/rekvisitter';
+  }
+}
 
 async function loadProdukt() {
   const loadingState = document.getElementById('loadingState');
