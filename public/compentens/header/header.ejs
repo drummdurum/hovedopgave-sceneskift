@@ -5,6 +5,13 @@
     </a>
   </div>
   <nav class="space-x-6" style="font-family: var(--font-body); display: flex; align-items: center;">
+    <!-- Shopping cart button -->
+    <button onclick="openKurvModal()" class="btn-primary" style="position: relative; cursor: pointer;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="color: var(--color-primary);">
+        <path d="M9 2C9 1.44772 9.44772 1 10 1H14C14.5523 1 15 1.44772 15 2V4H20C20.5523 4 21 4.44772 21 5C21 5.55228 20.5523 6 20 6H19.9199L19 18C19 20.2091 17.2091 22 15 22H9C6.79086 22 5 20.2091 5 18L4.0801 6H4C3.44772 6 3 5.55228 3 5C3 4.44772 3.44772 4 4 4H9V2ZM11 4H13V3H11V4ZM6.0918 6L7 18C7 19.1046 7.89543 20 9 20H15C16.1046 20 17 19.1046 17 18L17.9082 6H6.0918Z" fill="currentColor"/>
+      </svg>
+      <span id="kurvBadge" class="hidden" style="position: absolute; top: -8px; right: -8px; background-color: #dc2626; color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; min-width: 18px; text-align: center;">0</span>
+    </button>
     <!-- Profile button -->
     <a href="/profile" class="btn-primary" >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="color: var(--color-primary);">

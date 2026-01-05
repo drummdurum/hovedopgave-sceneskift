@@ -417,12 +417,22 @@ function updateGlobalKurvBadge() {
   const badge = document.getElementById('kurvBadge');
   const count = document.getElementById('kurvCount');
   
-  if (badge && count) {
+  // Opdater header badge
+  if (badge) {
     if (kurv.length > 0) {
-      badge.style.display = 'block';
-      count.textContent = kurv.length;
+      badge.classList.remove('hidden');
+      badge.textContent = kurv.length;
     } else {
-      badge.style.display = 'none';
+      badge.classList.add('hidden');
+    }
+  }
+  
+  // Opdater floating badge (hvis den findes)
+  if (count) {
+    count.textContent = kurv.length;
+    const floatingBadge = count.closest('.kurv-badge');
+    if (floatingBadge) {
+      floatingBadge.style.display = kurv.length > 0 ? 'block' : 'none';
     }
   }
 }

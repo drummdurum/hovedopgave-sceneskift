@@ -136,6 +136,29 @@
             <!-- Reservationer genereres via JavaScript -->
           </div>
         </div>
+
+        <!-- Admin sektion - kun synlig for admin -->
+        <% if (typeof user !== 'undefined' && user && user.rolle === 'admin') { %>
+        <div class="bg-red-50 border-2 border-red-200 rounded-2xl shadow-xl p-6 md:p-8 mt-8">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">⚠️</span>
+            <div class="flex-grow">
+              <h3 class="text-xl font-bold mb-2" style="color: #dc2626;">
+                Admin kontrol
+              </h3>
+              <p class="mb-4" style="color: #991b1b; opacity: 0.9;">
+                Som administrator kan du slette dette produkt. Denne handling kan ikke fortrydes.
+              </p>
+              <button 
+                onclick="sletProduktSomAdmin()" 
+                class="px-6 py-3 rounded-lg font-semibold transition hover:bg-red-700"
+                style="background-color: #dc2626; color: white;">
+                🗑️ Slet produkt
+              </button>
+            </div>
+          </div>
+        </div>
+        <% } %>
       </div>
     </div>
 

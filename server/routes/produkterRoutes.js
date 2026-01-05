@@ -431,8 +431,9 @@ router.delete('/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const bruger_id = req.session.user.id;
+    const bruger_rolle = req.session.user.rolle;
 
-    // Tjek om produkt eksisterer og om brugeren ejer det
+    // Tjek om produkt eksisterer
     const produkt = await prisma.produkter.findUnique({
       where: { id: parseInt(id) }
     });
@@ -441,7 +442,8 @@ router.delete('/:id', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Produkt ikke fundet' });
     }
 
-    if (produkt.bruger_id !== bruger_id) {
+    // Kun ejer eller admin kan slette
+    if (produkt.bruger_id !== bruger_id && bruger_rolle !== 'admin') {
       return res.status(403).json({ error: 'Du har ikke tilladelse til at slette dette produkt' });
     }
 

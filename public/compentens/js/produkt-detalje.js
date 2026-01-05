@@ -314,3 +314,33 @@ function updateKurvButtons() {
     fjernBtn.classList.add('hidden');
   }
 }
+
+async function sletProduktSomAdmin() {
+  if (!produkt) return;
+  
+  const confirmed = confirm(
+    `Er du sikker på at du vil slette "${produkt.navn}"?\n\n` +
+    `Dette produkt tilhører ${produkt.ejer.teaternavn}.\n` +
+    `Denne handling kan ikke fortrydes.`
+  );
+  
+  if (!confirmed) return;
+  
+  try {
+    const response = await fetch(`/produkter/${produkt.id}`, {
+      method: 'DELETE'
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      alert('Produktet er blevet slettet');
+      window.location.href = '/admin/hovedlager';
+    } else {
+      alert(data.error || 'Der opstod en fejl ved sletning af produktet');
+    }
+  } catch (error) {
+    console.error('Fejl ved sletning:', error);
+    alert('Der opstod en netværksfejl ved sletning af produktet');
+  }
+}
