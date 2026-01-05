@@ -44,11 +44,11 @@
           <div class="h-1 w-24 md:w-32 mt-2" style="background-color: var(--color-secondary);"></div>
         </div>
         <div class="flex flex-col sm:flex-row gap-3">
-          <button onclick="vaelgAlleProdukter()" class="btn-secondary text-sm md:text-base" style="border-radius: 100px;">
+          <button onclick="vaelgAlleProdukter()" class="btn-secondary text-sm md:text-base text-center" style="border-radius: 100px;">
             🛒 Vælg alle til kurv
           </button>
           <% if (user && user.godkendt) { %>
-          <a href="/produkter/opret" class="btn-primary text-sm md:text-base" style="border-radius: 100px;">
+          <a href="/produkter/opret" class="btn-primary text-sm md:text-base inline-flex items-center justify-center" style="border-radius: 100px;">
             ➕ Opret nyt rekvisit
           </a>
           <% } %>

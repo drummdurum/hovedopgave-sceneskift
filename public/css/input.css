@@ -638,12 +638,20 @@ main > .section + .section { margin-top: 0; }
 .periode-input-group select,
 .periode-input-group input[type="date"] {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
   border: 2px solid var(--color-secondary);
   border-radius: 0.75rem;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   color: var(--color-dark);
   background: white;
+}
+
+@media (min-width: 768px) {
+  .periode-input-group select,
+  .periode-input-group input[type="date"] {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
 }
 
 .periode-input-group select:focus,

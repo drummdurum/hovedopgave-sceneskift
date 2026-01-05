@@ -101,22 +101,20 @@ function renderPeriodeKort(f) {
     : '<span class="text-sm" style="color: var(--color-dark); opacity: 0.5;">Ingen produkter tilknyttet</span>';
   
   return `
-    <div class="p-6 rounded-xl transition hover:shadow-lg" style="background-color: #f8f9fa; border: 1px solid #e5e7eb;">
-      <div class="flex items-start justify-between mb-4">
-        <div>
-          <div class="flex items-center gap-3 mb-2">
-            <h3 class="text-xl font-bold" style="color: var(--color-dark);">${f.navn}</h3>
-            <span class="px-3 py-1 rounded-full text-sm font-medium" style="${statusColor}">${statusBadge}</span>
-          </div>
-          <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">
-            📅 ${startDato} — ${slutDato}
-          </p>
+    <div class="p-4 md:p-6 rounded-xl transition hover:shadow-lg" style="background-color: #f8f9fa; border: 1px solid #e5e7eb;">
+      <div class="mb-4">
+        <div class="flex items-center gap-2 md:gap-3 mb-2 flex-wrap">
+          <h3 class="text-lg md:text-xl font-bold" style="color: var(--color-dark);">${f.navn}</h3>
+          <span class="px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium" style="${statusColor}">${statusBadge}</span>
         </div>
-        <div class="flex gap-2">
-          <button onclick='redigerPeriode(${JSON.stringify(f).replace(/'/g, "&#39;")})' class="px-4 py-2 rounded-lg text-sm font-medium transition" style="background-color: var(--color-primary); color: white;">
+        <p class="text-xs md:text-sm mb-3" style="color: var(--color-dark); opacity: 0.7;">
+          📅 ${startDato} — ${slutDato}
+        </p>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button onclick='redigerPeriode(${JSON.stringify(f).replace(/'/g, "&#39;")})' class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition text-center" style="background-color: var(--color-primary); color: white;">
             ✏️ Rediger
           </button>
-          <button onclick="sletPeriode(${f.id})" class="px-4 py-2 rounded-lg text-sm font-medium transition" style="background-color: #fee2e2; color: #dc2626;">
+          <button onclick="sletPeriode(${f.id})" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition text-center" style="background-color: #fee2e2; color: #dc2626;">
             🗑️ Slet
           </button>
         </div>
