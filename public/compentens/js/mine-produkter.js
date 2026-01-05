@@ -1,4 +1,6 @@
 // Mine produkter side
+let alleProdukter = [];
+
 document.addEventListener('DOMContentLoaded', function() {
   loadMineProdukter();
 });
@@ -13,6 +15,7 @@ async function loadMineProdukter() {
     
     if (response.ok) {
       const produkter = data.produkter;
+      alleProdukter = produkter; // Gem til vælg alle funktion
       
       if (produkter.length === 0) {
         grid.innerHTML = '';
@@ -71,13 +74,18 @@ function renderProduktKort(produkt, showActions = false) {
         <h3 class="text-xl font-bold mb-2" style="color: var(--color-dark);">${produkt.navn}</h3>
         <p class="mb-4 line-clamp-2" style="color: var(--color-dark); opacity: 0.8;">${produkt.beskrivelse}</p>
         ${showActions ? `
-          <div class="flex gap-2">
-            <button onclick="redigerProdukt(${produkt.id})" class="flex-1 py-2 rounded-xl text-center" style="background-color: var(--color-primary); color: white;">
-              ✏️ Rediger
+          <div class="flex flex-col gap-2">
+            <button onclick="tilfoejTilKurvFraMineProdukter(${produkt.id}, '${produkt.navn.replace(/'/g, "\\'")}')", '${produkt.billede_url.replace(/'/g, "\\'")}')", 'Dig')" class="w-full py-2 rounded-xl text-center" style="background-color: var(--color-secondary); color: var(--color-dark); font-weight: 600;">
+              🛒 Tilføj til kurv
             </button>
-            <button onclick="sletProdukt(${produkt.id})" class="py-2 px-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;">
-              🗑️
-            </button>
+            <div class="flex gap-2">
+              <button onclick="redigerProdukt(${produkt.id})" class="flex-1 py-2 rounded-xl text-center" style="background-color: var(--color-primary); color: white;">
+                ✏️ Rediger
+              </button>
+              <button onclick="sletProdukt(${produkt.id})" class="py-2 px-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;">
+                🗑️
+              </button>
+            </div>
           </div>
         ` : ''}
       </div>
@@ -257,5 +265,42 @@ async function sletProdukt(id) {
   } catch (error) {
     console.error('Fejl:', error);
     alert('Fejl ved sletning af produkt');
+  }
+}
+
+// Tilføj produkt til kurv fra mine produkter
+function tilfoejTilKurvFraMineProdukter(produktId, produktNavn, billede, ejer) {
+  if (typeof tilfoejProduktTilKurv === 'function') {
+    tilfoejProduktTilKurv({
+      id: produktId,
+      navn: produktNavn,
+      billede: billede,
+      ejer: ejer
+    });
+  } else {
+    console.error('kurv-global.js ikke indlæst');
+  }
+}
+
+// Vælg alle produkter til kurv
+function vaelgAlleProdukter() {
+  if (alleProdukter.length === 0) {
+    showKurvNotification('Ingen produkter at tilføje', 'info');
+    return;
+  }
+  
+  let antalTilfojet = 0;
+  alleProdukter.forEach(produkt => {
+    const success = tilfoejProduktTilKurv({
+      id: produkt.id,
+      navn: produkt.navn,
+      billede: produkt.billede_url,
+      ejer: 'Dig'
+    });
+    if (success) antalTilfojet++;
+  });
+  
+  if (antalTilfojet > 0) {
+    showKurvNotification(`✅ ${antalTilfojet} produkt${antalTilfojet > 1 ? 'er' : ''} tilføjet til kurven`, 'success');
   }
 }

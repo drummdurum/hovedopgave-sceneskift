@@ -9,7 +9,12 @@
 
 const { sendMail } = require('./mailClient');
 const { sendPasswordResetEmail } = require('./passwordResetMail');
-const { sendReservationNotifikation, sendReservationBekraeftelse } = require('./reservationMail');
+const { 
+  sendReservationNotifikation, 
+  sendReservationBekraeftelse, 
+  sendHovedlagerNotifikation,
+  sendReservationPaamindelse 
+} = require('./reservationMail');
 
 module.exports = {
   // Basis
@@ -20,5 +25,7 @@ module.exports = {
   
   // Reservationer
   sendReservationNotifikation,
-  sendReservationBekraeftelse
+  sendReservationBekraeftelse,
+  sendHovedlagerNotifikation,
+  sendReservationPaamindelse
 };

@@ -482,4 +482,28 @@ router.delete('/reservationer/:id', requireAuth, async (req, res) => {
   }
 });
 
+// ============= STATISTIK ROUTES =============
+
+// Hent antal produkter
+router.get('/stats/produkter', async (req, res) => {
+  try {
+    const antalProdukter = await prisma.produkter.count();
+    res.json({ antal: antalProdukter });
+  } catch (error) {
+    console.error('Fetch produkter stats error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved hentning af statistik' });
+  }
+});
+
+// Hent antal brugere
+router.get('/stats/brugere', async (req, res) => {
+  try {
+    const antalBrugere = await prisma.brugere.count();
+    res.json({ antal: antalBrugere });
+  } catch (error) {
+    console.error('Fetch brugere stats error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved hentning af statistik' });
+  }
+});
+
 module.exports = router;

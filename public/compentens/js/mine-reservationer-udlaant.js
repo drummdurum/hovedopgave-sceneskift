@@ -80,7 +80,7 @@ function renderReservation(r) {
 }
 
 async function markerSomHentet(reservationId) {
-  if (!confirm('Markér produktet som hentet?')) return;
+  if (!showConfirmDialog('Markér produktet som hentet?')) return;
   
   try {
     const response = await fetch(`/api/reservationer/${reservationId}/hentet`, {
@@ -88,19 +88,20 @@ async function markerSomHentet(reservationId) {
     });
     
     if (response.ok) {
+      showSuccessNotification('✓ Produktet er markeret som hentet');
       loadReservationer(); // Genindlæs listen
     } else {
       const data = await response.json();
-      alert(data.error || 'Fejl ved opdatering');
+      showErrorNotification(data.error || 'Fejl ved opdatering');
     }
   } catch (error) {
     console.error('Fejl:', error);
-    alert('Fejl ved opdatering');
+    showErrorNotification('Fejl ved opdatering');
   }
 }
 
 async function markerSomTilbageleveret(reservationId) {
-  if (!confirm('Markér produktet som tilbageleveret?')) return;
+  if (!showConfirmDialog('Markér produktet som tilbageleveret?')) return;
   
   try {
     const response = await fetch(`/api/reservationer/${reservationId}/tilbageleveret`, {
@@ -108,13 +109,103 @@ async function markerSomTilbageleveret(reservationId) {
     });
     
     if (response.ok) {
+      showSuccessNotification('✓ Produktet er markeret som tilbageleveret');
       loadReservationer(); // Genindlæs listen
     } else {
       const data = await response.json();
-      alert(data.error || 'Fejl ved opdatering');
+      showErrorNotification(data.error || 'Fejl ved opdatering');
     }
   } catch (error) {
     console.error('Fejl:', error);
-    alert('Fejl ved opdatering');
+    showErrorNotification('Fejl ved opdatering');
   }
+}
+
+// Pæn confirm dialog
+function showConfirmDialog(message) {
+  return confirm(message); // Browser native for nu - kan opdateres til custom modal
+}
+
+// Success notifikation
+function showSuccessNotification(message) {
+  showNotification(message, 'success');
+}
+
+// Error notifikation
+function showErrorNotification(message) {
+  showNotification(message, 'error');
+}
+
+// Generel notifikation funktion
+function showNotification(message, type = 'info') {
+  // Fjern eksisterende notifikationer
+  const existing = document.querySelector('.status-notification');
+  if (existing) existing.remove();
+  
+  const notification = document.createElement('div');
+  notification.className = 'status-notification';
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideInRight 0.3s ease;
+    max-width: 400px;
+  `;
+  
+  if (type === 'success') {
+    notification.style.backgroundColor = '#dcfce7';
+    notification.style.color = '#065f46';
+    notification.style.border = '2px solid #10b981';
+  } else if (type === 'error') {
+    notification.style.backgroundColor = '#fee2e2';
+    notification.style.color = '#991b1b';
+    notification.style.border = '2px solid #dc2626';
+  } else {
+    notification.style.backgroundColor = '#dbeafe';
+    notification.style.color = '#1e40af';
+    notification.style.border = '2px solid #3b82f6';
+  }
+  
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  // Tilføj animation keyframes hvis ikke findes
+  if (!document.getElementById('notificationStyles')) {
+    const style = document.createElement('style');
+    style.id = 'notificationStyles';
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Fjern efter 3 sekunder
+  setTimeout(() => {
+    notification.style.animation = 'slideOutRight 0.3s ease';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
 }

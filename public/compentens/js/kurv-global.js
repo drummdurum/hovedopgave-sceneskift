@@ -35,10 +35,10 @@ function getKurvKey() {
 
 function initKurvBadge() {
   // Opret kurv badge element hvis det ikke allerede findes
-  if (!document.getElementById('kurvBadge')) {
+  if (!document.getElementById('floatingKurvBadge')) {
     const badge = document.createElement('div');
     badge.className = 'kurv-badge';
-    badge.id = 'kurvBadge';
+    badge.id = 'floatingKurvBadge';
     badge.style.display = 'none';
     badge.innerHTML = `
       <button onclick="openKurvModal()" class="kurv-btn" title="Se din forespørgselskurv">
@@ -108,11 +108,11 @@ function initKurvModal() {
               <div class="dato-inputs">
                 <div>
                   <label for="kurvFraDato">Fra dato</label>
-                  <input type="date" id="kurvFraDato">
+                  <input type="date" id="kurvFraDato" onclick="this.showPicker()">
                 </div>
                 <div>
                   <label for="kurvTilDato">Til dato</label>
-                  <input type="date" id="kurvTilDato">
+                  <input type="date" id="kurvTilDato" onclick="this.showPicker()">
                 </div>
               </div>
             </div>
@@ -414,26 +414,24 @@ function saveKurv(kurv) {
 
 function updateGlobalKurvBadge() {
   const kurv = getKurv();
-  const badge = document.getElementById('kurvBadge');
-  const count = document.getElementById('kurvCount');
   
   // Opdater header badge
-  if (badge) {
+  const headerBadge = document.getElementById('kurvBadge');
+  if (headerBadge) {
     if (kurv.length > 0) {
-      badge.classList.remove('hidden');
-      badge.textContent = kurv.length;
+      headerBadge.classList.remove('hidden');
+      headerBadge.textContent = kurv.length;
     } else {
-      badge.classList.add('hidden');
+      headerBadge.classList.add('hidden');
     }
   }
   
-  // Opdater floating badge (hvis den findes)
-  if (count) {
+  // Opdater floating badge (bund højre)
+  const floatingBadge = document.getElementById('floatingKurvBadge');
+  const count = document.getElementById('kurvCount');
+  if (floatingBadge && count) {
     count.textContent = kurv.length;
-    const floatingBadge = count.closest('.kurv-badge');
-    if (floatingBadge) {
-      floatingBadge.style.display = kurv.length > 0 ? 'block' : 'none';
-    }
+    floatingBadge.style.display = kurv.length > 0 ? 'block' : 'none';
   }
 }
 

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %> - SceneSkift</title>
+  <link rel="icon" href="/compentens/image/logo rundt.png">
   <link rel="stylesheet" href="/css/output.css">
 </head>
 <body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
@@ -42,11 +43,16 @@
           <h2 class="text-3xl" style="font-family: var(--font-heading); color: var(--color-primary);">Dine produkter</h2>
           <div class="h-1 w-32 mt-2" style="background-color: var(--color-secondary);"></div>
         </div>
-        <% if (user && user.godkendt) { %>
-        <a href="/produkter/opret" class="btn-primary" style="border-radius: 100px;">
-          ➕ Opret nyt produkt
-        </a>
-        <% } %>
+        <div class="flex gap-3">
+          <button onclick="vaelgAlleProdukter()" class="btn-secondary" style="border-radius: 100px;">
+            🛒 Vælg alle til kurv
+          </button>
+          <% if (user && user.godkendt) { %>
+          <a href="/produkter/opret" class="btn-primary" style="border-radius: 100px;">
+            ➕ Opret nyt produkt
+          </a>
+          <% } %>
+        </div>
       </div>
       
       <!-- Produkter grid -->

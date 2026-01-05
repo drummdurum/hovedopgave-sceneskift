@@ -134,7 +134,7 @@ router.get('/mine-reservationer/udlaant', requireAuth, (req, res) => {
 });
 
 // Produkt detalje side (enkelt rekvisit)
-router.get('/rekvisitter/:id', (req, res) => {
+router.get('/rekvisitter/:id', requireAuth, (req, res) => {
   const produktId = parseInt(req.params.id);
   
   if (isNaN(produktId)) {
@@ -143,7 +143,7 @@ router.get('/rekvisitter/:id', (req, res) => {
   
   res.render('produkt-detalje', { 
     title: 'Rekvisit',
-    user: req.session.user || null,
+    user: req.session.user,
     produktId: produktId
   });
 });

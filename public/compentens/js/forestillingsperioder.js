@@ -197,10 +197,32 @@ async function gemPeriode(e) {
     const result = await response.json();
     
     if (response.ok) {
-      document.getElementById('formSuccess').textContent = redigeringsMode ? 'Periode opdateret!' : 'Periode oprettet!';
+      // Vis advarsler hvis der er konflikter (FØR success)
+      if (result.konflikter && result.konflikter.length > 0) {
+        const konfliktNavne = result.konflikter.map(k => k.produktNavn).join(', ');
+        document.getElementById('formError').textContent = `⚠️ Nogle produkter kunne ikke reserveres: ${konfliktNavne} (allerede reserveret i perioden)`;
+        document.getElementById('formError').classList.remove('hidden');
+      }
+      
+      // Vis success med detaljer om reservationer
+      let successMsg = redigeringsMode ? 'Periode opdateret!' : 'Periode oprettet!';
+      
+      if (result.reservationer > 0) {
+        successMsg += ` ${result.reservationer} produkt${result.reservationer !== 1 ? 'er' : ''} reserveret.`;
+      }
+      if (result.tilfoejede > 0) {
+        successMsg += ` ${result.tilfoejede} ny${result.tilfoejede !== 1 ? 'e' : ''} reservation${result.tilfoejede !== 1 ? 'er' : ''}.`;
+      }
+      if (result.fjernede > 0) {
+        successMsg += ` ${result.fjernede} reservation${result.fjernede !== 1 ? 'er' : ''} fjernet.`;
+      }
+      
+      document.getElementById('formSuccess').textContent = successMsg;
       document.getElementById('formSuccess').classList.remove('hidden');
       loadForestillingsperioder();
-      setTimeout(() => skjulModal(), 1000);
+      
+      // Luk modal senere hvis der er konflikter (så bruger kan læse advarslen)
+      setTimeout(() => skjulModal(), result.konflikter && result.konflikter.length > 0 ? 4000 : 2000);
     } else {
       document.getElementById('formError').textContent = result.error || 'Der opstod en fejl';
       document.getElementById('formError').classList.remove('hidden');

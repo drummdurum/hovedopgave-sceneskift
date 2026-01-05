@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %> - Forside</title>
+  <link rel="icon" href="/compentens/image/logo rundt.png">
   <link rel="stylesheet" href="/css/output.css">
 </head>
 <body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
@@ -67,19 +68,19 @@
         <h3 class="mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Hvad vi kan hjælpe med:</h3>
         <div class="h-1 w-32 mb-6" style="background-color: var(--color-secondary);"></div>
         <ul class="space-y-5">
-          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateX(10px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'">
             <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
             <span class="text-xl" style="color: var(--color-dark);">Valg af rekvisitter til din periode og stil</span>
           </li>
-          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateX(10px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'">
             <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
             <span class="text-xl" style="color: var(--color-dark);">Koordinering af flere reservationer</span>
           </li>
-          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateX(10px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'">
             <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
             <span class="text-xl" style="color: var(--color-dark);">Specialønsker og tilpasninger</span>
           </li>
-          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5">
+          <li class="flex items-center gap-3 bg-gray-100 rounded-xl p-5" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateX(10px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'">
             <span style="color: var(--color-secondary); font-size: 1.25rem;">✓</span>
             <span class="text-xl" style="color: var(--color-dark);">Priser og tilgængelighed</span>
           </li>
@@ -94,7 +95,7 @@
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
         <!-- Card 1 -->
-        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+        <a href="/rekvisitter" class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease; text-decoration: none; cursor: pointer;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
           <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
               <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -106,10 +107,10 @@
           <p class="leading-relaxed" style="color: var(--color-primary);">
             Alt vores udstyr er professionelt og vedligeholdt til de højeste standarder.
           </p>
-        </div>
+        </a>
 
         <!-- Card 2 -->
-        <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
+        <a href="/rekvisitter" class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease; text-decoration: none; cursor: pointer;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">
           <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6" style="background-color: var(--color-secondary); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(0deg)'">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-dark-red);">
               <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
@@ -122,7 +123,7 @@
           <p class="leading-relaxed" style="color: var(--color-primary);">
             Book dit udstyr online og få øjeblikkelig bekræftelse på tilgængelighed.
           </p>
-        </div>
+        </a>
 
         <!-- Card 3 -->
         <div class="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center" style="transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'">

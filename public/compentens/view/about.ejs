@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %> - MinApp</title>
+  <title><%= title %> - SceneSkift</title>
+  <link rel="icon" href="/compentens/image/logo rundt.png">
   <link rel="stylesheet" href="/css/output.css">
 </head>
 <body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
@@ -141,7 +142,7 @@
             </svg>
           </div>
           <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
-            5000+ rekvisitter
+            <span id="antalProdukter">5000+</span> rekvisitter
           </h3>
           <p class="leading-relaxed text-lg" style="color: var(--color-primary);">
             Fra viktorianske møbler til moderne props - vi har Danmarks største udvalg af teaterrekvisitter.
@@ -156,7 +157,7 @@
             </svg>
           </div>
           <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-dark-red);">
-            150+ teatre
+            <span id="antalBrugere">150+</span> teatre
           </h3>
           <p class="leading-relaxed text-lg" style="color: var(--color-primary);">
             Vi er stolte over at være en del af Danmarks levende amatørteaterscene med et stærkt fællesskab.
@@ -181,6 +182,32 @@
   </main>
   
   <%- include('../footer/footer') %>
+  
+  <script>
+    // Hent og vis dynamiske statistikker
+    async function loadStats() {
+      try {
+        // Hent antal produkter
+        const produkterRes = await fetch('/api/stats/produkter');
+        const produkterData = await produkterRes.json();
+        if (produkterData.antal) {
+          document.getElementById('antalProdukter').textContent = produkterData.antal.toLocaleString('da-DK') + '+';
+        }
+
+        // Hent antal brugere
+        const brugereRes = await fetch('/api/stats/brugere');
+        const brugereData = await brugereRes.json();
+        if (brugereData.antal) {
+          document.getElementById('antalBrugere').textContent = brugereData.antal.toLocaleString('da-DK') + '+';
+        }
+      } catch (error) {
+        console.error('Fejl ved hentning af statistik:', error);
+      }
+    }
+
+    // Kør når siden er loadet
+    loadStats();
+  </script>
   
 </body>
 </html>
