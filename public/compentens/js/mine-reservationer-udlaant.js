@@ -80,50 +80,125 @@ function renderReservation(r) {
 }
 
 async function markerSomHentet(reservationId) {
-  if (!showConfirmDialog('Markér produktet som hentet?')) return;
-  
-  try {
-    const response = await fetch(`/api/reservationer/${reservationId}/hentet`, {
-      method: 'PATCH'
-    });
-    
-    if (response.ok) {
-      showSuccessNotification('✓ Produktet er markeret som hentet');
-      loadReservationer(); // Genindlæs listen
-    } else {
-      const data = await response.json();
-      showErrorNotification(data.error || 'Fejl ved opdatering');
+  showConfirmDialog(
+    'Markér som hentet?',
+    'Bekræft at produktet er blevet hentet af låneren.',
+    async () => {
+      try {
+        const response = await fetch(`/api/reservationer/${reservationId}/hentet`, {
+          method: 'PATCH'
+        });
+        
+        if (response.ok) {
+          showSuccessNotification('✓ Produktet er markeret som hentet');
+          loadReservationer(); // Genindlæs listen
+        } else {
+          const data = await response.json();
+          showErrorNotification(data.error || 'Fejl ved opdatering');
+        }
+      } catch (error) {
+        console.error('Fejl:', error);
+        showErrorNotification('Fejl ved opdatering');
+      }
     }
-  } catch (error) {
-    console.error('Fejl:', error);
-    showErrorNotification('Fejl ved opdatering');
-  }
+  );
 }
 
 async function markerSomTilbageleveret(reservationId) {
-  if (!showConfirmDialog('Markér produktet som tilbageleveret?')) return;
-  
-  try {
-    const response = await fetch(`/api/reservationer/${reservationId}/tilbageleveret`, {
-      method: 'PATCH'
-    });
-    
-    if (response.ok) {
-      showSuccessNotification('✓ Produktet er markeret som tilbageleveret');
-      loadReservationer(); // Genindlæs listen
-    } else {
-      const data = await response.json();
-      showErrorNotification(data.error || 'Fejl ved opdatering');
+  showConfirmDialog(
+    'Markér som tilbageleveret?',
+    'Bekræft at produktet er blevet returneret.',
+    async () => {
+      try {
+        const response = await fetch(`/api/reservationer/${reservationId}/tilbageleveret`, {
+          method: 'PATCH'
+        });
+        
+        if (response.ok) {
+          showSuccessNotification('✓ Produktet er markeret som tilbageleveret');
+          loadReservationer(); // Genindlæs listen
+        } else {
+          const data = await response.json();
+          showErrorNotification(data.error || 'Fejl ved opdatering');
+        }
+      } catch (error) {
+        console.error('Fejl:', error);
+        showErrorNotification('Fejl ved opdatering');
+      }
     }
-  } catch (error) {
-    console.error('Fejl:', error);
-    showErrorNotification('Fejl ved opdatering');
-  }
+  );
 }
 
 // Pæn confirm dialog
-function showConfirmDialog(message) {
-  return confirm(message); // Browser native for nu - kan opdateres til custom modal
+function showConfirmDialog(title, message, onConfirm) {
+  // Fjern eksisterende dialog hvis der er en
+  const existing = document.getElementById('confirmDialog');
+  if (existing) existing.remove();
+  
+  const dialog = document.createElement('div');
+  dialog.id = 'confirmDialog';
+  dialog.style.cssText = `
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  `;
+  
+  dialog.innerHTML = `
+    <div class="confirm-backdrop" style="position: absolute; inset: 0; background-color: rgba(0,0,0,0.5); animation: fadeIn 0.2s ease;"></div>
+    <div class="confirm-content" style="position: relative; background: white; border-radius: 1rem; padding: 2rem; max-width: 400px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: scaleIn 0.3s ease;">
+      <h3 style="font-size: 1.5rem; font-weight: bold; color: var(--color-primary); margin-bottom: 0.75rem; font-family: var(--font-heading);">${title}</h3>
+      <p style="color: var(--color-dark); opacity: 0.8; margin-bottom: 1.5rem; line-height: 1.6;">${message}</p>
+      <div style="display: flex; gap: 0.75rem;">
+        <button id="confirmCancel" style="flex: 1; padding: 0.75rem; border-radius: 0.75rem; border: 2px solid var(--color-primary); color: var(--color-primary); font-weight: 600; background: white; cursor: pointer; transition: all 0.2s;">
+          Annuller
+        </button>
+        <button id="confirmOk" style="flex: 1; padding: 0.75rem; border-radius: 0.75rem; border: none; background-color: var(--color-primary); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          Bekræft
+        </button>
+      </div>
+    </div>
+  `;
+  
+  // Tilføj animations
+  if (!document.getElementById('confirmDialogStyles')) {
+    const style = document.createElement('style');
+    style.id = 'confirmDialogStyles';
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+      #confirmOk:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+      #confirmCancel:hover {
+        background-color: var(--color-primary);
+        color: white;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  document.body.appendChild(dialog);
+  
+  // Event handlers
+  const closeDialog = () => dialog.remove();
+  
+  dialog.querySelector('#confirmCancel').addEventListener('click', closeDialog);
+  dialog.querySelector('.confirm-backdrop').addEventListener('click', closeDialog);
+  dialog.querySelector('#confirmOk').addEventListener('click', () => {
+    closeDialog();
+    if (onConfirm) onConfirm();
+  });
 }
 
 // Success notifikation

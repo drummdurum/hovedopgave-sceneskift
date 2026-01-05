@@ -693,3 +693,76 @@ main > .section + .section { margin-top: 0; }
   font-size: 0.9rem;
   color: #16a34a;
 }
+
+/* Reservation konflikter styling */
+.reservation-konflikter {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border-radius: 0.75rem;
+  border: 2px solid #fee2e2;
+}
+
+.konflikt-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.konflikt-icon {
+  font-size: 1.5rem;
+}
+
+.konflikt-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.konflikt-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.konflikt-item {
+  padding: 0.75rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  border: 1px solid #fecaca;
+}
+
+.konflikt-produkt-navn {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-dark);
+  margin-bottom: 0.5rem;
+}
+
+.konflikt-reservationer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.konflikt-reservation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: #fef2f2;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+}
+
+.konflikt-laaner {
+  color: var(--color-dark);
+  font-weight: 600;
+}
+
+.konflikt-dato {
+  color: #dc2626;
+  font-size: 0.8rem;
+}

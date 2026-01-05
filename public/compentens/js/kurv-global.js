@@ -124,6 +124,17 @@ function initKurvModal() {
                 <span id="valgtPeriodeTekst" class="periode-tekst"></span>
               </div>
             </div>
+            
+            <!-- Reservation konflikter visning -->
+            <div id="reservationKonflikter" class="reservation-konflikter hidden">
+              <div class="konflikt-header">
+                <span class="konflikt-icon">⚠️</span>
+                <span class="konflikt-title">Reservationskonflikter</span>
+              </div>
+              <div id="konfliktListe" class="konflikt-liste">
+                <!-- Konflikter genereres her -->
+              </div>
+            </div>
           </div>
         </div>
         
@@ -264,7 +275,7 @@ function togglePeriodeMetode() {
 }
 
 // Opdater visning af valgt periode fra dropdown
-function opdaterValgtePeriodeDatoer() {
+async function opdaterValgtePeriodeDatoer() {
   const select = document.getElementById('kurvForestillingsperiode');
   const periodeInfo = document.getElementById('valgtPeriodeInfo');
   const periodeTekst = document.getElementById('valgtPeriodeTekst');
@@ -276,8 +287,12 @@ function opdaterValgtePeriodeDatoer() {
     const slut = new Date(selectedOption.dataset.slut).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
     periodeTekst.textContent = `${start} til ${slut}`;
     periodeInfo.classList.remove('hidden');
+    
+    // Tjek for konflikter
+    await checkReservationKonflikter(selectedOption.dataset.start, selectedOption.dataset.slut);
   } else {
     periodeInfo.classList.add('hidden');
+    hideKonflikter();
   }
   
   validateReservationForm();
@@ -305,8 +320,82 @@ function validateReservationForm() {
   }
 }
 
+// Tjek for reservation konflikter
+async function checkReservationKonflikter(startDato, slutDato) {
+  const kurv = getKurv();
+  if (!kurv.length || !startDato || !slutDato) {
+    hideKonflikter();
+    return;
+  }
+  
+  const konfliktContainer = document.getElementById('reservationKonflikter');
+  const konfliktListe = document.getElementById('konfliktListe');
+  
+  try {
+    // Tjek hver produkt for konflikter
+    const konfliktPromises = kurv.map(async (item) => {
+      const response = await fetch(`/api/reservationer/check-overlap`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          produkt_id: item.id,
+          start_dato: startDato,
+          slut_dato: slutDato
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.hasOverlap && data.overlappingReservations?.length > 0) {
+          return {
+            produktNavn: item.navn,
+            reservationer: data.overlappingReservations
+          };
+        }
+      }
+      return null;
+    });
+    
+    const konflikter = (await Promise.all(konfliktPromises)).filter(k => k !== null);
+    
+    if (konflikter.length > 0) {
+      konfliktListe.innerHTML = konflikter.map(konflikt => `
+        <div class="konflikt-item">
+          <div class="konflikt-produkt-navn">${konflikt.produktNavn}</div>
+          <div class="konflikt-reservationer">
+            ${konflikt.reservationer.map(res => {
+              const fraDato = new Date(res.fra_dato).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' });
+              const tilDato = new Date(res.til_dato).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' });
+              return `
+                <div class="konflikt-reservation">
+                  <span class="konflikt-laaner">${res.laaner?.navn || 'Ukendt'} (${res.laaner?.teaternavn || 'Ukendt teater'})</span>
+                  <span class="konflikt-dato">${fraDato} - ${tilDato}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+      
+      konfliktContainer.classList.remove('hidden');
+    } else {
+      hideKonflikter();
+    }
+  } catch (error) {
+    console.error('Fejl ved tjek af konflikter:', error);
+    hideKonflikter();
+  }
+}
+
+function hideKonflikter() {
+  const konfliktContainer = document.getElementById('reservationKonflikter');
+  if (konfliktContainer) {
+    konfliktContainer.classList.add('hidden');
+  }
+}
+
 // Lyt på dato-ændringer
-document.addEventListener('change', function(e) {
+document.addEventListener('change', async function(e) {
   if (e.target.id === 'kurvFraDato' || e.target.id === 'kurvTilDato') {
     validateReservationForm();
     
@@ -321,8 +410,12 @@ document.addEventListener('change', function(e) {
       const slut = new Date(tilDato).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
       periodeTekst.textContent = `${start} til ${slut}`;
       periodeInfo.classList.remove('hidden');
+      
+      // Tjek for konflikter ved manuel dato
+      await checkReservationKonflikter(fraDato, tilDato);
     } else {
       periodeInfo.classList.add('hidden');
+      hideKonflikter();
     }
   }
 });

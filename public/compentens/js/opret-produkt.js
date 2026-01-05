@@ -66,17 +66,19 @@ document.addEventListener('DOMContentLoaded', function() {
           forestillingsperiodeContainer.innerHTML = `
             <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">
               Ingen aktive forestillingsperioder. 
-              <a href="/forestillingsperioder" style="color: var(--color-secondary); text-decoration: underline;">Opret en ny</a>
+              <button type="button" id="opretPeriodeBtn" style="color: var(--color-secondary); text-decoration: underline; background: none; border: none; cursor: pointer;">Opret en ny</button>
             </p>
           `;
+          document.getElementById('opretPeriodeBtn').addEventListener('click', showOpretPeriodePopup);
         }
       } else {
         forestillingsperiodeContainer.innerHTML = `
           <p class="text-sm" style="color: var(--color-dark); opacity: 0.7;">
             Ingen forestillingsperioder oprettet endnu. 
-            <a href="/forestillingsperioder" style="color: var(--color-secondary); text-decoration: underline;">Opret en ny</a>
+            <button type="button" id="opretPeriodeBtn" style="color: var(--color-secondary); text-decoration: underline; background: none; border: none; cursor: pointer;">Opret en ny</button>
           </p>
         `;
+        document.getElementById('opretPeriodeBtn').addEventListener('click', showOpretPeriodePopup);
       }
     } catch (error) {
       console.error('Error loading forestillingsperioder:', error);
@@ -86,6 +88,126 @@ document.addEventListener('DOMContentLoaded', function() {
   
   loadKategorier();
   loadForestillingsperioder();
+  
+  // Popup til oprettelse af forestillingsperiode
+  function showOpretPeriodePopup() {
+    const popupHtml = `
+      <div id="periodePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="backdrop-filter: blur(4px);">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl" style="max-height: 90vh; overflow-y: auto;">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold" style="color: var(--color-dark);">Opret forestillingsperiode</h3>
+            <button type="button" id="closePopupBtn" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+          </div>
+          
+          <form id="opretPeriodeForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--color-dark);">Navn på forestilling</label>
+              <input type="text" id="periodeNavn" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary);"
+                placeholder="F.eks. Hamlet">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--color-dark);">Startdato</label>
+              <input type="date" id="periodeStartDato" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary);">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--color-dark);">Slutdato</label>
+              <input type="date" id="periodeSlutDato" required
+                class="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition"
+                style="border-color: var(--color-primary);">
+            </div>
+            
+            <div id="periodeError" class="hidden p-4 rounded-xl" style="background-color: #fee2e2; color: #dc2626;"></div>
+            
+            <div class="flex gap-3 pt-4">
+              <button type="button" id="cancelPeriodeBtn"
+                class="flex-1 py-3 rounded-xl font-bold transition"
+                style="background-color: #f8f9fa; color: var(--color-dark);">
+                Annuller
+              </button>
+              <button type="submit" id="submitPeriodeBtn"
+                class="flex-1 py-3 rounded-xl font-bold text-white transition"
+                style="background-color: var(--color-primary);">
+                Opret periode
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', popupHtml);
+    
+    const popup = document.getElementById('periodePopup');
+    const closeBtn = document.getElementById('closePopupBtn');
+    const cancelBtn = document.getElementById('cancelPeriodeBtn');
+    const periodeForm = document.getElementById('opretPeriodeForm');
+    
+    function closePopup() {
+      popup.remove();
+    }
+    
+    closeBtn.addEventListener('click', closePopup);
+    cancelBtn.addEventListener('click', closePopup);
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) closePopup();
+    });
+    
+    periodeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const errorDiv = document.getElementById('periodeError');
+      const submitBtn = document.getElementById('submitPeriodeBtn');
+      
+      errorDiv.classList.add('hidden');
+      
+      const navn = document.getElementById('periodeNavn').value;
+      const startDato = document.getElementById('periodeStartDato').value;
+      const slutDato = document.getElementById('periodeSlutDato').value;
+      
+      if (new Date(slutDato) < new Date(startDato)) {
+        errorDiv.textContent = 'Slutdato skal være efter startdato';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="animate-pulse">Opretter...</span>';
+      
+      try {
+        const response = await fetch('/api/forestillingsperioder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            navn,
+            start_dato: startDato,
+            slut_dato: slutDato
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          closePopup();
+          await loadForestillingsperioder();
+        } else {
+          errorDiv.textContent = data.error || 'Der opstod en fejl';
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'Der opstod en netværksfejl. Prøv igen.';
+        errorDiv.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Opret periode';
+      }
+    });
+  }
   
   // Placering radio button styling
   const lagerEget = document.getElementById('lagerEget');

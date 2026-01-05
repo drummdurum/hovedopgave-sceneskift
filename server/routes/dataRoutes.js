@@ -95,6 +95,37 @@ router.get('/produkt/:produkt_id/reservationer', async (req, res) => {
   }
 });
 
+// Tjek for overlappende reservationer
+router.post('/reservationer/check-overlap', async (req, res) => {
+  try {
+    const { produkt_id, start_dato, slut_dato } = req.body;
+
+    if (!produkt_id || !start_dato || !slut_dato) {
+      return res.status(400).json({ error: 'produkt_id, start_dato og slut_dato er påkrævet' });
+    }
+
+    const { hasOverlap, overlappingReservations } = await checkReservationOverlap(
+      parseInt(produkt_id), 
+      start_dato, 
+      slut_dato
+    );
+
+    res.json({ 
+      hasOverlap, 
+      overlappingReservations: overlappingReservations.map(r => ({
+        ...r,
+        laaner: {
+          navn: r.bruger || 'Ukendt',
+          teaternavn: r.teaternavn || 'Ukendt teater'
+        }
+      }))
+    });
+  } catch (error) {
+    console.error('Check overlap error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved tjek af overlap' });
+  }
+});
+
 // Hent en enkelt reservation
 router.get('/reservationer/:id', async (req, res) => {
   try {
