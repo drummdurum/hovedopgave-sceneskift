@@ -1,24 +1,64 @@
 <footer class="mt-auto" style="background-color: var(--color-dark); font-family: var(--font-body);">
-  <div class="container-max px-6 py-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <div class="container-max px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- SceneSkift Info -->
       <div>
-        <h3 class="text-xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light);">MinApp</h3>
-        <p style="color: var(--color-light); opacity: 0.7;">Din Node.js applikation med Express og Tailwind CSS</p>
+        <h3 class="text-2xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-secondary);">SceneSkift</h3>
+        <p style="color: var(--color-light); opacity: 0.8; line-height: 1.6;">
+          Del dine rekvisitter og bliv en del af Danmarks teaterfællesskab - bæredygtigt og nemt.
+        </p>
       </div>
+      
+      <!-- Navigation -->
       <div>
-        <h4 class="text-lg font-semibold mb-4" style="font-family: var(--font-heading); color: var(--color-light);">Links</h4>
+        <h4 class="text-lg font-semibold mb-4" style="font-family: var(--font-heading); color: var(--color-light);">Navigation</h4>
         <ul class="space-y-2">
-          <li><a href="/" class="transition" style="color: var(--color-light); opacity: 0.7;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.7'">Forside</a></li>
-          <li><a href="/about" class="transition" style="color: var(--color-light); opacity: 0.7;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.7'">Om os</a></li>
+          <li><a href="/" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Forside</a></li>
+          <li><a href="/rekvisitter" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Rekvisitter</a></li>
+          <li><a href="/about" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Om os</a></li>
+          <li><a href="/forestillingsperioder" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Forestillingsperioder</a></li>
         </ul>
       </div>
+      
+      <!-- Min konto -->
+      <div>
+        <h4 class="text-lg font-semibold mb-4" style="font-family: var(--font-heading); color: var(--color-light);">Min konto</h4>
+        <ul class="space-y-2">
+          <li><a href="/profile" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Min profil</a></li>
+          <li><a href="/produkter/mine" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Mine produkter</a></li>
+          <li><a href="/mine-reservationer/hente" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Mine reservationer</a></li>
+          <li><a href="/login" class="transition" style="color: var(--color-light); opacity: 0.8;" onmouseover="this.style.color='var(--color-secondary)'; this.style.opacity='1'" onmouseout="this.style.color='var(--color-light)'; this.style.opacity='0.8'">Log ind</a></li>
+        </ul>
+      </div>
+      
+      <!-- Kontakt -->
       <div>
         <h4 class="text-lg font-semibold mb-4" style="font-family: var(--font-heading); color: var(--color-light);">Kontakt</h4>
-        <p style="color: var(--color-light); opacity: 0.7;">Email: info@minapp.dk</p>
+        <ul class="space-y-3">
+          <li style="color: var(--color-light); opacity: 0.8;">
+            <span style="color: var(--color-secondary);">📧</span> sebastiandrumm@hotmail.com
+          </li>
+          <li style="color: var(--color-light); opacity: 0.8;">
+            <span style="color: var(--color-secondary);">🌐</span> sceneskift.nu
+          </li>
+          <li style="color: var(--color-light); opacity: 0.8;">
+            <span style="color: var(--color-secondary);">🎭</span> For danske amatørteatre
+          </li>
+        </ul>
       </div>
     </div>
-    <div class="mt-8 pt-6 text-center" style="border-top: 1px solid rgba(246, 246, 246, 0.2); color: var(--color-light); opacity: 0.7;">
-      <p>&copy; <%= new Date().getFullYear() %> MinApp. Alle rettigheder forbeholdes.</p>
+    
+    <!-- Divider -->
+    <div class="mt-10 pt-8" style="border-top: 1px solid rgba(246, 246, 246, 0.2);">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p style="color: var(--color-light); opacity: 0.7;">
+          &copy; <%= new Date().getFullYear() %> SceneSkift. Skabt med ❤️ for teatret.
+        </p>
+        <div class="flex gap-4">
+          <span style="color: var(--color-light); opacity: 0.7;">🌱 Bæredygtig rekvisitdeling</span>
+          <span style="color: var(--color-light); opacity: 0.7;">♻️ Cirkulær økonomi</span>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

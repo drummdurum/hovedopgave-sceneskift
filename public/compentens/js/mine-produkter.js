@@ -75,7 +75,7 @@ function renderProduktKort(produkt, showActions = false) {
         <p class="mb-4 line-clamp-2" style="color: var(--color-dark); opacity: 0.8;">${produkt.beskrivelse}</p>
         ${showActions ? `
           <div class="flex flex-col gap-2">
-            <button onclick="tilfoejTilKurvFraMineProdukter(${produkt.id}, '${produkt.navn.replace(/'/g, "\\'")}')", '${produkt.billede_url.replace(/'/g, "\\'")}')", 'Dig')" class="w-full py-2 rounded-xl text-center" style="background-color: var(--color-secondary); color: var(--color-dark); font-weight: 600;">
+            <button onclick="tilfoejTilKurvFraMineProdukter(${produkt.id}, '${produkt.navn.replace(/'/g, "\\'")}', '${produkt.billede_url.replace(/'/g, "\\'")}', 'Dig')" class="w-full py-2 rounded-xl text-center" style="background-color: var(--color-secondary); color: var(--color-dark); font-weight: 600;">
               🛒 Tilføj til kurv
             </button>
             <div class="flex gap-2">
@@ -270,16 +270,13 @@ async function sletProdukt(id) {
 
 // Tilføj produkt til kurv fra mine produkter
 function tilfoejTilKurvFraMineProdukter(produktId, produktNavn, billede, ejer) {
-  if (typeof tilfoejProduktTilKurv === 'function') {
-    tilfoejProduktTilKurv({
-      id: produktId,
-      navn: produktNavn,
-      billede: billede,
-      ejer: ejer
-    });
-  } else {
-    console.error('kurv-global.js ikke indlæst');
-  }
+  // Brug den globale kurv funktion
+  tilfoejProduktTilKurv({
+    id: produktId,
+    navn: produktNavn,
+    billede: billede,
+    ejer: ejer
+  });
 }
 
 // Vælg alle produkter til kurv
