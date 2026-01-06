@@ -7,7 +7,7 @@
   <link rel="icon" href="/compentens/image/logo rundt.png">
   <link rel="stylesheet" href="/css/output.css">
 </head>
-<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body);">
+<body class="flex flex-col min-h-screen" style="background-color: var(--color-light); font-family: var(--font-body); overflow-x: hidden;">
   
     <!-- Header fixed på toppen med transparent baggrund -->
     <header class="sticky top-0 z-50" style="background-color: transparent; z-index: 50;">
@@ -21,22 +21,22 @@
     <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.3); z-index: 0;"></div>
     
     <!-- Hero indhold -->
-    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative justify-center" style="z-index: 1;">
-      <div class="text-center" style="padding:150px;">
-        <div class="mb-8">
-          <img src="/compentens/image/Logo.jpg" alt="Logo" class="mx-auto" style="max-width: 600px; width: 100%;">
+    <div class="flex flex-col items-center justify-center w-full px-4 md:px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 60px 16px;">
+        <div class="mb-6 md:mb-8">
+          <img src="/compentens/image/Logo.jpg" alt="Logo" class="mx-auto" style="max-width: min(600px, 90vw); width: 100%;">
         </div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-8" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 md:mb-8" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
           Vi lover at du ikke står alene med dine rekvisitter
         </h1>
-        <a href="/rekvisitter" class="btn-primary whitespace-nowrap" style="padding: 5px 50px;">
+        <a href="/rekvisitter" class="btn-primary whitespace-nowrap text-sm md:text-base inline-flex items-center justify-center" style="padding: 8px 32px; border-radius: 100px;">
           Se udvalg
         </a>
       </div>
     </div>
   </section>
   <!-- Main content -->
-  <main class="flex-grow container-max px-6 py-12">
+  <main class="flex-grow container-max px-4 md:px-6 py-6 md:py-12">
     <!-- Top intro section with divider -->
     <section class="section max-w-6xl mx-auto text-center">
       <h2 class="text-5xl md:text-6xl font-bold tracking-tight" style="font-family: var(--font-heading); color: var(--color-primary);">Skabt <em>af,</em> <em>for</em> og <em>med</em> amatørteatre</h2>
