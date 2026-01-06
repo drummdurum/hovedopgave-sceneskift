@@ -3,24 +3,25 @@ const bcrypt = require('bcrypt');
 
 async function seed() {
   try {
-    // Opdater admin bruger hvis den findes (id 2)
-    const adminUser = await prisma.brugere.findUnique({
-      where: { id: 2 }
+    // Opdater eksamen@admin.com bruger til admin
+    const eksamenUser = await prisma.brugere.findUnique({
+      where: { email: 'eksamen@admin.com' }
     });
 
-    if (adminUser) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+    if (eksamenUser) {
       await prisma.brugere.update({
-        where: { id: adminUser.id },
+        where: { id: eksamenUser.id },
         data: { 
           godkendt: true, 
-          rolle: 'admin',
-          password: hashedPassword
+          rolle: 'admin'
         }
       });
-      console.log('✅ Admin bruger opdateret med nyt password:', adminUser.email);
+      console.log('✅ Bruger opdateret til admin:', eksamenUser.email);
+      console.log('   Navn:', eksamenUser.navn);
+      console.log('   Godkendt: true');
+      console.log('   Rolle: admin');
     } else {
-      console.log('⚠️ Ingen admin bruger fundet med id 2 - opret den via /register');
+      console.log('⚠️ Ingen bruger fundet med email: eksamen@admin.com');
     }
   } catch (error) {
     console.error('Seed fejl:', error);
