@@ -15,18 +15,18 @@
   </header>
     
   <!-- Hero sektion med baggrundsbillede -->
-  <section class="relative min-h-[50vh] md:min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 40px;">
+  <section class="relative min-h-[50vh] md:min-h-[40vh] flex flex-col" style="background-image: url('/compentens/image/forside.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -100px; margin-bottom: 20px;">
     
     <!-- Dark overlay -->
     <div class="absolute inset-0" style="background-color: rgba(0, 0, 0, 0.6); z-index: 0;"></div>
     
     <!-- Hero indhold -->
-    <div class="flex flex-col items-center justify-center w-full px-6 flex-grow relative" style="z-index: 1;">
-      <div class="text-center" style="padding: 80px 20px;">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+    <div class="flex flex-col items-center justify-center w-full px-4 md:px-6 flex-grow relative" style="z-index: 1;">
+      <div class="text-center" style="padding: 60px 16px;">
+        <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4" style="font-family: var(--font-heading); color: var(--color-light); text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
           🔧 Admin Panel
         </h1>
-        <p class="text-xl" style="color: var(--color-light); opacity: 0.9;">
+        <p class="text-base md:text-xl" style="color: var(--color-light); opacity: 0.9;">
           Administrer brugere og godkendelser
         </p>
       </div>
@@ -34,42 +34,42 @@
   </section>
 
   <!-- Main content -->
-  <main class="flex-grow container-max px-6 py-12">
+  <main class="flex-grow container-max px-4 md:px-6 py-6 md:py-12">
     
     <% if (user && user.rolle === 'admin') { %>
     
     <!-- Stats overview -->
-    <section class="section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-      <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color: var(--color-secondary);">
-          <span class="text-2xl">👥</span>
+    <section class="section max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-12">
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 text-center">enter">
+        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto mb-3 md:mb-4 flex items-center justify-center" style="background-color: var(--color-secondary);">
+          <span class="text-xl md:text-2xl">👥</span>
         </div>
-        <p class="text-4xl font-bold" style="color: var(--color-primary);" id="totalUsers">-</p>
-        <p style="color: var(--color-dark); opacity: 0.7;">Totale brugere</p>
+        <p class="text-2xl md:text-4xl font-bold" style="color: var(--color-primary);" id="totalUsers">-</p>
+        <p class="text-sm md:text-base" style="color: var(--color-dark); opacity: 0.7;">Totale brugere</p>
       </div>
       
-      <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color: #fef3c7;">
-          <span class="text-2xl">⏳</span>
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 text-center">enter">
+        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto mb-3 md:mb-4 flex items-center justify-center" style="background-color: #fef3c7;">
+          <span class="text-xl md:text-2xl">⏳</span>
         </div>
-        <p class="text-4xl font-bold" style="color: #d97706;" id="pendingUsers">-</p>
-        <p style="color: var(--color-dark); opacity: 0.7;">Afventer godkendelse</p>
+        <p class="text-2xl md:text-4xl font-bold" style="color: #d97706;" id="pendingUsers">-</p>
+        <p class="text-sm md:text-base" style="color: var(--color-dark); opacity: 0.7;">Afventer godkendelse</p>
       </div>
       
-      <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background-color: #dcfce7;">
-          <span class="text-2xl">✅</span>
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 text-center">enter">
+        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto mb-3 md:mb-4 flex items-center justify-center" style="background-color: #dcfce7;">
+          <span class="text-xl md:text-2xl">✅</span>
         </div>
-        <p class="text-4xl font-bold" style="color: #16a34a;" id="approvedUsers">-</p>
-        <p style="color: var(--color-dark); opacity: 0.7;">Godkendte brugere</p>
+        <p class="text-2xl md:text-4xl font-bold" style="color: #16a34a;" id="approvedUsers">-</p>
+        <p class="text-sm md:text-base" style="color: var(--color-dark); opacity: 0.7;">Godkendte brugere</p>
       </div>
     </section>
     
     <!-- Afventende brugere -->
-    <section class="section max-w-6xl mx-auto mb-12">
-      <div class="bg-white rounded-2xl shadow-xl p-10">
-        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Afventende godkendelser</h2>
-        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+    <section class="section max-w-6xl mx-auto mb-6 md:mb-12">
+      <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6 lg:p-10">
+        <h2 class="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Afventende godkendelser</h2>
+        <div class="h-1 w-20 md:w-32 mb-4 md:mb-8" style="background-color: var(--color-secondary);"></div>
         
         <div id="pendingList" class="space-y-4">
           <p style="color: var(--color-dark); opacity: 0.7;">Indlæser...</p>
@@ -79,26 +79,26 @@
     
     <!-- Alle brugere -->
     <section class="section max-w-6xl mx-auto">
-      <div class="bg-white rounded-2xl shadow-xl p-10">
-        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Alle brugere</h2>
-        <div class="h-1 w-32 mb-8" style="background-color: var(--color-secondary);"></div>
+      <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6 lg:p-10">
+        <h2 class="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Alle brugere</h2>
+        <div class="h-1 w-20 md:w-32 mb-4 md:mb-8" style="background-color: var(--color-secondary);"></div>
         
-        <div class="overflow-x-auto">
-          <table class="w-full" id="usersTable">
+        <div class="overflow-x-auto -mx-4 md:mx-0">
+          <table class="w-full min-w-[800px]" id="usersTable">
             <thead>
               <tr style="background-color: #f8f9fa;">
-                <th class="text-left p-4 rounded-tl-xl">Navn</th>
-                <th class="text-left p-4">Email</th>
-                <th class="text-left p-4">Teater</th>
-                <th class="text-left p-4">Lokation</th>
-                <th class="text-left p-4">Status</th>
-                <th class="text-left p-4">Rolle</th>
-                <th class="text-left p-4 rounded-tr-xl">Handlinger</th>
+                <th class="text-left p-2 md:p-4 rounded-tl-xl text-xs md:text-sm">Navn</th>
+                <th class="text-left p-2 md:p-4 text-xs md:text-sm">Email</th>
+                <th class="text-left p-2 md:p-4 text-xs md:text-sm">Teater</th>
+                <th class="text-left p-2 md:p-4 text-xs md:text-sm">Lokation</th>
+                <th class="text-left p-2 md:p-4 text-xs md:text-sm">Status</th>
+                <th class="text-left p-2 md:p-4 text-xs md:text-sm">Rolle</th>
+                <th class="text-left p-2 md:p-4 rounded-tr-xl text-xs md:text-sm">Handlinger</th>
               </tr>
             </thead>
             <tbody id="usersList">
               <tr>
-                <td colspan="7" class="p-4 text-center" style="color: var(--color-dark); opacity: 0.7;">Indlæser...</td>
+                <td colspan="7" class="p-2 md:p-4 text-center text-xs md:text-sm" style="color: var(--color-dark); opacity: 0.7;">Indlæser...</td>
               </tr>
             </tbody>
           </table>
@@ -109,13 +109,13 @@
     <% } else { %>
     <!-- Ikke admin eller ikke logget ind -->
     <section class="section max-w-2xl mx-auto text-center">
-      <div class="bg-white rounded-2xl shadow-xl p-10">
-        <h2 class="text-3xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Adgang nægtet</h2>
-        <div class="h-1 w-32 mx-auto mb-8" style="background-color: var(--color-secondary);"></div>
-        <p class="text-lg mb-8" style="color: var(--color-dark);">
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10">
+        <h2 class="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Adgang nægtet</h2>
+        <div class="h-1 w-20 md:w-32 mx-auto mb-4 md:mb-8" style="background-color: var(--color-secondary);"></div>
+        <p class="text-base md:text-lg mb-6 md:mb-8" style="color: var(--color-dark);">
           Du har ikke adgang til admin panelet. Kun administratorer kan se denne side.
         </p>
-        <a href="/" class="btn-primary" style="border-radius: 100px; padding: 12px 32px;">
+        <a href="/" class="btn-primary" style="border-radius: 100px; padding: 10px 24px; font-size: 0.9rem;">
           Tilbage til forsiden
         </a>
       </div>
