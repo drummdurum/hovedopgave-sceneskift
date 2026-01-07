@@ -6,7 +6,6 @@ const { requireAuth, redirectIfAuthenticated } = require('../middleware/auth');
 router.get('/', (req, res) => {
   res.render('index', { 
     title: 'Forside',
-    message: 'Velkommen til din Node.js + Express + EJS app!',
     user: req.session.user || null
   });
 });

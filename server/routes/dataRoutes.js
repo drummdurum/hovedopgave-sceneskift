@@ -12,6 +12,31 @@ const {
   groupProdukterByEjer 
 } = require('../../service/reservationService');
 
+
+// ============= STATISTIK ROUTES =============
+
+// Hent antal produkter
+router.get('/stats/produkter', async (req, res) => {
+  try {
+    const antalProdukter = await prisma.produkter.count();
+    res.json({ antal: antalProdukter });
+  } catch (error) {
+    console.error('Fetch produkter stats error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved hentning af statistik' });
+  }
+});
+
+// Hent antal brugere
+router.get('/stats/brugere', async (req, res) => {
+  try {
+    const antalBrugere = await prisma.brugere.count();
+    res.json({ antal: antalBrugere });
+  } catch (error) {
+    console.error('Fetch brugere stats error:', error);
+    res.status(500).json({ error: 'Der opstod en fejl ved hentning af statistik' });
+  }
+});
+
 // ============= RESERVATIONER ROUTES =============
 
 // Hent brugerens reservationer (produkter de skal hente)
@@ -156,65 +181,6 @@ router.get('/reservationer/:id', async (req, res) => {
   } catch (error) {
     console.error('Fetch reservation error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved hentning af reservation' });
-  }
-});
-
-// Opret ny reservation (kræver login)
-router.post('/produkt/:produkt_id/reservationer', requireAuth, async (req, res) => {
-  try {
-    const { produkt_id } = req.params;
-    const { fra_dato, til_dato } = req.body;
-    const bruger = req.session.user.navn;
-    const teaternavn = req.session.user.teaternavn;
-    const produktId = parseInt(produkt_id);
-
-    // Valider input
-    if (!fra_dato || !til_dato) {
-      return res.status(400).json({ error: 'Fra_dato og til_dato er påkrævet' });
-    }
-
-    // Tjek om produkt eksisterer
-    const produkt = await prisma.produkter.findUnique({
-      where: { id: produktId }
-    });
-
-    if (!produkt) {
-      return res.status(404).json({ error: 'Produkt ikke fundet' });
-    }
-
-    // Tjek for overlappende reservationer
-    const { hasOverlap, overlappingReservations } = await checkReservationOverlap(produktId, fra_dato, til_dato);
-    
-    if (hasOverlap) {
-      const konfliktPerioder = overlappingReservations.map(r => {
-        const fra = new Date(r.fra_dato).toLocaleDateString('da-DK');
-        const til = new Date(r.til_dato).toLocaleDateString('da-DK');
-        return `${fra} - ${til} (${r.teaternavn})`;
-      }).join(', ');
-      
-      return res.status(409).json({ 
-        error: 'Produktet er allerede reserveret i denne periode',
-        konflikter: overlappingReservations,
-        besked: `Eksisterende reservationer: ${konfliktPerioder}`
-      });
-    }
-
-    const nyReservation = await createReservation({
-      produktId,
-      laanerId: req.session.user.id,
-      bruger,
-      teaternavn,
-      startDato: fra_dato,
-      slutDato: til_dato
-    });
-
-    res.status(201).json({ 
-      message: 'Reservation oprettet succesfuldt',
-      reservation: nyReservation 
-    });
-  } catch (error) {
-    console.error('Create reservation error:', error);
-    res.status(500).json({ error: 'Der opstod en fejl ved oprettelse af reservation' });
   }
 });
 
@@ -510,30 +476,6 @@ router.delete('/reservationer/:id', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Delete reservation error:', error);
     res.status(500).json({ error: 'Der opstod en fejl ved sletning af reservation' });
-  }
-});
-
-// ============= STATISTIK ROUTES =============
-
-// Hent antal produkter
-router.get('/stats/produkter', async (req, res) => {
-  try {
-    const antalProdukter = await prisma.produkter.count();
-    res.json({ antal: antalProdukter });
-  } catch (error) {
-    console.error('Fetch produkter stats error:', error);
-    res.status(500).json({ error: 'Der opstod en fejl ved hentning af statistik' });
-  }
-});
-
-// Hent antal brugere
-router.get('/stats/brugere', async (req, res) => {
-  try {
-    const antalBrugere = await prisma.brugere.count();
-    res.json({ antal: antalBrugere });
-  } catch (error) {
-    console.error('Fetch brugere stats error:', error);
-    res.status(500).json({ error: 'Der opstod en fejl ved hentning af statistik' });
   }
 });
 

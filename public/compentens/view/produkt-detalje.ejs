@@ -40,7 +40,7 @@
     <div id="loadingState" class="text-center py-16">
       <div class="animate-pulse">
         <div class="w-16 h-16 mx-auto mb-4 rounded-full" style="background-color: var(--color-secondary);"></div>
-        <p style="color: var(--color-dark);">Indlæser produkt...</p>
+        <p style="color: var(--color-dark);">Indlæser rekvisit...</p>
       </div>
     </div>
 
@@ -48,9 +48,9 @@
     <div id="errorState" class="hidden text-center py-16">
       <div class="bg-white rounded-2xl shadow-xl p-10 max-w-lg mx-auto">
         <span class="text-6xl mb-4 block">😕</span>
-        <h3 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Produkt ikke fundet</h3>
+        <h3 class="text-2xl mb-4" style="font-family: var(--font-heading); color: var(--color-primary);">Rekvisit ikke fundet</h3>
         <p class="mb-6" style="color: var(--color-dark); opacity: 0.8;">
-          Det produkt du leder efter findes ikke eller er blevet fjernet.
+          Det rekvisit du leder efter findes ikke eller er blevet fjernet.
         </p>
         <a href="/rekvisitter" class="btn-primary">Se alle rekvisitter</a>
       </div>
@@ -148,13 +148,13 @@
                 Admin kontrol
               </h3>
               <p class="mb-4" style="color: #991b1b; opacity: 0.9;">
-                Som administrator kan du slette dette produkt. Denne handling kan ikke fortrydes.
+                Som administrator kan du slette denne rekvisit. Denne handling kan ikke fortrydes.
               </p>
               <button 
                 onclick="sletProduktSomAdmin()" 
                 class="px-6 py-3 rounded-lg font-semibold transition hover:bg-red-700"
                 style="background-color: #dc2626; color: white;">
-                🗑️ Slet produkt
+                🗑️ Slet rekvisit
               </button>
             </div>
           </div>
